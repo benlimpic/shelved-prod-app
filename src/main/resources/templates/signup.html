@@ -36,7 +36,12 @@
         </div>
         <div class="inputbox">
           <ion-icon name="lock-closed-outline"></ion-icon>
-          <input type="password" id="passwordcon" name="passwordcon" required />
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            required
+          />
           <label for="">Confirm Password</label>
         </div>
         <button id="submit" type="submit">Sign Up</button>
@@ -48,11 +53,11 @@
   </body>
 </html>
 <script>
-  const submitButttom = document.getElementById("submit");
-  submitButttom.addEventListener("click", () => {
+  const submitButton = document.getElementById("submit");
+  submitButton.addEventListener("click", () => {
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
-    const confirmPassword = document.getElementById("passwordcon").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
     const email = document.getElementById("email").value;
     const data = {
       username,
@@ -69,7 +74,7 @@
         },
         body: jsonData,
       }).then((response) => {
-        //alert('succesfull');
+        //alert('successful');
         //if(response.status == 200){
         //alert('succesfull');
         //xs}

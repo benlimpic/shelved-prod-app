@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class ContentController {
 
-  @GetMapping("/login")
+  @GetMapping("/req/login")
   public String login() {
     return "login";
   }
@@ -15,4 +15,10 @@ public class ContentController {
   public String signup() {
     return "signup";
   }
+
+  @GetMapping("/index")
+  public String home() {
+    return "index";
+  }
+
 }
