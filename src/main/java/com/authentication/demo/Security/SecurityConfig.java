@@ -45,20 +45,24 @@ public class SecurityConfig {
   }
 
   @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-    return httpSecurity
-        .csrf(AbstractHttpConfigurer::disable)
-        .formLogin(httpForm -> {
-          httpForm.loginPage("/req/login").permitAll();
-          httpForm.defaultSuccessUrl("/index");
-
-        })
-
-        .authorizeHttpRequests(registry -> {
-          registry.requestMatchers("/req/signup", "/css/**", "/js/**").permitAll();
-          registry.anyRequest().authenticated();
-        })
-        .build();
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http.csrf(AbstractHttpConfigurer::disable)
+        .formLogin(form -> form
+            .loginPage("/req/login")
+            .permitAll()
+            .defaultSuccessUrl("/index"))
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/req/signup", "/css/**", "/js/**")
+            .permitAll()
+            .anyRequest()
+            .authenticated())
+        .logout(logout -> logout
+            .logoutUrl("/logout")
+            .invalidateHttpSession(true)
+            .clearAuthentication(true)
+            .deleteCookies("JSESSIONID")
+            .logoutSuccessUrl("/req/login"));
+    return http.build();
   }
 
 }
