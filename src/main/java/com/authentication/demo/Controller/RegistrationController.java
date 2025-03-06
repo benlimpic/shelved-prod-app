@@ -1,38 +1,57 @@
 package com.authentication.demo.Controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.net.URI;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
-import com.authentication.demo.Model.MyAppUser;
-import com.authentication.demo.Repository.MyAppUserRepository;
+import com.authentication.demo.Service.MyAppUserService;
 
-@RestController
+@Controller
 public class RegistrationController {
 
-  @Autowired
-  private MyAppUserRepository myAppUserRepository;
+  private final MyAppUserService myAppUserService;
 
   @Autowired
-  private PasswordEncoder passwordEncoder;
+  public RegistrationController(MyAppUserService myAppUserService) {
+    this.myAppUserService = myAppUserService;
+  }
 
   @PostMapping(value = "/req/signup", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-  public ResponseEntity<String> handleFormSubmit(@RequestParam Map<String, String> params) {
-    MyAppUser user = new MyAppUser();
-    user.setEmail(params.get("email"));
-    user.setUsername(params.get("username"));
-    user.setPassword(passwordEncoder.encode(params.get("password")));
-    myAppUserRepository.save(user);
-    return ResponseEntity.status(HttpStatus.FOUND)
-                         .location(URI.create("/req/login"))
-                         .body("User created");
+  public String postUser(@RequestParam Map<String, String> params, Model model) {
+    List<String> errors = new ArrayList<>();
+    if (params == null || params.isEmpty()) {
+      errors.add("Parameters cannot be null or empty.");
+      model.addAttribute("errors", errors);
+      return "signup"; // Return the view name for the signup page
+    }
+    try {
+      myAppUserService.postUser(params);
+      // Authenticate the user after successful registration
+      UserDetails userDetails = myAppUserService.loadUserByUsername(params.get("username"));
+      Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+      SecurityContextHolder.getContext().setAuthentication(auth);
+      System.out.println("User created and authenticated successfully");
+      return "redirect:/index"; // Redirect to the index page
+    } catch (IllegalArgumentException e) {
+      String[] errorArray = e.getMessage().split(", ");
+      for (String error : errorArray) {
+        errors.add(error);
+      }
+    } catch (Exception e) {
+      errors.add("An unexpected error occurred. Please try again.");
+    }
+    model.addAttribute("errors", errors);
+    return "signup"; // Return the view name for the signup page
   }
 }

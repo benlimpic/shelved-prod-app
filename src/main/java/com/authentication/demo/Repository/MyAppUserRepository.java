@@ -8,4 +8,6 @@ import com.authentication.demo.Model.MyAppUser;
 
 public interface MyAppUserRepository extends JpaRepository<MyAppUser, Long> {
   Optional<MyAppUser> findByUsername(String username);
+
+  Optional<MyAppUser> findByEmail(String email);
 }

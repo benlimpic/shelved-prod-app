@@ -43,24 +43,24 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-      http.csrf(csrf -> csrf.disable())
-          .formLogin(form -> form
-              .loginPage("/req/login")
-              .permitAll()
-              .defaultSuccessUrl("/index")
-              .failureUrl("/req/login?error=true"))
-          .authorizeHttpRequests(auth -> auth
-              .requestMatchers("/req/signup", "/css/**", "/js/**")
-              .permitAll()
-              .anyRequest()
-              .authenticated())
-          .logout(logout -> logout
-              .logoutUrl("/logout")
-              .invalidateHttpSession(true)
-              .clearAuthentication(true)
-              .deleteCookies("JSESSIONID")
-              .logoutSuccessUrl("/req/login"));
-      return http.build();
+    http.csrf(csrf -> csrf.disable())
+        .formLogin(form -> form
+            .loginPage("/req/login")
+            .loginProcessingUrl("/req/login")
+            .permitAll()
+            .defaultSuccessUrl("/index")
+            .failureUrl("/req/login?error=true"))
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/req/signup", "/req/login", "/css/**", "/js/**")
+            .permitAll()
+            .anyRequest()
+            .authenticated())
+        .logout(logout -> logout
+            .logoutUrl("/logout")
+            .invalidateHttpSession(true)
+            .clearAuthentication(true)
+            .deleteCookies("JSESSIONID")
+            .logoutSuccessUrl("/req/login"));
+    return http.build();
   }
-
 }
