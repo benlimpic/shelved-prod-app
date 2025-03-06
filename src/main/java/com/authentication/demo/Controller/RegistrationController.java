@@ -15,16 +15,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.authentication.demo.Service.MyAppUserService;
+import com.authentication.demo.Service.UserService;
 
 @Controller
 public class RegistrationController {
 
-  private final MyAppUserService myAppUserService;
+  private final UserService userService;
 
-  @Autowired
-  public RegistrationController(MyAppUserService myAppUserService) {
-    this.myAppUserService = myAppUserService;
+  public RegistrationController(UserService userService) {
+    this.userService = userService;
   }
 
   @PostMapping(value = "/req/signup", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
@@ -36,13 +35,13 @@ public class RegistrationController {
       return "signup"; // Return the view name for the signup page
     }
     try {
-      myAppUserService.postUser(params);
+      userService.postUser(params);
       // Authenticate the user after successful registration
-      UserDetails userDetails = myAppUserService.loadUserByUsername(params.get("username"));
+      UserDetails userDetails = userService.loadUserByUsername(params.get("username"));
       Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
       SecurityContextHolder.getContext().setAuthentication(auth);
       System.out.println("User created and authenticated successfully");
-      return "redirect:/index"; // Redirect to the index page
+      return "index"; // Redirect to the index page
     } catch (IllegalArgumentException e) {
       String[] errorArray = e.getMessage().split(", ");
       for (String error : errorArray) {

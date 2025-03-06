@@ -17,24 +17,23 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.authentication.demo.Model.MyAppUser;
-import com.authentication.demo.Repository.MyAppUserRepository;
+import com.authentication.demo.Model.UserModel;
+import com.authentication.demo.Repository.UserRepository;
 
 @Service
-public class MyAppUserService implements UserDetailsService {
+public class UserService implements UserDetailsService {
 
-  private final MyAppUserRepository repository;
+  private final UserRepository repository;
   private final PasswordEncoder passwordEncoder;
 
-  @Autowired
-  public MyAppUserService(MyAppUserRepository repository, @Lazy PasswordEncoder passwordEncoder) {
+  public UserService(UserRepository repository, @Lazy PasswordEncoder passwordEncoder) {
     this.repository = repository;
     this.passwordEncoder = passwordEncoder;
   }
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    Optional<MyAppUser> user = repository.findByUsername(username);
+    Optional<UserModel> user = repository.findByUsername(username);
 
     if (user.isPresent()) {
       var userObj = user.get();
@@ -56,8 +55,8 @@ public class MyAppUserService implements UserDetailsService {
     String confirmPassword = params.get("confirmPassword");
 
     // CHECK IF USERNAME OR EMAIL ALREADY EXISTS
-    Optional<MyAppUser> userUsername = repository.findByUsername(username);
-    Optional<MyAppUser> userEmail = repository.findByEmail(email);
+    Optional<UserModel> userUsername = repository.findByUsername(username);
+    Optional<UserModel> userEmail = repository.findByEmail(email);
 
     List<String> errors = new ArrayList<>();
     if (userUsername.isPresent()) {
@@ -75,7 +74,7 @@ public class MyAppUserService implements UserDetailsService {
     }
 
     // CREATE NEW USER
-    MyAppUser user = new MyAppUser();
+    UserModel user = new UserModel();
     user.setEmail(email);
     user.setUsername(username);
     user.setPassword(passwordEncoder.encode(password));
@@ -86,5 +85,6 @@ public class MyAppUserService implements UserDetailsService {
     Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     SecurityContextHolder.getContext().setAuthentication(auth);
     System.out.println("User created and authorized");
+    
   }
 }

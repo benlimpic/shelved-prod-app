@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class MyAppUser {
+public class UserModel {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,4 +25,3 @@ public class MyAppUser {
 
   private String password;
 }
-    
