@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.authentication.demo.Service.UserService;
+import com.authentication.demo.logger.AuthenticationLogger;
 
 @Controller
 public class RegistrationController {
@@ -28,29 +28,43 @@ public class RegistrationController {
 
   @PostMapping(value = "/req/signup", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
   public String postUser(@RequestParam Map<String, String> params, Model model) {
+    // CREATE ERROR LIST
     List<String> errors = new ArrayList<>();
-    if (params == null || params.isEmpty()) {
-      errors.add("Parameters cannot be null or empty.");
-      model.addAttribute("errors", errors);
-      return "signup"; // Return the view name for the signup page
-    }
-    try {
-      userService.postUser(params);
-      // Authenticate the user after successful registration
-      UserDetails userDetails = userService.loadUserByUsername(params.get("username"));
-      Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-      SecurityContextHolder.getContext().setAuthentication(auth);
-      System.out.println("User created and authenticated successfully");
-      return "index"; // Redirect to the index page
-    } catch (IllegalArgumentException e) {
-      String[] errorArray = e.getMessage().split(", ");
-      for (String error : errorArray) {
-        errors.add(error);
+
+    // CHECK IF FORM DATA IS NOT EMPTY
+    if (params != null && !params.isEmpty()) {
+
+      try {
+        userService.postUser(params);
+        // AUTHENTICATE USER
+        UserDetails userDetails = userService.loadUserByUsername(params.get("username"));
+        Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+
+        // SET AUTHENTICATION
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        // LOG AUTHENTICATION DETAILS
+        System.out.println("User created successfully");
+        AuthenticationLogger.logAuthenticationDetails();
+
+        // REDIRECT TO HOME PAGE
+        return "index";
       }
-    } catch (Exception e) {
-      errors.add("An unexpected error occurred. Please try again.");
+
+      // ERROR HANDLING
+      catch (IllegalArgumentException e) {
+        String[] errorArray = e.getMessage().split(", ");
+        for (String error : errorArray) {
+          errors.add(error);
+        }
+      } catch (Exception e) {
+        errors.add("An unexpected error occurred. Please try again.");
+      }
     }
+    // RETURN TO SIGNUP PAGE WITH ERRORS
     model.addAttribute("errors", errors);
-    return "signup"; // Return the view name for the signup page
+    System.out.println("User creation failed");
+    AuthenticationLogger.logAuthenticationDetails();
+    return "signup";
   }
 }

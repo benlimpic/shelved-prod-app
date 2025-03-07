@@ -1,5 +1,7 @@
 package com.authentication.demo.Security;
 
+import java.io.IOException;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -15,6 +17,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.authentication.demo.Service.UserService;
+import com.authentication.demo.logger.AuthenticationLogger;
 
 @Configuration
 @EnableWebSecurity
@@ -56,18 +59,40 @@ public class SecurityConfig {
             .loginProcessingUrl("/req/login")
             .permitAll()
             .defaultSuccessUrl("/index")
-            .failureUrl("/req/login?error=true"))
+            .failureUrl("/req/login?error=true")
+            //LOGIN SUCCESS HANDLER
+            .successHandler((request, response, authentication) -> {
+              request.getSession().setAttribute("username", authentication.getName());
+              AuthenticationLogger.log("User " + authentication.getName() + " logged in successfully.");
+              response.sendRedirect("/index");
+            })
+            //LOGIN FAILURE HANDLER
+            .failureHandler((request, response, exception) -> {
+              request.getSession().setAttribute("error", exception.getMessage());
+              response.sendRedirect("/req/login?error=true");
+              AuthenticationLogger.log("Login failed: " + exception.getMessage());
+                }))
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/req/signup", "/req/login", "/css/**", "/js/**")
             .permitAll()
             .anyRequest()
             .authenticated())
         .logout(logout -> logout
-            .logoutUrl("/logout")
+            //LOGOUT SUCCESS HANDLER
+            .addLogoutHandler((request, response, authentication) -> {
+              if (authentication != null) {
+                AuthenticationLogger.log("User " + authentication.getName() + " logged out successfully.");
+                request.getSession().invalidate();
+              }
+              try {
+                response.sendRedirect("/req/login");
+              } catch (IOException e) {
+                e.printStackTrace();
+              }
+            })
             .invalidateHttpSession(true)
-            .clearAuthentication(true)
             .deleteCookies("JSESSIONID")
-            .logoutSuccessUrl("/req/login"));
+            );
     return http.build();
   }
 }
