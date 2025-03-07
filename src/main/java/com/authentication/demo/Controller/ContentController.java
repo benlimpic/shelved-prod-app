@@ -26,4 +26,10 @@ public class ContentController {
     return "index";
   }
 
+  @GetMapping("/user")
+  public String user() {
+    AuthenticationLogger.logAuthenticationDetails();
+    return "user";
+  }
+
 }

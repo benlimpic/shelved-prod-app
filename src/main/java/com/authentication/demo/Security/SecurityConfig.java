@@ -19,9 +19,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import com.authentication.demo.Security.UserLoginConfig;
 
 import com.authentication.demo.Service.UserService;
 import com.authentication.demo.logger.AuthenticationLogger;
+import com.authentication.demo.Security.UserLogoutConfig;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,9 +34,15 @@ import jakarta.servlet.http.HttpServletResponse;
 public class SecurityConfig {
 
   private final UserService userService;
+  private final UserLogoutConfig userLogoutConfig;
 
-  public SecurityConfig(UserService userService) {
+  public SecurityConfig(UserService userService, UserLogoutConfig userLogoutConfig) {
     this.userService = userService;
+    this.userLogoutConfig = userLogoutConfig;
+  }
+
+  private UserLoginConfig formLoginConfig() {
+    return new UserLoginConfig();
   }
 
   @Bean
@@ -65,27 +73,24 @@ public class SecurityConfig {
         // LOGIN FORM
         .formLogin(form -> form
             .loginPage("/req/login")
-            .loginProcessingUrl("/req/login")
-            .permitAll()
-            .defaultSuccessUrl("/index")
-            .failureUrl("/req/login?error=true")
-
-            // LOGIN SUCCESS HANDLER
-            .successHandler((request, response, authentication) -> {
-              request.getSession().setAttribute("username", authentication.getName());
-              AuthenticationLogger.log("User " + authentication.getName() + " logged in successfully.");
-              response.sendRedirect("/index");
-            })
-
+            // LOGIN SUCCCESS HANDLER
+            .successHandler(formLoginConfig().customAuthenticationSuccessHandler())
             // LOGIN FAILURE HANDLER
-            .failureHandler(customAuthenticationFailureHandler()))
+            .failureHandler(formLoginConfig().customAuthenticationFailureHandler())
+            .permitAll())
 
         // AUTHORIZATION
         .authorizeHttpRequests(auth -> auth
+            //NO AUTHORIZATION REQUIRED
             .requestMatchers("/req/signup", "/req/login", "/css/**", "/js/**")
             .permitAll()
+            // AUTHORIZATION REQUIRED
+            .requestMatchers("/index", "/user")
+            .authenticated()
             .anyRequest()
-            .authenticated())
+            // DENY ALL UNLISTED REQUESTS
+            .denyAll()
+            )
 
         // LOGOUT
         .logout(logout -> logout
@@ -95,31 +100,7 @@ public class SecurityConfig {
             .deleteCookies("JSESSIONID")
             .logoutSuccessUrl("/req/login")
             // LOGOUT HANDLER
-            .addLogoutHandler((request, response, authentication) -> {
-              if (authentication != null) {
-                AuthenticationLogger.log("User " + authentication.getName() + " logged out successfully.");
-              }
-            }));
+            .logoutSuccessHandler(userLogoutConfig.customLogoutSuccessHandler()));
     return http.build();
-  }
-
-  @Bean
-  public AuthenticationFailureHandler customAuthenticationFailureHandler() {
-    return new AuthenticationFailureHandler() {
-      @Override
-      // LOGIN FAILURE ERROR HANDLING
-      public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
-          AuthenticationException exception) throws IOException, ServletException {
-        if (exception instanceof BadCredentialsException) {
-          request.getSession().setAttribute("error", "Invalid username or password.");
-        } else if (exception instanceof DisabledException) {
-          request.getSession().setAttribute("error", "User account is disabled.");
-        } else {
-          request.getSession().setAttribute("error", "Authentication failed: " + exception.getMessage());
-        }
-        AuthenticationLogger.log("Login failed: " + exception.getMessage());
-        response.sendRedirect("/req/login?error=true");
-      }
-    };
   }
 }
