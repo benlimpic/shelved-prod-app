@@ -5,6 +5,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 public class AuthenticationLogger {
 
+    // LOG AUTHENTICATION DETAILS
     public static void logAuthenticationDetails() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

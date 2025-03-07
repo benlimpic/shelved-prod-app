@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.http.MediaType;
+import org.springframework.ui.Model;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.authentication.demo.Service.UserService;
 import com.authentication.demo.logger.AuthenticationLogger;
@@ -26,6 +26,7 @@ public class RegistrationController {
     this.userService = userService;
   }
 
+  //REGISTER NEW USER
   @PostMapping(value = "/req/signup", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
   public String postUser(@RequestParam Map<String, String> params, Model model) {
     // CREATE ERROR LIST
@@ -51,7 +52,7 @@ public class RegistrationController {
         return "index";
       }
 
-      // ERROR HANDLING
+      // SIGNUP PAGE ERROR HANDLING
       catch (IllegalArgumentException e) {
         String[] errorArray = e.getMessage().split(", ");
         for (String error : errorArray) {

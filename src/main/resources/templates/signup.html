@@ -21,7 +21,7 @@
       <form action="/req/signup" method="post">
         <h1>Sign Up</h1>
         <ul th:if="${errors}">
-            <li th:each="error : ${errors}" th:text="${error}" style="color: red"></li>
+            <li th:each="error : ${errors}" th:text="${error}" style="text-align: center; color: red"></li>
         </ul>
         <div class="inputbox">
           <ion-icon name="person-outline"></ion-icon>
