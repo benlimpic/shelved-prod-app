@@ -1,14 +1,17 @@
 package com.authentication.demo.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
+import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,25 +28,31 @@ public class UserService implements UserDetailsService {
 
   private final UserRepository repository;
   private final PasswordEncoder passwordEncoder;
+  private final AuthenticationManager authenticationManager;
 
-  public UserService(UserRepository repository, @Lazy PasswordEncoder passwordEncoder) {
+
+  public UserService(UserRepository repository, @Lazy PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
     this.repository = repository;
     this.passwordEncoder = passwordEncoder;
+    this.authenticationManager = authenticationManager;
   }
 
+
+  // LOAD USER BY USERNAME
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    // Fetch user from database
     Optional<UserModel> user = repository.findByUsername(username);
-
-    if (user.isPresent()) {
-      var userObj = user.get();
-      return User.builder()
-          .username(userObj.getUsername())
-          .password(userObj.getPassword())
-          .build();
+    if (user.isEmpty()) {
+      throw new UsernameNotFoundException("User not found");
     }
 
-    throw new UsernameNotFoundException(username);
+    // RETURN USER DETAILS
+    return User.withUsername(user.get().getUsername())
+        .password(user.get().getPassword())
+        .authorities(user.get().getRoles().isEmpty() ? List.of(new SimpleGrantedAuthority("USER"))
+            : user.get().getRoles().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()))
+        .build();
   }
 
   // POST METHOD TO CREATE NEW USER
@@ -59,6 +68,12 @@ public class UserService implements UserDetailsService {
     Optional<UserModel> userEmail = repository.findByEmail(email);
 
     List<String> errors = new ArrayList<>();
+    if (username == null || username.isEmpty() ||
+        email == null || email.isEmpty() ||
+        password == null || password.isEmpty() ||
+        confirmPassword == null || confirmPassword.isEmpty()) {
+      errors.add("All fields are required");
+    }
     if (userUsername.isPresent()) {
       errors.add("Username already exists");
     }
@@ -78,11 +93,13 @@ public class UserService implements UserDetailsService {
     user.setEmail(email);
     user.setUsername(username);
     user.setPassword(passwordEncoder.encode(password));
+    user.setRoles(Collections.singletonList("USER"));
     repository.save(user);
+    
 
-    // AUTHORIZE NEW USER
-    UserDetails userDetails = loadUserByUsername(username);
-    Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-    SecurityContextHolder.getContext().setAuthentication(auth);
+    // Authenticate new user
+    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
+    Authentication authentication = authenticationManager.authenticate(authToken);
+    SecurityContextHolder.getContext().setAuthentication(authentication);
   }
 }

@@ -16,19 +16,16 @@ public class ContentController {
 
   @GetMapping("/req/signup")
   public String signup() {
-    AuthenticationLogger.logAuthenticationDetails();
     return "signup";
   }
 
   @GetMapping("/index")
   public String home() {
-    AuthenticationLogger.logAuthenticationDetails();
     return "index";
   }
 
   @GetMapping("/user")
   public String user() {
-    AuthenticationLogger.logAuthenticationDetails();
     return "user";
   }
 

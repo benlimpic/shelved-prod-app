@@ -28,6 +28,7 @@ public class UserLoginConfig {
                     Authentication authentication) throws IOException, ServletException {
                 // LOGIN SUCCESS HANDLING
                 AuthenticationLogger.log("Login successful: " + authentication.getName());
+                AuthenticationLogger.logAuthenticationDetails();
                 response.sendRedirect("/index");
             }
         };
@@ -48,6 +49,7 @@ public class UserLoginConfig {
                     request.getSession().setAttribute("error", "Authentication failed: " + exception.getMessage());
                 }
                 AuthenticationLogger.log("Login failed: " + exception.getMessage());
+                AuthenticationLogger.logAuthenticationDetails();
                 response.sendRedirect("/req/login?error=true");
             }
         };
