@@ -21,15 +21,15 @@ import com.authentication.demo.Service.UserService;
 public class SecurityConfig {
 
   private final UserService userService;
-  private final UserLogoutConfig userLogoutConfig;
 
-  public SecurityConfig(@Lazy UserService userService, UserLogoutConfig userLogoutConfig) {
+  // CONSTRUCTOR
+  public SecurityConfig(@Lazy UserService userService) {
     this.userService = userService;
-    this.userLogoutConfig = userLogoutConfig;
   }
 
-  private UserLoginConfig formLoginConfig() {
-    return new UserLoginConfig();
+  // LOGIN / LOGOUT ROUTING AND ERROR HANDLING
+  private SecurityHandler securityHandler(AuthenticationManager authenticationManager) {
+    return new SecurityHandler(userService, authenticationManager);
   }
 
   @Bean
@@ -58,23 +58,23 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    AuthenticationManager authenticationManager = authenticationManager(http.getSharedObject(AuthenticationConfiguration.class));
     http.csrf(csrf -> csrf.disable())
         .formLogin(form -> form
             .loginPage("/req/login")
-            .successHandler(formLoginConfig().customAuthenticationSuccessHandler())
-            .failureHandler(formLoginConfig().customAuthenticationFailureHandler())
+            .successHandler(securityHandler(authenticationManager).loginSuccessHandler())
+            .failureHandler(securityHandler(authenticationManager).loginFailureHandler())
             .permitAll())
-        .authorizeHttpRequests(auth -> auth
+          .authorizeHttpRequests(auth -> auth
             .requestMatchers("/req/signup", "/req/login", "/css/**", "/js/**").permitAll()
-            .requestMatchers("/index", "/user").authenticated()
-            .anyRequest().denyAll())
+            .requestMatchers("/index", "/user").hasRole("USER")
+            .anyRequest().authenticated())
         .logout(logout -> logout
             .logoutUrl("/logout")
             .invalidateHttpSession(true)
             .clearAuthentication(true)
             .deleteCookies("JSESSIONID")
-            .logoutSuccessUrl("/req/login")
-            .logoutSuccessHandler(userLogoutConfig.customLogoutSuccessHandler()));
+            .logoutSuccessHandler(securityHandler(authenticationManager).logoutSuccessHandler()));
     return http.build();
   }
 }

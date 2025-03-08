@@ -29,6 +29,8 @@ import lombok.Setter;
 @Table(name = "users")
 public class UserModel implements UserDetails {
 
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -47,10 +49,12 @@ public class UserModel implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+        return roles.stream()
+            .map(role -> new SimpleGrantedAuthority(role))
+            .collect(Collectors.toList());
     }
 
-    // other getters and setters
+    // OTHER GETTERS + SETTERS
 
     @Override
     public String getPassword() {

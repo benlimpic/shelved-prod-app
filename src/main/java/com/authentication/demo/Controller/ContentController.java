@@ -3,14 +3,11 @@ package com.authentication.demo.Controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.authentication.demo.logger.AuthenticationLogger;
-
 @Controller
 public class ContentController {
 
   @GetMapping("/req/login")
   public String login() {
-    AuthenticationLogger.logAuthenticationDetails();
     return "login";
   }
 
@@ -20,7 +17,7 @@ public class ContentController {
   }
 
   @GetMapping("/index")
-  public String home() {
+  public String index() {
     return "index";
   }
 

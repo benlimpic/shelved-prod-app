@@ -30,13 +30,17 @@ public class RegistrationController {
   @PostMapping("/signup")
   public String postUser(@RequestParam Map<String, String> userDetails) {
 
+    // POST USER
     userService.postUser(userDetails);
 
+    // AUTHENTICATE USER
     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails.get("username"),
         userDetails.get("password"));
     Authentication authentication = authenticationManager.authenticate(authToken);
     SecurityContextHolder.getContext().setAuthentication(authentication);
 
+    // LOG REGISTRATION
+    AuthenticationLogger.log("User " + authentication.getName() + " registered successfully.");
     AuthenticationLogger.logAuthenticationDetails();
 
     return "index";

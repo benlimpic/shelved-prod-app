@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -30,33 +31,32 @@ public class UserService implements UserDetailsService {
   private final PasswordEncoder passwordEncoder;
   private final AuthenticationManager authenticationManager;
 
-
-  public UserService(UserRepository repository, @Lazy PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
+  public UserService(UserRepository repository, @Lazy PasswordEncoder passwordEncoder,
+      AuthenticationManager authenticationManager) {
     this.repository = repository;
     this.passwordEncoder = passwordEncoder;
     this.authenticationManager = authenticationManager;
   }
 
-
-  // LOAD USER BY USERNAME
+  // LOAD USER AND CREATE USERDETAILS OBJECT
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    // Fetch user from database
     Optional<UserModel> user = repository.findByUsername(username);
     if (user.isEmpty()) {
-      throw new UsernameNotFoundException("User not found");
+      throw new UsernameNotFoundException("User not found with username: " + username);
     }
 
-    // RETURN USER DETAILS
-    return User.withUsername(user.get().getUsername())
-        .password(user.get().getPassword())
-        .authorities(user.get().getRoles().isEmpty() ? List.of(new SimpleGrantedAuthority("USER"))
-            : user.get().getRoles().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()))
-        .build();
+    // CONVERT ROLES TO GRANTEDAUTHORITY OBJECT
+    List<GrantedAuthority> authorities = user.get().getRoles().stream()
+        .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+        .collect(Collectors.toList());
+
+    // CREATE USERDETAILS OBJECT
+    return new User(user.get().getUsername(), user.get().getPassword(), authorities);
   }
 
   // POST METHOD TO CREATE NEW USER
-  public void postUser(Map<String, String> params) {
+  public String postUser(Map<String, String> params) {
     // GET FORM DATA PARAMS
     String username = params.get("username");
     String email = params.get("email");
@@ -95,11 +95,12 @@ public class UserService implements UserDetailsService {
     user.setPassword(passwordEncoder.encode(password));
     user.setRoles(Collections.singletonList("USER"));
     repository.save(user);
-    
 
     // Authenticate new user
     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
     Authentication authentication = authenticationManager.authenticate(authToken);
     SecurityContextHolder.getContext().setAuthentication(authentication);
+
+    return "index";
   }
 }
