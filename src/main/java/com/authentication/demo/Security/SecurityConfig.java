@@ -21,15 +21,11 @@ import com.authentication.demo.Service.UserService;
 public class SecurityConfig {
 
   private final UserService userService;
+  private final SecurityHandler securityHandler;
 
-  // CONSTRUCTOR
-  public SecurityConfig(@Lazy UserService userService) {
+  public SecurityConfig(@Lazy UserService userService, SecurityHandler securityHandler) {
     this.userService = userService;
-  }
-
-  // LOGIN / LOGOUT ROUTING AND ERROR HANDLING
-  private SecurityHandler securityHandler(AuthenticationManager authenticationManager) {
-    return new SecurityHandler(userService, authenticationManager);
+    this.securityHandler = securityHandler;
   }
 
   @Bean
@@ -58,23 +54,22 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    AuthenticationManager authenticationManager = authenticationManager(http.getSharedObject(AuthenticationConfiguration.class));
     http.csrf(csrf -> csrf.disable())
         .formLogin(form -> form
-            .loginPage("/req/login")
-            .successHandler(securityHandler(authenticationManager).loginSuccessHandler())
-            .failureHandler(securityHandler(authenticationManager).loginFailureHandler())
+            .loginPage("/login")
+            .successHandler(securityHandler.loginSuccessHandler())
+            .failureHandler(securityHandler.loginFailureHandler())
             .permitAll())
-          .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/req/signup", "/req/login", "/css/**", "/js/**").permitAll()
-            .requestMatchers("/index", "/user").hasRole("USER")
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/signup", "/login", "/css/**", "/js/**").permitAll()
+            .requestMatchers("/index", "/profile").hasRole("USER")
             .anyRequest().authenticated())
         .logout(logout -> logout
             .logoutUrl("/logout")
             .invalidateHttpSession(true)
             .clearAuthentication(true)
             .deleteCookies("JSESSIONID")
-            .logoutSuccessHandler(securityHandler(authenticationManager).logoutSuccessHandler()));
+            .logoutSuccessHandler(securityHandler.logoutSuccessHandler()));
     return http.build();
   }
 }

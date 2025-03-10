@@ -34,25 +34,40 @@ public class UserModel implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    @Column(name = "username", unique = true)
-    private String username;
-
+    
     @Column(name = "email", unique = true)
     private String email;
 
     @Column(name = "password")
     private String password;
-
+    
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;
-
+    
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()
-            .map(role -> new SimpleGrantedAuthority(role))
-            .collect(Collectors.toList());
+        .map(role -> new SimpleGrantedAuthority(role))
+        .collect(Collectors.toList());
     }
+    
+    @Column(name = "username", unique = true)
+    private String username;
+
+    @Column(name = "profilePicture")
+    private String profilePicture;
+    
+    @Column(name = "firstName")
+    private String firstName;
+
+    @Column(name = "lastName")
+    private String lastName;
+
+    @Column(name = "birthday")
+    private String birthday;
+
+    @Column(name = "aboutMe")
+    private String aboutMe;
 
     // OTHER GETTERS + SETTERS
 

@@ -2,17 +2,13 @@ package com.authentication.demo.Security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
-import com.authentication.demo.Service.UserService;
 import com.authentication.demo.logger.AuthenticationLogger;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,13 +17,6 @@ import jakarta.servlet.http.HttpServletResponse;
 @Configuration
 public class SecurityHandler {
 
-    private final UserService userService;
-    private final AuthenticationManager authenticationManager;
-
-    public SecurityHandler(UserService userService, AuthenticationManager authenticationManager) {
-        this.userService = userService;
-        this.authenticationManager = authenticationManager;
-    }
 
     @Bean
     public AuthenticationSuccessHandler loginSuccessHandler() {
@@ -35,9 +24,6 @@ public class SecurityHandler {
             // LOGIN SUCCESS HANDLING
             String username = request.getParameter("username");
             String password = request.getParameter("password");
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
-            Authentication auth = authenticationManager.authenticate(authToken);
-            SecurityContextHolder.getContext().setAuthentication(auth);
 
             AuthenticationLogger.log("Login successful: " + authentication.getName());
             AuthenticationLogger.logAuthenticationDetails();
@@ -54,7 +40,7 @@ public class SecurityHandler {
             }
             AuthenticationLogger.log("Login failed");
             AuthenticationLogger.logAuthenticationDetails();
-            response.sendRedirect("/req/login?error=true");
+            response.sendRedirect("/login?error=true");
         };
     }
 
@@ -64,7 +50,7 @@ public class SecurityHandler {
             // LOGOUT SUCCESS HANDLING
             AuthenticationLogger.log("Logout successful");
             AuthenticationLogger.logAuthenticationDetails();
-            response.sendRedirect("/req/login");
+            response.sendRedirect("/login?logout=true");
         };
     }
 }
