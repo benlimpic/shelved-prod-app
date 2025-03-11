@@ -41,6 +41,21 @@ public class UserModel implements UserDetails {
     @Column(name = "password")
     private String password;
     
+    @Column(name = "username", unique = true)
+    private String username;
+    
+    @Column(name = "profile_picture")
+    private byte[] profilePicture;
+    
+    @Column(name = "first_name")
+    private String firstName;
+    
+    @Column(name = "last_name")
+    private String lastName;
+    
+    @Column(name = "about_me")
+    private String aboutMe;
+    
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;
     
@@ -50,24 +65,6 @@ public class UserModel implements UserDetails {
         .map(role -> new SimpleGrantedAuthority(role))
         .collect(Collectors.toList());
     }
-    
-    @Column(name = "username", unique = true)
-    private String username;
-
-    @Column(name = "profilePicture")
-    private String profilePicture;
-    
-    @Column(name = "firstName")
-    private String firstName;
-
-    @Column(name = "lastName")
-    private String lastName;
-
-    @Column(name = "birthday")
-    private String birthday;
-
-    @Column(name = "aboutMe")
-    private String aboutMe;
 
     // OTHER GETTERS + SETTERS
 

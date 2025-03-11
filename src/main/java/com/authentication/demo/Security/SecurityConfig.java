@@ -54,22 +54,20 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http.csrf(csrf -> csrf.disable())
-        .formLogin(form -> form
-            .loginPage("/login")
-            .successHandler(securityHandler.loginSuccessHandler())
-            .failureHandler(securityHandler.loginFailureHandler())
-            .permitAll())
+    http
+    .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/signup", "/login", "/css/**", "/js/**").permitAll()
             .requestMatchers("/index", "/profile").hasRole("USER")
             .anyRequest().authenticated())
+        .formLogin(form -> form
+            .loginPage("/login")
+            .permitAll())
         .logout(logout -> logout
             .logoutUrl("/logout")
             .invalidateHttpSession(true)
             .clearAuthentication(true)
-            .deleteCookies("JSESSIONID")
-            .logoutSuccessHandler(securityHandler.logoutSuccessHandler()));
+            .deleteCookies("JSESSIONID"));
     return http.build();
   }
 }

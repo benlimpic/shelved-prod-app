@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,34 +17,36 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.authentication.demo.Model.CustomUserDetails;
 import com.authentication.demo.Model.UserModel;
 import com.authentication.demo.Repository.UserRepository;
 
 @Service
 public class UserService implements UserDetailsService {
 
-    private final UserRepository repository;
-    private final PasswordEncoder passwordEncoder;
-    private AuthenticationManager authenticationManager;
+  private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    public UserService(UserRepository repository, @Lazy PasswordEncoder passwordEncoder) {
-        this.repository = repository;
-        this.passwordEncoder = passwordEncoder;
-    }
+  private final UserRepository repository;
+  private final PasswordEncoder passwordEncoder;
+  private AuthenticationManager authenticationManager;
+  private final UserDetailsService userDetailsService;
+  public UserService(UserRepository repository, @Lazy PasswordEncoder passwordEncoder, UserDetailsService userDetailsService) {
+    this.repository = repository;
+    this.passwordEncoder = passwordEncoder;
+    this.userDetailsService = userDetailsService;
+  }
 
-    @Lazy
-    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
-    }
+  @Lazy
+  public void setAuthenticationManager(AuthenticationManager authenticationManager) {
+    this.authenticationManager = authenticationManager;
+  }
 
-  // LOAD USER AND CREATE USERDETAILS OBJECT
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     Optional<UserModel> user = repository.findByUsername(username);
@@ -50,100 +54,63 @@ public class UserService implements UserDetailsService {
       throw new UsernameNotFoundException("User not found with username: " + username);
     }
 
-    // CONVERT ROLES TO GRANTEDAUTHORITY OBJECT
     List<GrantedAuthority> authorities = user.get().getRoles().stream()
         .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
         .collect(Collectors.toList());
 
-    // CREATE USERDETAILS OBJECT
-    return new User(user.get().getUsername(), user.get().getPassword(), authorities);
-  }
+    byte[] profilePicture = user.get().getProfilePicture();
+    Byte[] profilePictureBytes = null;
+    if (profilePicture != null) {
+      profilePictureBytes = new Byte[profilePicture.length];
+      for (int i = 0; i < profilePicture.length; i++) {
+        profilePictureBytes[i] = profilePicture[i];
+      }
+    }
 
+    return new CustomUserDetails(
+        user.get().getUsername(),
+        user.get().getPassword(),
+        user.get().getEmail(),
+        user.get().getFirstName(),
+        user.get().getLastName(),
+        user.get().getAboutMe(),
+        user.get().getProfilePicture(),
+        authorities);
+  }
 
   // UPDATE USERNAME
-  public String updateUsername(String username, String newUsername) {
-    Optional<UserModel> user = repository.findByUsername(username);
-    if (user.isEmpty()) {
-      throw new UsernameNotFoundException("User not found with username: " + username);
+
+  public String updateUsername(String newUsername) {
+    Optional<UserModel> existingUser = repository.findByUsername(newUsername);
+    if (existingUser.isPresent()) {
+      return "Username already exists";
     }
 
-    Optional<UserModel> userNew = repository.findByUsername(newUsername);
-    if (userNew.isPresent()) {
-      throw new IllegalArgumentException("Username already exists");
-    }
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+      UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+      String currentUsername = userDetails.getUsername();
 
-    user.get().setUsername(newUsername);
-    repository.save(user.get());
-    return "profile";
+      Optional<UserModel> user = repository.findByUsername(currentUsername);
+      if (user.isPresent()) {
+        UserModel userModel = user.get();
+        userModel.setUsername(newUsername);
+        repository.save(userModel);
+
+        // Re-authenticate the user with the new username
+        UserDetails updatedUserDetails = userDetailsService.loadUserByUsername(newUsername);
+        Authentication newAuth = new UsernamePasswordAuthenticationToken(updatedUserDetails,
+            authentication.getCredentials(), updatedUserDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(newAuth);
+
+        return "Username updated successfully";
+      } else {
+        return "User not found";
+      }
+    } else {
+      return "No authenticated user found";
+    }
   }
-
-
-  // UPDATE EMAIL
-  public String updateEmail(String email, String newEmail) {
-    Optional<UserModel> user = repository.findByEmail(email);
-    if (user.isEmpty()) {
-      throw new UsernameNotFoundException("User not found with email: " + email);
-    }
-
-    Optional<UserModel> userNew = repository.findByEmail(newEmail);
-    if (userNew.isPresent()) {
-      throw new IllegalArgumentException("Email already exists");
-    }
-
-    user.get().setEmail(newEmail);
-    repository.save(user.get());
-    return "profile";
-  }
-
-
-  // UPDATE PASSWORD
-  public String updatePassword(String username, String password, String newPassword, String newConfirmPassword) {
-    Optional<UserModel> user = repository.findByUsername(username);
-    if (user.isEmpty()) {
-      throw new UsernameNotFoundException("User not found with username: " + username);
-    }
-
-    if (!passwordEncoder.matches(password, user.get().getPassword())) {
-      throw new IllegalArgumentException("Incorrect password");
-    }
-
-    if (!newPassword.equals(newConfirmPassword)) {
-      throw new IllegalArgumentException("Passwords do not match");
-    }
-
-    user.get().setPassword(passwordEncoder.encode(newPassword));
-    repository.save(user.get());
-    return "profile";
-  }
-
-  // UPDATE PROFILE PICTURE
-  public String updateProfilePicture(String username, String profilePicture) {
-    Optional<UserModel> user = repository.findByUsername(username);
-    if (user.isEmpty()) {
-      throw new UsernameNotFoundException("User not found with username: " + username);
-    }
-
-    user.get().setProfilePicture(profilePicture);
-    repository.save(user.get());
-    return "profile";
-  }
-
-
-  // UPDATE USER DETAILS
-  public String updateUserDetails(String username, String firstName, String lastName, String birthday, String aboutMe) {
-    Optional<UserModel> user = repository.findByUsername(username);
-    if (user.isEmpty()) {
-      throw new UsernameNotFoundException("User not found with username: " + username);
-    }
-
-    user.get().setFirstName(firstName);
-    user.get().setLastName(lastName);
-    user.get().setBirthday(birthday);
-    user.get().setAboutMe(aboutMe);
-    repository.save(user.get());
-    return "profile";
-  }
-
 
   // CREATE NEW USER
   public Map<String, String> postUser(Map<String, String> params) {
@@ -160,23 +127,23 @@ public class UserService implements UserDetailsService {
         email == null || email.isEmpty() ||
         password == null || password.isEmpty() ||
         confirmPassword == null || confirmPassword.isEmpty()) {
-        errors.add("All fields are required");
+      errors.add("All fields are required");
     }
     if (userUsername.isPresent()) {
-        errors.add("Username already exists");
+      errors.add("Username already exists");
     }
     if (userEmail.isPresent()) {
-        errors.add("Email already exists");
+      errors.add("Email already exists");
     }
     if (!password.equals(confirmPassword)) {
-        errors.add("Passwords do not match");
+      errors.add("Passwords do not match");
     }
 
     if (!errors.isEmpty()) {
-        Map<String, String> result = new HashMap<>();
-        result.put("status", "error");
-        result.put("message", String.join(", ", errors));
-        return result;
+      Map<String, String> result = new HashMap<>();
+      result.put("status", "error");
+      result.put("message", String.join(", ", errors));
+      return result;
     }
 
     UserModel user = new UserModel();
@@ -190,31 +157,21 @@ public class UserService implements UserDetailsService {
     result.put("status", "success");
     result.put("message", "User registered successfully");
     return result;
-}
-
+  }
 
   // LOGIN USER
-  public String login(Map<String, String> params) {
+  public void login(Map<String, String> params) {
     // GET FORM DATA PARAMS
     String username = params.get("username");
     String password = params.get("password");
 
-
-    // AUTHENTICATE USER
-    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
-    Authentication authentication = authenticationManager.authenticate(authToken);
-    SecurityContextHolder.getContext().setAuthentication(authentication);
-
-    return "index";
   }
 
-
-  //LOGOUT USER
+  // LOGOUT USER
   public String logout() {
     SecurityContextHolder.clearContext();
     return "login";
   }
-
 
   // DELETE USER
   public String deleteUser(String username) {
@@ -222,7 +179,6 @@ public class UserService implements UserDetailsService {
     if (user.isEmpty()) {
       throw new UsernameNotFoundException("User not found with username: " + username);
     }
-
     repository.delete(user.get());
     return "signup";
   }

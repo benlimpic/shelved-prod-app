@@ -2,13 +2,15 @@ package com.authentication.demo.Controller;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -16,7 +18,7 @@ import com.authentication.demo.Service.UserService;
 
 @Controller
 public class UserController {
-
+  private static final Logger logger = LoggerFactory.getLogger(UserController.class);
   private final UserService userService;
   private final AuthenticationManager authenticationManager;
 
@@ -24,7 +26,6 @@ public class UserController {
     this.userService = userService;
     this.authenticationManager = authenticationManager;
   }
-
 
   @PostMapping("/signup")
   public String createUser(@RequestParam Map<String, String> userDetails, RedirectAttributes redirectAttributes) {
@@ -39,29 +40,32 @@ public class UserController {
     return "redirect:/login";
   }
 
-  @PutMapping("/update_user_details")
-  public String updateUser(@RequestBody Map<String, String> userDetails) {
-    return "profile";
+
+  @PostMapping("/update_username")
+  public String updateUsername(@RequestParam String username, RedirectAttributes redirectAttributes) {
+      String result = userService.updateUsername(username);
+      if ("Username updated successfully".equals(result)) {
+          redirectAttributes.addFlashAttribute("message", result);
+      } else {
+          redirectAttributes.addFlashAttribute("error", result);
+      }
+      return "redirect:/profile";
   }
 
-  @PutMapping("/update_password")
-  public String updatePassword(@RequestBody Map<String, String> userDetails) {
-    return "profile";
-  }
-
-  @PutMapping("/update_username")
-  public String updateUsername(@RequestBody Map<String, String> userDetails) {
-    return "profile";
-  }
-
-  @PutMapping("/update_email")
-  public String updateEmail(@RequestBody Map<String, String> userDetails) {
-    return "profile";
-  }
 
   @PostMapping("/login")
-  public String login() {
-    return "index";
+  public String login(@RequestParam String username, @RequestParam String password,
+      RedirectAttributes redirectAttributes) {
+    try {
+      authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+      return "redirect:/profile";
+    } catch (AuthenticationException e) {
+      redirectAttributes.addFlashAttribute("error", "Invalid username or password");
+      return "redirect:/login";
+    } catch (Exception e) {
+      redirectAttributes.addFlashAttribute("error", "An unexpected error occurred");
+      return "redirect:/login";
+    }
   }
 
   @PostMapping("/logout")
@@ -73,4 +77,5 @@ public class UserController {
   public String deleteUser() {
     return "login";
   }
+
 }

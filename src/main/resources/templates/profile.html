@@ -1,73 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
   <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Login</title>
-    <script
-      type="module"
-      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
-    ></script>
-    <script
-      nomodule
-      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
-    ></script>
-    <link rel="stylesheet" href="/css/style.css" />
-    <script src="/js/signup.js" defer></script>
+    <title>User Profile</title>
   </head>
   <body>
-      <section>
+    <h1>User Profile</h1>
+
+    <!-- Display success and error messages -->
+    <div th:if="${message}" th:text="${message}" style="color: green;"></div>
+    <div th:if="${error}" th:text="${error}" style="color: red;"></div>
+
+    <!-- Display user details -->
+    <div>
+        <p>Username: <span th:text="${user.username}"></span></p>
+        <p>Email: <span th:text="${user.email}"></span></p>
+        <p>Name: <span th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span></p>
+        <p>About Me: <span th:text="${user.aboutMe}"></span></p>
+    </div>
+
+    <!-- Form to update username -->
+    <form th:action="@{/update_username}" method="post">
         <div>
-          <h2>User Details</h2>
-          <image th:src="${user.profilePicture}" alt="Profile Picture"></image>
-          <h5>Username: <span th:text="${user.username}"></span></h5>
-          <h5>Email: <span th:text="${user.email}"></span></h5>
-          <h5>Name: <span th:text="|${user.firstName} ${user.lastName}|"></span></h5>
-          <h5>Birthday: <span th:text="${user.birthday}"></span></h5>
-          <h5>About Me: <span th:text="${user.aboutMe}"></span></h5>
+            <label for="username">New Username:</label>
+            <input type="text" id="username" name="username" required>
         </div>
-
         <div>
-          <form acction="/users" method="put">
-            <h1>Update User Details</h1>
-            
-            <div class="dialog-row
-            ">
-              <label
-              th:if="${param.error}"
-              th:text="${session['error']}"
-              style="text-align: center; color: red"
-              ></label>
-            </div>
-
-            <div class="inputbox">
-              <ion-icon name="person-outline"></ion-icon>
-              <input type="text" id="firstName" name="firstName"/>
-              <label for="firstName">First Name</label>
-            </div>
-            
-            <div class="inputbox">
-              <ion-icon name="person-outline"></ion-icon>
-              <input type="text" id="lastName" name="lastName"/>
-              <label for="lastName">Last Name</label>
-            </div>
-            
-            <div class="inputbox">
-              <ion-icon name="person-outline"></ion-icon>
-              <input type="date" id="birthday" name="birthday" />
-              <label for="birthday">Birthday</label>
-            </div>
-            
-            <div class="inputbox">
-              <ion-icon name="person-outline"></ion-icon>
-              <input type="text" id="aboutMe" name="aboutMe" />
-              <label for="aboutMe">About Me</label>
-            </div>
-
-            <button type="submit">Update User Info</button>
-          </form>
+            <button type="submit">Update Username</button>
         </div>
-      </section>
-    </body>
+    </form>
   </body>
 </html>
