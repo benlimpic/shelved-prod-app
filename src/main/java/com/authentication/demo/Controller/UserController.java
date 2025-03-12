@@ -111,6 +111,19 @@ public class UserController {
     }
   }
 
+  @PostMapping("/update_user_details")
+  public String updateUserDetails(@RequestParam Map<String, String> userDetails,
+      RedirectAttributes redirectAttributes) {
+    String result = userService.updateUserDetails(userDetails);
+    if ("User details updated successfully".equals(result)) {
+      redirectAttributes.addFlashAttribute("message", result);
+      return "redirect:/profile";
+    } else {
+      redirectAttributes.addFlashAttribute("error", result);
+      return "redirect:/profile";
+    }
+  }
+
   @DeleteMapping("/delete")
   public String deleteUser() {
     return "login";

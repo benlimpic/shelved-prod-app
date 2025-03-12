@@ -120,7 +120,6 @@ public class UserService implements UserDetailsService {
   }
 
   // UPDATE EMAIL
-
   public String updateEmail(String newEmail, String confirmNewEmail) {
     if (!newEmail.equals(confirmNewEmail)) {
       return "New emails do not match";
@@ -145,7 +144,6 @@ public class UserService implements UserDetailsService {
   }
 
   // UPDATE PASSWORD
-
   public String updatePassword(String currentPassword, String newPassword, String confirmNewPassword) {
     if (!newPassword.equals(confirmNewPassword)) {
       return "New passwords do not match";
@@ -168,6 +166,28 @@ public class UserService implements UserDetailsService {
       } else {
         return "Current password is incorrect";
       }
+    } else {
+      return "No authenticated user found";
+    }
+  }
+
+  //UPDATE USER DETAILS
+  public String updateUserDetails(Map<String, String> params) {
+    Optional<UserModel> user = getCurrentUser();
+    if (user.isPresent()) {
+      UserModel userModel = user.get();
+      userModel.setFirstName(params.get("firstName"));
+      userModel.setLastName(params.get("lastName"));
+      userModel.setBiography(params.get("biography"));
+      repository.save(userModel);
+
+      // Re-authenticate the user with the updated details
+      UserDetails updatedUserDetails = userDetailsService.loadUserByUsername(userModel.getUsername());
+      Authentication newAuth = new UsernamePasswordAuthenticationToken(updatedUserDetails, null,
+          updatedUserDetails.getAuthorities());
+      SecurityContextHolder.getContext().setAuthentication(newAuth);
+
+      return "User details updated successfully";
     } else {
       return "No authenticated user found";
     }
@@ -235,6 +255,7 @@ public class UserService implements UserDetailsService {
     return "login";
   }
 
+  //UPDATE PROFILE PICTURE
   public String updateProfilePicture(MultipartFile profilePicture) {
     if (profilePicture.isEmpty()) {
       return "Profile picture is empty";
@@ -263,6 +284,7 @@ public class UserService implements UserDetailsService {
     }
   }
 
+  //SAVE PROFILE PICTURE
   private String saveProfilePicture(MultipartFile profilePicture) throws IOException {
     // Create the directory if it doesn't exist
     File directory = new File("profile-pictures");
@@ -270,7 +292,7 @@ public class UserService implements UserDetailsService {
       directory.mkdirs();
     }
 
-    // Generate a unique filename
+    // GENERATE A UNIQUE FILENAME
     String filename = UUID.randomUUID().toString() + "-" + profilePicture.getOriginalFilename();
     File file = new File(directory, filename);
 
@@ -279,10 +301,11 @@ public class UserService implements UserDetailsService {
       fos.write(profilePicture.getBytes());
     }
 
-    // Return the URL to the saved file
+    // RETURN IMAGE URL
     return "/profile-pictures/" + filename;
   }
 
+  //GET DEFAULT PROFILE PICTURE
   public String getDefaultProfilePictureUrl() {
     return "/profile-pictures/default-profile-photo.png";
   }
