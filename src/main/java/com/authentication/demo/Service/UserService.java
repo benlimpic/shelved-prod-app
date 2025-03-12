@@ -171,7 +171,7 @@ public class UserService implements UserDetailsService {
     }
   }
 
-  //UPDATE USER DETAILS
+  // UPDATE USER DETAILS
   public String updateUserDetails(Map<String, String> params) {
     Optional<UserModel> user = getCurrentUser();
     if (user.isPresent()) {
@@ -255,7 +255,7 @@ public class UserService implements UserDetailsService {
     return "login";
   }
 
-  //UPDATE PROFILE PICTURE
+  // UPDATE PROFILE PICTURE
   public String updateProfilePicture(MultipartFile profilePicture) {
     if (profilePicture.isEmpty()) {
       return "Profile picture is empty";
@@ -284,7 +284,7 @@ public class UserService implements UserDetailsService {
     }
   }
 
-  //SAVE PROFILE PICTURE
+  // SAVE PROFILE PICTURE
   private String saveProfilePicture(MultipartFile profilePicture) throws IOException {
     // Create the directory if it doesn't exist
     File directory = new File("profile-pictures");
@@ -305,7 +305,7 @@ public class UserService implements UserDetailsService {
     return "/profile-pictures/" + filename;
   }
 
-  //GET DEFAULT PROFILE PICTURE
+  // GET DEFAULT PROFILE PICTURE
   public String getDefaultProfilePictureUrl() {
     return "/profile-pictures/default-profile-photo.png";
   }
@@ -313,10 +313,11 @@ public class UserService implements UserDetailsService {
   // DELETE USER
   public String deleteUser(String username) {
     Optional<UserModel> user = repository.findByUsername(username);
-    if (user.isEmpty()) {
-      throw new UsernameNotFoundException("User not found with username: " + username);
+    if (user.isPresent()) {
+      repository.delete(user.get());
+      return "User deleted successfully";
+    } else {
+      return "User not found";
     }
-    repository.delete(user.get());
-    return "signup";
   }
 }

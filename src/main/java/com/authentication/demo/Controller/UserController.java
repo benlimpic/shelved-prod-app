@@ -9,7 +9,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -124,9 +123,16 @@ public class UserController {
     }
   }
 
-  @DeleteMapping("/delete")
-  public String deleteUser() {
-    return "login";
-  }
+    @PostMapping("/delete_user")
+    public String deleteUser(@RequestParam String username, RedirectAttributes redirectAttributes) {
+        String result = userService.deleteUser(username);
+        if ("User deleted successfully".equals(result)) {
+            redirectAttributes.addFlashAttribute("message", result);
+            return "redirect:/login";
+        } else {
+            redirectAttributes.addFlashAttribute("error", result);
+            return result;
+        }
+    }
 
 }

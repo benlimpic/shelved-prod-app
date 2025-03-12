@@ -2,8 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
     <title>User Profile</title>
+    <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body>
+    <section>
+      <div>
     <h1>User Profile</h1>
 
     <!-- SUCCESS / ERROR -->
@@ -106,7 +109,17 @@
           <button type="submit">Update User Details</button>
         </div>
       </form>
-    </div>
+      </div>
 
+      <div>
+        <h2>Delete User</h2>
+        <form th:action="@{/delete_user}" method="post">
+          <input type="hidden" name="username" th:value="${user.username}" />
+          <button type="submit">Delete</button>
+        </form>
+      </div>
+    </div>
+    </section>
   </body>
+
 </html>
