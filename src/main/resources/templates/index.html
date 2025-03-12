@@ -19,10 +19,19 @@
   <body>
     <section>
       <div>
-        <div>
-          <ion-icon name="checkmark-circle-outline"></ion-icon>
-          <a href="/profile">Profile</a>
-        </div>
+      <nav>
+        <tr>
+          <td>
+            <a href="/index">Home</a>
+          </td>
+          <td>
+            <a href="/profile">Profile</a>
+          </td>
+          <td>
+            <a href="/logout">Logout</a>
+          </td>
+        </tr>
+      </nav>
         <form name="logoutForm" th:action="@{/logout}" method="post">
           <h1>Congratulations!</h1>
           <h4>There is only one thing left to do...</h4>

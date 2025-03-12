@@ -27,6 +27,7 @@ public class UserController {
     this.authenticationManager = authenticationManager;
   }
 
+  // CREATE USER
   @PostMapping("/signup")
   public String createUser(@RequestParam Map<String, String> userDetails,
       RedirectAttributes redirectAttributes) {
@@ -42,6 +43,7 @@ public class UserController {
     return "redirect:/login";
   }
 
+  // LOGIN USER
   @PostMapping("/login")
   public String login(@RequestParam String username, @RequestParam String password,
       RedirectAttributes redirectAttributes) {
@@ -57,11 +59,13 @@ public class UserController {
     }
   }
 
+  // LOGOUT USER
   @PostMapping("/logout")
   public String logout() {
     return "login";
   }
 
+  // UPDATE USER USERNAME
   @PostMapping("/update_username")
   public String updateUsername(@RequestParam String username, RedirectAttributes redirectAttributes) {
     String result = userService.updateUsername(username);
@@ -73,6 +77,7 @@ public class UserController {
     return "redirect:/profile";
   }
 
+  // UPDATE USER EMAIL
   @PostMapping("/update_email")
   public String updateEmail(@RequestParam String newEmail, @RequestParam String confirmNewEmail,
       RedirectAttributes redirectAttributes) {
@@ -85,6 +90,7 @@ public class UserController {
     return "redirect:/profile";
   }
 
+  // UPDATE USER PASSWORD
   @PostMapping("/update_password")
   public String updatePassword(@RequestParam String currentPassword, @RequestParam String newPassword,
       @RequestParam String confirmNewPassword, RedirectAttributes redirectAttributes) {
@@ -97,6 +103,7 @@ public class UserController {
     return "redirect:/profile";
   }
 
+  // UPDATE USER PROFILE PICTURE
   @PostMapping("/update_profile_picture")
   public String updateProfilePicture(@RequestParam("profilePicture") MultipartFile profilePicture,
       RedirectAttributes redirectAttributes) {
@@ -110,6 +117,7 @@ public class UserController {
     }
   }
 
+  // UPDATE USER DETAILS
   @PostMapping("/update_user_details")
   public String updateUserDetails(@RequestParam Map<String, String> userDetails,
       RedirectAttributes redirectAttributes) {
@@ -123,16 +131,17 @@ public class UserController {
     }
   }
 
-    @PostMapping("/delete_user")
-    public String deleteUser(@RequestParam String username, RedirectAttributes redirectAttributes) {
-        String result = userService.deleteUser(username);
-        if ("User deleted successfully".equals(result)) {
-            redirectAttributes.addFlashAttribute("message", result);
-            return "redirect:/login";
-        } else {
-            redirectAttributes.addFlashAttribute("error", result);
-            return result;
-        }
+  // DELETE USER
+  @PostMapping("/delete_user")
+  public String deleteUser(@RequestParam String username, RedirectAttributes redirectAttributes) {
+    String result = userService.deleteUser(username);
+    if ("User deleted successfully".equals(result)) {
+      redirectAttributes.addFlashAttribute("message", result);
+      return "redirect:/login";
+    } else {
+      redirectAttributes.addFlashAttribute("error", result);
+      return result;
     }
+  }
 
 }
