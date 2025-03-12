@@ -6,27 +6,86 @@
   <body>
     <h1>User Profile</h1>
 
-    <!-- Display success and error messages -->
+    <!-- SUCCESS / ERROR -->
     <div th:if="${message}" th:text="${message}" style="color: green;"></div>
     <div th:if="${error}" th:text="${error}" style="color: red;"></div>
 
-    <!-- Display user details -->
-    <div>
+    <!-- USER DETAILS -->
+      <div>
+        <h2>User Details</h2>
         <p>Username: <span th:text="${user.username}"></span></p>
         <p>Email: <span th:text="${user.email}"></span></p>
         <p>Name: <span th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span></p>
-        <p>About Me: <span th:text="${user.aboutMe}"></span></p>
+        <p>Biography: <span th:text="${user.biography}"></span></p>
+        <p>Profile Picture: <img th:src="${user.profilePictureUrl}" alt="Profile Picture" /></p>
+      </div>
+
+
+    <!-- UPDATE USERNAME FORM-->
+     <div>
+      <h2>Update Username</h2>
+      <form th:action="@{/update_username}" method="post">
+        <div>
+          <label for="username">New Username:</label>
+          <input type="text" id="username" name="username" required>
+        </div>
+        <div>
+          <button type="submit">Update Username</button>
+        </div>
+      </form>
     </div>
 
-    <!-- Form to update username -->
-    <form th:action="@{/update_username}" method="post">
+    <!-- UPDATE EMAIL FORM-->
+      <div>
+        <h2>Update Email</h2>
+        <form th:action="@{/update_email}" method="post">
+          <div>
+            <label for="newEmail">New Email:</label>
+            <input type="email" id="newEmail" name="newEmail" required>
+          </div>
+          <div>
+            <label for="confirmNewEmail">Confirm New Email:</label>
+            <input type="email" id="confirmNewEmail" name="confirmNewEmail" required>
+          </div>
+          <button type="submit">Update Email</button>
+        </form>
+      <div>
+
+    <!-- UPDATE PASSWORD FORM -->
+     <div>
+      <h2>Update Password</h2>
+      <form th:action="@{/update_password}" method="post">
         <div>
-            <label for="username">New Username:</label>
-            <input type="text" id="username" name="username" required>
+          <label for="currentPassword">Current Password:</label>
+          <input type="password" id="currentPassword" name="currentPassword" required>
         </div>
         <div>
-            <button type="submit">Update Username</button>
+          <label for="newPassword">New Password:</label>
+          <input type="password" id="newPassword" name="newPassword" required>
         </div>
-    </form>
+        <div>
+          <label for="confirmNewPassword">Confirm New Password:</label>
+          <input type="password" id="confirmNewPassword" name="confirmNewPassword" required>
+        </div>
+        <div>
+          <button type="submit">Update Password</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- UPDATE PROFILE PICTURE-->
+    <div>
+      <h2>Update Profile Picture</h2>
+      <form th:action="@{/update_profile_picture}" method="post" enctype="multipart/form-data">
+        <div>
+            <label for="profilePicture">Profile Picture:</label>
+            <input type="file" id="profilePicture" name="profilePicture" required>
+        </div>
+        <div>
+            <button type="submit">Update Profile Picture</button>
+        </div>
+      </form>
+    </div>
+
   </body>
 </html>

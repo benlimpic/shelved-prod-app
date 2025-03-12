@@ -45,7 +45,7 @@ public class UserModel implements UserDetails {
     private String username;
     
     @Column(name = "profile_picture")
-    private byte[] profilePicture;
+    private String profilePictureUrl;
     
     @Column(name = "first_name")
     private String firstName;
@@ -53,8 +53,8 @@ public class UserModel implements UserDetails {
     @Column(name = "last_name")
     private String lastName;
     
-    @Column(name = "about_me")
-    private String aboutMe;
+    @Column(name = "biography")
+    private String biography;
     
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;
@@ -67,6 +67,7 @@ public class UserModel implements UserDetails {
     }
 
     // OTHER GETTERS + SETTERS
+
 
     @Override
     public String getPassword() {

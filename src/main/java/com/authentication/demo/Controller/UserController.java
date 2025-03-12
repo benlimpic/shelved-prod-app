@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.authentication.demo.Service.UserService;
@@ -28,7 +29,9 @@ public class UserController {
   }
 
   @PostMapping("/signup")
-  public String createUser(@RequestParam Map<String, String> userDetails, RedirectAttributes redirectAttributes) {
+  public String createUser(@RequestParam Map<String, String> userDetails,
+      RedirectAttributes redirectAttributes) {
+
     Map<String, String> result = userService.postUser(userDetails);
 
     if ("error".equals(result.get("status"))) {
@@ -39,19 +42,6 @@ public class UserController {
     redirectAttributes.addFlashAttribute("message", result.get("message"));
     return "redirect:/login";
   }
-
-
-  @PostMapping("/update_username")
-  public String updateUsername(@RequestParam String username, RedirectAttributes redirectAttributes) {
-      String result = userService.updateUsername(username);
-      if ("Username updated successfully".equals(result)) {
-          redirectAttributes.addFlashAttribute("message", result);
-      } else {
-          redirectAttributes.addFlashAttribute("error", result);
-      }
-      return "redirect:/profile";
-  }
-
 
   @PostMapping("/login")
   public String login(@RequestParam String username, @RequestParam String password,
@@ -71,6 +61,54 @@ public class UserController {
   @PostMapping("/logout")
   public String logout() {
     return "login";
+  }
+
+  @PostMapping("/update_username")
+  public String updateUsername(@RequestParam String username, RedirectAttributes redirectAttributes) {
+    String result = userService.updateUsername(username);
+    if ("Username updated successfully".equals(result)) {
+      redirectAttributes.addFlashAttribute("message", result);
+    } else {
+      redirectAttributes.addFlashAttribute("error", result);
+    }
+    return "redirect:/profile";
+  }
+
+  @PostMapping("/update_email")
+  public String updateEmail(@RequestParam String newEmail, @RequestParam String confirmNewEmail,
+      RedirectAttributes redirectAttributes) {
+    String result = userService.updateEmail(newEmail, confirmNewEmail);
+    if ("Email updated successfully".equals(result)) {
+      redirectAttributes.addFlashAttribute("message", result);
+    } else {
+      redirectAttributes.addFlashAttribute("error", result);
+    }
+    return "redirect:/profile";
+  }
+
+  @PostMapping("/update_password")
+  public String updatePassword(@RequestParam String currentPassword, @RequestParam String newPassword,
+      @RequestParam String confirmNewPassword, RedirectAttributes redirectAttributes) {
+    String result = userService.updatePassword(currentPassword, newPassword, confirmNewPassword);
+    if ("Password updated successfully".equals(result)) {
+      redirectAttributes.addFlashAttribute("message", result);
+    } else {
+      redirectAttributes.addFlashAttribute("error", result);
+    }
+    return "redirect:/profile";
+  }
+
+  @PostMapping("/update_profile_picture")
+  public String updateProfilePicture(@RequestParam("profilePicture") MultipartFile profilePicture,
+      RedirectAttributes redirectAttributes) {
+    String result = userService.updateProfilePicture(profilePicture);
+    if ("Profile picture updated successfully".equals(result)) {
+      redirectAttributes.addFlashAttribute("message", result);
+      return "redirect:/profile";
+    } else {
+      redirectAttributes.addFlashAttribute("error", result);
+      return "redirect:/profile";
+    }
   }
 
   @DeleteMapping("/delete")

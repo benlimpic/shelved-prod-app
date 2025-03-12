@@ -1,6 +1,16 @@
 spring:
+  web:
+    resources:
+      static-locations: classpath:/static/,file:./profile-pictures/
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 25MB
+      max-request-size: 25MB
+
   datasource:
-    url: jdbc:postgresql://localhost:5432/registration
+    url: "jdbc:postgresql://localhost:5432/registration"
     username: postgres
     password: postgres
 

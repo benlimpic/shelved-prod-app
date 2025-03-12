@@ -7,23 +7,23 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class CustomUserDetails implements UserDetails {
 
-    private final String username;
-    private final String password;
-    private final String email;
-    private final String firstName;
-    private final String lastName;
-    private final String aboutMe; // Use aboutMe property
-    private final byte[] profilePicture; // Use profilePicture property
-    private final Collection<? extends GrantedAuthority> authorities;
+    private String username;
+    private String password;
+    private String email;
+    private String firstName;
+    private String lastName;
+    private String biography;
+    private String profilePictureUrl;
+    private Collection<? extends GrantedAuthority> authorities;
 
-    public CustomUserDetails(String username, String password, String email, String firstName, String lastName, String aboutMe, byte[] profilePicture, Collection<? extends GrantedAuthority> authorities) {
+    public CustomUserDetails(String username, String password, String email, String firstName, String lastName, String biography, String profilePictureUrl, Collection<? extends GrantedAuthority> authorities) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.aboutMe = aboutMe;
-        this.profilePicture = profilePicture;
+        this.biography = biography;
+        this.profilePictureUrl = profilePictureUrl;
         this.authorities = authorities;
     }
 
@@ -39,12 +39,12 @@ public class CustomUserDetails implements UserDetails {
         return lastName;
     }
 
-    public String getAboutMe() {
-        return aboutMe;
+    public String getBiography() {
+        return biography;
     }
 
-    public byte[] getProfilePicture() {
-        return profilePicture;
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
     }
 
     @Override
