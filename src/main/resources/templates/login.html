@@ -2,11 +2,15 @@
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
       <title>Login</title>
-      <link rel="stylesheet" href="/css/style.css" />
+      <link rel="stylesheet" href="/css/output.css" />
   </head>
   <body>
     <section>
       <div>
+        <div>
+          <h1 class="text-3xl font-bold">Welcome to the login page!</h1>
+          <p class="p-2 bg-amber-100">You really are more welcome here!</p>
+        </div>
         <h1>Login</h1>
         <div th:if="${param.error}" style="color: red;">Invalid username or password</div>
         <div th:if="${param.logout}" style="color: green;">You have been logged out</div>
