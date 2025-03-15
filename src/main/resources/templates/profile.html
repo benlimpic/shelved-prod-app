@@ -22,21 +22,24 @@
       </nav>
     </header>
     <div class="container">
-      <div class="card">
-        <div class="headerBox">
-          <h1 class="formHeader">User Profile</h1>
-        </div>
+      <div class="emptyCard">
+      <div class="headerBox">
+        <h1 class="formHeader">User Profile</h1>
+      </div>
+        <!-- USER DETAILS -->
+        <img class="headerImage" th:src="${user.profilePictureUrl}" alt="Profile Picture" />
+        <label>Username: </label>
+        <span class="font-semibold" th:text="${user.username}"></span>
+        <label>Email: </label>
+        <span class="font-semibold" th:text="${user.email}"></span>
+        <label>Name: </label>
         <div>
-
-          <!-- USER DETAILS -->
-          <p>Username: <span th:text="${user.username}"></span></p>
-          <p>Email: <span th:text="${user.email}"></span></p>
-          <p>Name: <span th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span></p>
-          <p>Biography: <span th:text="${user.biography}"></span></p>
-          <p>Profile Picture: <img class="headerImage" th:src="${user.profilePictureUrl}" alt="Profile Picture" /></p>
+          <span class="font-semibold" th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span>
         </div>
-
-
+        <label>Biography: </label>
+        <span class="font-semibold" th:text="${user.biography}"></span>
+      </div>
+      <div class="cardProfile">
         <div th:if="${message}" th:text="${message}" style="color: green;"></div>
         <div th:if="${error}" th:text="${error}" style="color: red;"></div>
         <!-- UPDATE USERNAME FORM-->
@@ -44,13 +47,9 @@
          <div>
            <form th:action="@{/update_username}" method="post">
             <h2>Update Username</h2>
-            <div>
               <label for="username">New Username:</label>
               <input type="text" id="username" name="username" required>
-            </div>
-            <div>
               <button type="submit">Update Username</button>
-            </div>
           </form>
         </div>
       
@@ -59,7 +58,6 @@
             <form th:action="@{/update_email}" method="post">
               <h2>Update Email</h2>
 
-              
                 <label for="newEmail">New Email:</label>
                 <input type="email" id="newEmail" name="newEmail" required>
            
@@ -96,7 +94,7 @@
 
             <div class="flex flex-col items-center justify-center">
               <label for="profilePicture" class="label">Profile Picture:</label>
-              <div class="flex justify-center w-full">
+              <div class="flex justify-center ">
                 <input class="file-input" type="file" id="profilePicture" name="profilePicture" required>
               </div>
             </div>
