@@ -16,27 +16,29 @@
     ></script>
     <link rel="stylesheet" href="/css/output.css" />
   </head>
-  <header>
-    <nav>
-      <ul class="flex justify-between">
-        <li>
-          <a class="link" href="/index">Home</a>
-        </li>
-        <li>
-          <a class="link" href="/profile">Profile</a>
-        </li>
-        <li>
-          <a class="link" href="/logout">Logout</a>
-        </li>
-      </ul>
-    </nav>
-  </header>
   <body>
+    <header>
+      <nav>
+        <ul class="flex justify-between">
+          <li>
+            <a class="link" href="/index">Home</a>
+          </li>
+          <li>
+            <a class="link" href="/profile">Profile</a>
+          </li>
+          <li>
+            <a class="link" href="/logout">Logout</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
     <div class="container">
       <div class="card">
-        <form name="logoutForm" th:action="@{/logout}" method="post">
+        <div class="headerBox">
           <h1 class="formHeader">Congratulations!</h1>
-          <p>There is only one thing left to do...</p>
+        </div>
+        <form name="logoutForm" th:action="@{/logout}" method="post">
+          <p class="m-2 text-wrap ">There is only one thing left to do...</p>
           <button class="button">Sign Out</button>
         </form>
       </div>

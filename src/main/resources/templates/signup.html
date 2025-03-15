@@ -6,9 +6,26 @@
     <link rel="stylesheet" href="/css/output.css" />
   </head>
   <body>
+    <header>
+      <nav>
+        <ul class="flex justify-between">
+          <li>
+            <a class="link" href="/index">Home</a>
+          </li>
+          <li>
+            <a class="link" href="/profile">Profile</a>
+          </li>
+          <li>
+            <a class="link" href="/logout">Logout</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
     <div class="container">
       <div class="card">
-        <h1 class="formHeader">Sign Up</h1>
+        <div class="headerBox">
+          <h1 class="formHeader">Sign Up</h1>
+        </div>
         <div th:if="${error}" th:text="${error}" class="failure"></div>
         <form th:action="@{/signup}" method="post">
           <label class="label" for="username">Username:</label>

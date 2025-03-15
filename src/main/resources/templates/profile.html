@@ -6,132 +6,135 @@
     <link rel="stylesheet" href="/css/output.css" />
   </head>
   <body>
-      <div class="container">
-        <nav>
-          <tr>
-            <td class="flex justify-between">
-              <a class="link" href="/index">Home</a>
-            </td>
-            <td>
-              <a class="link" href="/profile">Profile</a>
-            </td>
-            <td>
-              <a class="link" href="/logout">Logout</a>
-            </td>
-          </tr>
-        </nav>
-    <h1>User Profile</h1>
-
-    <!-- SUCCESS / ERROR -->
-    <div th:if="${message}" th:text="${message}" style="color: green;"></div>
-    <div th:if="${error}" th:text="${error}" style="color: red;"></div>
-
-    <!-- USER DETAILS -->
-      <div>
-        <h2>User Details</h2>
-        <p>Username: <span th:text="${user.username}"></span></p>
-        <p>Email: <span th:text="${user.email}"></span></p>
-        <p>Name: <span th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span></p>
-        <p>Biography: <span th:text="${user.biography}"></span></p>
-        <p>Profile Picture: <img th:src="${user.profilePictureUrl}" alt="Profile Picture" /></p>
-      </div>
-
-
-    <!-- UPDATE USERNAME FORM-->
-     <div>
-      <h2>Update Username</h2>
-      <form th:action="@{/update_username}" method="post">
-        <div>
-          <label for="username">New Username:</label>
-          <input type="text" id="username" name="username" required>
+    <header>
+      <nav>
+        <ul class="flex justify-between">
+          <li>
+            <a class="link" href="/index">Home</a>
+          </li>
+          <li>
+            <a class="link" href="/profile">Profile</a>
+          </li>
+          <li>
+            <a class="link" href="/logout">Logout</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <div class="container">
+      <div class="card">
+        <div class="headerBox">
+          <h1 class="formHeader">User Profile</h1>
         </div>
         <div>
-          <button type="submit">Update Username</button>
-        </div>
-      </form>
-    </div>
 
-    <!-- UPDATE EMAIL FORM-->
-      <div>
-        <h2>Update Email</h2>
-        <form th:action="@{/update_email}" method="post">
+          <!-- USER DETAILS -->
+          <p>Username: <span th:text="${user.username}"></span></p>
+          <p>Email: <span th:text="${user.email}"></span></p>
+          <p>Name: <span th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span></p>
+          <p>Biography: <span th:text="${user.biography}"></span></p>
+          <p>Profile Picture: <img class="headerImage" th:src="${user.profilePictureUrl}" alt="Profile Picture" /></p>
+        </div>
+
+
+        <div th:if="${message}" th:text="${message}" style="color: green;"></div>
+        <div th:if="${error}" th:text="${error}" style="color: red;"></div>
+        <!-- UPDATE USERNAME FORM-->
+
+         <div>
+           <form th:action="@{/update_username}" method="post">
+            <h2>Update Username</h2>
+            <div>
+              <label for="username">New Username:</label>
+              <input type="text" id="username" name="username" required>
+            </div>
+            <div>
+              <button type="submit">Update Username</button>
+            </div>
+          </form>
+        </div>
+      
+        <!-- UPDATE EMAIL FORM-->
           <div>
-            <label for="newEmail">New Email:</label>
-            <input type="email" id="newEmail" name="newEmail" required>
+            <form th:action="@{/update_email}" method="post">
+              <h2>Update Email</h2>
+
+              
+                <label for="newEmail">New Email:</label>
+                <input type="email" id="newEmail" name="newEmail" required>
+           
+                <label for="confirmNewEmail">Confirm New Email:</label>
+                <input type="email" id="confirmNewEmail" name="confirmNewEmail" required>
+
+              <button type="submit">Update Email</button>
+            </form>
           </div>
+      
+        <!-- UPDATE PASSWORD FORM -->
+         <div>
+           <form th:action="@{/update_password}" method="post">
+            <h2>Update Password</h2>
+
+              <label for="currentPassword">Current Password:</label>
+              <input type="password" id="currentPassword" name="currentPassword" required>
+
+              <label for="newPassword">New Password:</label>
+              <input type="password" id="newPassword" name="newPassword" required>
+
+              <label for="confirmNewPassword">Confirm New Password:</label>
+              <input type="password" id="confirmNewPassword" name="confirmNewPassword" required>
+
+              <button type="submit">Update Password</button>
+
+          </form>
+        </div>
+      
+        <!-- UPDATE PROFILE PICTURE-->
+        <div>
+          <form th:action="@{/update_profile_picture}" method="post" enctype="multipart/form-data">
+            <h2>Update Profile Picture</h2>
+
+            <div class="flex flex-col items-center justify-center">
+              <label for="profilePicture" class="label">Profile Picture:</label>
+              <div class="flex justify-center w-full">
+                <input class="file-input" type="file" id="profilePicture" name="profilePicture" required>
+              </div>
+            </div>
+
+
+                <button type="submit">Update Profile Picture</button>
+
+          </form>
+        </div>
+      
+        <div>
+          <form th:action="@{/update_user_details}" method="post">
+            <h2>Update User Details</h2>
+
+              <label for="firstName">First Name:</label>
+              <input type="text" id="firstName" name="firstName" required>
+
+              <label for="lastName">Last Name:</label>
+              <input type="text" id="lastName" name="lastName" required>
+
+              <label for="biography">Biography:</label>
+              <textarea id="biography" name="biography" required></textarea>
+
+              <button type="submit">Update User Details</button>
+
+          </form>
+          </div>
+      
           <div>
-            <label for="confirmNewEmail">Confirm New Email:</label>
-            <input type="email" id="confirmNewEmail" name="confirmNewEmail" required>
+            <h2>Delete User</h2>
+            <form th:action="@{/delete_user}" method="post">
+              <input type="hidden" name="username" th:value="${user.username}" />
+              <button type="submit">Delete</button>
+            </form>
           </div>
-          <button type="submit">Update Email</button>
-        </form>
-      <div>
 
-    <!-- UPDATE PASSWORD FORM -->
-     <div>
-      <h2>Update Password</h2>
-      <form th:action="@{/update_password}" method="post">
-        <div>
-          <label for="currentPassword">Current Password:</label>
-          <input type="password" id="currentPassword" name="currentPassword" required>
-        </div>
-        <div>
-          <label for="newPassword">New Password:</label>
-          <input type="password" id="newPassword" name="newPassword" required>
-        </div>
-        <div>
-          <label for="confirmNewPassword">Confirm New Password:</label>
-          <input type="password" id="confirmNewPassword" name="confirmNewPassword" required>
-        </div>
-        <div>
-          <button type="submit">Update Password</button>
-        </div>
-      </form>
-    </div>
-
-    <!-- UPDATE PROFILE PICTURE-->
-    <div>
-      <h2>Update Profile Picture</h2>
-      <form th:action="@{/update_profile_picture}" method="post" enctype="multipart/form-data">
-        <div>
-            <label for="profilePicture">Profile Picture:</label>
-            <input type="file" id="profilePicture" name="profilePicture" required>
-        </div>
-        <div>
-            <button type="submit">Update Profile Picture</button>
-        </div>
-      </form>
-    </div>
-
-    <div>
-      <h2>Update User Details</h2>
-      <form th:action="@{/update_user_details}" method="post">
-        <div>
-          <label for="firstName">First Name:</label>
-          <input type="text" id="firstName" name="firstName" required>
-        </div>
-        <div>
-          <label for="lastName">Last Name:</label>
-          <input type="text" id="lastName" name="lastName" required>
-        </div>
-        <div>
-          <label for="biography">Biography:</label>
-          <textarea id="biography" name="biography" required></textarea>
-        </div>
-        <div>
-          <button type="submit">Update User Details</button>
-        </div>
-      </form>
-      </div>
-
-      <div>
-        <h2>Delete User</h2>
-        <form th:action="@{/delete_user}" method="post">
-          <input type="hidden" name="username" th:value="${user.username}" />
-          <button type="submit">Delete</button>
-        </form>
       </div>
     </div>
   </body>
-
+  <body>
 </html>
