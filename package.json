@@ -4,19 +4,26 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build-css": "npx tailwindcss -i ./src/main/resources/static/css/input.css -o ./src/main/resources/static/css/output.css",
+    "clean-css": "rm -f ./src/main/resources/static/css/output.css",
+    "build-css": "npm run clean-css && npx tailwindcss -i ./src/main/resources/static/css/input.css -o ./src/main/resources/static/css/output.css",
     "watch-css": "npx tailwindcss -i ./src/main/resources/static/css/input.css -o ./src/main/resources/static/css/output.css --watch",
-    "dev": "npm run watch-css"
+    "dev": "npm run clean-css && npm run build-css && npm run watch-css"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@tailwindcss/forms": "^0.5.10",
+    "@tailwindcss/typography": "^0.5.16",
     "autoprefixer": "^10.4.21",
     "nodemon": "^2.0.22",
-    "tailwindcss": "^3.4.17"
+    "prettier-plugin-tailwindcss": "^0.6.11",
+    "tailwindcss": "^3.4.17",
+    "tailwindcss-animate": "^1.0.7"
   },
   "dependencies": {
-    "@tailwindcss/postcss": "^4.0.14"
+    "@tailwindcss/postcss": "^4.0.14",
+    "daisyui": "^5.0.4",
+    "tailwind-scrollbar-hide": "^2.0.0"
   }
 }

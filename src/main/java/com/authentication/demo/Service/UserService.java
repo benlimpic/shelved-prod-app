@@ -223,7 +223,7 @@ public class UserService implements UserDetailsService {
     if (!errors.isEmpty()) {
       Map<String, String> result = new HashMap<>();
       result.put("status", "error");
-      result.put("message", String.join(", ", errors));
+      result.put("message", String.join(",", errors));
       return result;
     }
 

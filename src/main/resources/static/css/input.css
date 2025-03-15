@@ -1,146 +1,45 @@
-/* Source: src/main/resources/static/css/input.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap");
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
+@layer base {
+  form {
+    @apply flex flex-col col-span-6 justify-center items-center;
+  }
 }
 
-body {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background-image: url("https://user-images.githubusercontent.com/13468728/233847739-219cb494-c265-4554-820a-bd3424c59065.jpg");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
+@layer components {
+  .container {
+    @apply flex flex-col items-center justify-center;
+  }
+
+  .input {
+    @apply p-2 mt-0.5 mx-2 mb-2 font-bold text-black bg-white rounded-md shadow-sm;
+  }
+
+  .button {
+    @apply py-2 px-6 m-2 font-bold text-white bg-blue-500 rounded-md hover:bg-blue-700 drop-shadow-sm;
+  }
+
+  .link {
+    @apply py-0.5 px-2 m-1 font-thin text-white text-sm rounded-md bg-slate-600 hover:bg-slate-800 drop-shadow-sm;
+  }
+
+  .label {
+    @apply px-2 w-full text-left text-sm text-black;
+  }
+
+  .success {
+    @apply text-wrap text-center my-1 text-sm font-bold text-green-500;
+  }
+
+  .failure {
+    @apply text-wrap my-1 text-center text-sm font-bold text-red-500;
+  }
 }
 
-section {
-  position: relative;
-  max-width: 500px; /* Adjust the max-width as needed */
-  background-color: transparent;
-  border: 2px solid rgba(255, 255, 255, 0.5);
-  border-radius: 20px;
-  backdrop-filter: blur(55px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem 3rem;
-  transition: all 0.5s ease-in-out;
-}
-
-h1 {
-  font-size: 2rem;
-  color: #fff;
-  text-align: center;
-}
-.inputbox {
-  position: relative;
-  margin: 20px 0;
-  max-width: 550px;
-  border-bottom: 2px solid #fff;
-  transition: all 0.5s ease-in-out;
-}
-
-.inputbox input {
-  width: 100%;
-  height: 40px;
-  background: transparent;
-  border: none;
-  outline: none;
-  font-size: 1rem;
-  padding: 0 35px 0 5px;
-  color: #fff;
-}
-
-.inputbox ion-icon {
-  position: absolute;
-  right: 8px;
-  color: #fff;
-  font-size: 1.2rem;
-  top: 12px;
-  transition: all 0.5s ease-in-out;
-}
-
-.inputbox label {
-  position: absolute;
-  top: 50%;
-  left: 5px;
-  transform: translateY(-50%);
-  color: #fff;
-  font-size: 1rem;
-  pointer-events: none;
-  transition: all 0.5s ease-in-out;
-}
-
-input:focus ~ label,
-input:valid ~ label {
-  top: -5px;
-  font-size: 0.9rem;
-  color: #a8a8a8;
-}
-
-button {
-  width: 100%;
-  height: 40px;
-  border-radius: 40px;
-  background-color: rgba(255, 255, 255, 1);
-  border: none;
-  outline: none;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 600;
-  transition: all 0.4s ease;
-}
-
-button:hover {
-  background-color: rgba(255, 255, 255, 0.5);
-}
-
-.register {
-  font-size: 0.9rem;
-  color: #fff;
-  text-align: center;
-  margin: 25px 0 10px;
-  transition: all 0.5s ease-in-out;
-}
-
-.register p a {
-  text-decoration: none;
-  color: #fff;
-  font-weight: 600;
-  transition: all 0.5s ease-in-out;
-}
-
-.register p a:hover {
-  text-decoration: underline;
-  color: #a8a8a8;
-}
-
-img {
-  position: block;
-  margin: 0 auto;
-  top: 0;
-  left: 0;
-  width: 150px;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 50%;
-  transition: all 0.5s ease-in-out;
-}
-
-nav a{
-  color: #fff;
-  text-decoration: none;
-  font-size: 1.2rem;
-  font-weight: 600;
-  transition: all 0.5s ease-in-out;
+@layer utilities {
+  .card {
+    @apply w-1/4 p-2 m-2 bg-gray-200 border border-gray-400 rounded-md shadow-md;
+  }
 }

@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Login</title>
     <script
@@ -18,23 +18,23 @@
   <body>
     <section>
       <div>
-      <nav>
-        <tr>
-          <td>
-            <a href="/index">Home</a>
-          </td>
-          <td>
-            <a href="/profile">Profile</a>
-          </td>
-          <td>
-            <a href="/logout">Logout</a>
-          </td>
-        </tr>
-      </nav>
-        <form name="logoutForm" th:action="@{/logout}" method="post">
+        <nav>
+          <tr>
+            <td class="flex justify-between">
+              <a class="link" href="/index">Home</a>
+            </td>
+            <td>
+              <a class="link" href="/profile">Profile</a>
+            </td>
+            <td>
+              <a class="link" href="/logout">Logout</a>
+            </td>
+          </tr>
+        </nav>
+        <form class="card" name="logoutForm" th:action="@{/logout}" method="post">
           <h1>Congratulations!</h1>
           <h4>There is only one thing left to do...</h4>
-          <button>Sign Out</button>
+          <button class="button">Sign Out</button>
         </form>
       </div>
     </section>

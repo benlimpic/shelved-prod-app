@@ -1,35 +1,54 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
-      <title>Login</title>
-      <link rel="stylesheet" href="/css/output.css" />
+    <title>Login</title>
+    <link rel="stylesheet" href="/css/output.css" />
   </head>
   <body>
-    <section>
-      <div>
-        <div>
-          <h1 class="text-3xl font-bold">Welcome to the login page!</h1>
-          <p class="p-2 bg-amber-100">You really are more welcome here!</p>
+    <section class="container">
+      <nav>
+        <tr>
+          <td class="flex justify-between">
+            <a class="link" href="/index">Home</a>
+          </td>
+          <td>
+            <a class="link" href="/profile">Profile</a>
+          </td>
+          <td>
+            <a class="link" href="/logout">Logout</a>
+          </td>
+        </tr>
+      </nav>
+      <div class="card">
+        <h1 class="text-2xl text-blue-600 text-center">Login</h1>
+        <div th:if="${param.error}" class="failure box">
+          Invalid username or password</div>
+        <div th:if="${param.logout}" class="success box" >
+          You have been logged out
         </div>
-        <h1>Login</h1>
-        <div th:if="${param.error}" style="color: red;">Invalid username or password</div>
-        <div th:if="${param.logout}" style="color: green;">You have been logged out</div>
-        <div th:if="${message}" style="color: green;" th:text="${message}"></div>
+        <div th:if="${message}" class="success box" th:text="${message}"></div>
         <form th:action="@{/login}" method="post">
-          <div>
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
-          </div>
-          <div>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-          </div>
-          <div>
-            <button type="submit">Login</button>
-          </div>
-          <div>
-            <a href="/signup">Sign Up</a>
-          </div>
+          <label class="label" for="Username">Username:</label>
+          <input
+            class="input"
+            label="Username"
+            type="text"
+            id="username"
+            name="username"
+            placeholder="Username"
+            required
+          />
+          <label class="label" for="password">Password:</label>
+          <input
+            class="input"
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Password"
+            required
+          />
+          <button class="button" type="submit">Login</button>
+          <a class="link" href="/signup">Sign Up</a>
         </form>
       </div>
     </section>
