@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
     <link rel="stylesheet" href="/css/output.css" />
   </head>
   <body>
-    <section>
-      <div>
+      <div class="container">
         <nav>
           <tr>
-            <td>
-              <a href="/index">Home</a>
+            <td class="flex justify-between">
+              <a class="link" href="/index">Home</a>
             </td>
             <td>
-              <a href="/profile">Profile</a>
+              <a class="link" href="/profile">Profile</a>
             </td>
             <td>
-              <a href="/logout">Logout</a>
+              <a class="link" href="/logout">Logout</a>
             </td>
           </tr>
         </nav>
@@ -132,7 +132,6 @@
         </form>
       </div>
     </div>
-    </section>
   </body>
 
 </html>

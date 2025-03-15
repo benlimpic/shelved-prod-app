@@ -8,6 +8,7 @@ module.exports = {
     extend: {},
   },
   plugins: [
+
     //# DaisyUI adds class-based components and plugins to Tailwind CSS.
     //! Docs: https://daisyui.com/components/
     // require("daisyui"),

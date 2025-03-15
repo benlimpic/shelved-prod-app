@@ -1,46 +1,50 @@
-<!DOCTYPE html>
+<!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign Up</title>
     <link rel="stylesheet" href="/css/output.css" />
   </head>
   <body>
-    <section class="container">
-      <nav>
-        <tr>
-          <td class="flex justify-between">
-            <a class="link" href="/index">Home</a>
-          </td>
-          <td>
-            <a class="link" href="/profile">Profile</a>
-          </td>
-          <td>
-            <a class="link" href="/logout">Logout</a>
-          </td>
-        </tr>
-      </nav>
+    <div class="container">
       <div class="card">
-        <h1 class="text-2xl text-blue-600 text-center">Sign Up</h1>
-        <div th:if="${error}" th:text="${error}" class="failure box"></div>
+        <h1 class="formHeader">Sign Up</h1>
+        <div th:if="${error}" th:text="${error}" class="failure"></div>
         <form th:action="@{/signup}" method="post">
-            <label class="label" for="username">Username:</label>
-            <input class="input" type="text" id="username" name="username" required />
-            <label class="label" for="email">Email:</label>
-            <input class="input" type="email" id="email" name="email" required />
-            <label class="label" for="password">Password:</label>
-            <input class="input" type="password" id="password" name="password" required />
-            <label class="label" for="confirmPassword">Confirm Password:</label>
-            <input
-              class="input"
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              required
-            />
-            <button class="button" type="submit">Sign Up</button>
-            <a class="link" href="/login">Login</a>
+          <label class="label" for="username">Username:</label>
+          <input
+            class="input"
+            type="text"
+            id="username"
+            name="username"
+            required
+          />
+
+          <label class="label" for="email">Email:</label>
+          <input class="input" type="email" id="email" name="email" required />
+
+          <label class="label" for="password">Password:</label>
+          <input
+            class="input"
+            type="password"
+            id="password"
+            name="password"
+            required
+          />
+
+          <label class="label" for="confirmPassword">Confirm Password:</label>
+          <input
+            class="input"
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            required
+          />
+          <button class="button" type="submit">Sign Up</button>
+          <a class="link" href="/login">Login</a>
         </form>
+
       </div>
-    </section>
+    </div>
   </body>
 </html>
