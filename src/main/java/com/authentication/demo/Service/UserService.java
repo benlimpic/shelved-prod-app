@@ -171,13 +171,32 @@ public class UserService implements UserDetailsService {
     }
   }
 
-  // UPDATE USER DETAILS
-  public String updateUserDetails(Map<String, String> params) {
+  // UPDATE USER FIRST & LAST NAME
+  public String updateUserFirstAndLastName(Map<String, String> params) {
     Optional<UserModel> user = getCurrentUser();
     if (user.isPresent()) {
       UserModel userModel = user.get();
       userModel.setFirstName(params.get("firstName"));
       userModel.setLastName(params.get("lastName"));
+      repository.save(userModel);
+
+      // Re-authenticate the user with the updated details
+      UserDetails updatedUserDetails = userDetailsService.loadUserByUsername(userModel.getUsername());
+      Authentication newAuth = new UsernamePasswordAuthenticationToken(updatedUserDetails, null,
+          updatedUserDetails.getAuthorities());
+      SecurityContextHolder.getContext().setAuthentication(newAuth);
+
+      return "User first & last name updated successfully";
+    } else {
+      return "No authenticated user found";
+    }
+  }
+
+  // UPDATE USER BIOGRAPHY
+  public String updateUserBiography(Map<String, String> params) {
+    Optional<UserModel> user = getCurrentUser();
+    if (user.isPresent()) {
+      UserModel userModel = user.get();
       userModel.setBiography(params.get("biography"));
       repository.save(userModel);
 
@@ -187,7 +206,7 @@ public class UserService implements UserDetailsService {
           updatedUserDetails.getAuthorities());
       SecurityContextHolder.getContext().setAuthentication(newAuth);
 
-      return "User details updated successfully";
+      return "User biography updated successfully";
     } else {
       return "No authenticated user found";
     }

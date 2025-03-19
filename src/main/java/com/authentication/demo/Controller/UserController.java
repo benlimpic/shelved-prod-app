@@ -49,7 +49,7 @@ public class UserController {
       RedirectAttributes redirectAttributes) {
     try {
       authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-      return "redirect:/profile";
+      return "redirect:/index";
     } catch (AuthenticationException e) {
       redirectAttributes.addFlashAttribute("error", "Invalid username or password");
       return "redirect:/login";
@@ -117,12 +117,26 @@ public class UserController {
     }
   }
 
-  // UPDATE USER DETAILS
-  @PostMapping("/update_user_details")
-  public String updateUserDetails(@RequestParam Map<String, String> userDetails,
+  // UPDATE USER FIRST & LAST NAME
+  @PostMapping("/update_name")
+  public String updateName(@RequestParam Map<String, String> userDetails,
       RedirectAttributes redirectAttributes) {
-    String result = userService.updateUserDetails(userDetails);
-    if ("User details updated successfully".equals(result)) {
+    String result = userService.updateUserFirstAndLastName(userDetails);
+    if ("User first & last name updated successfully".equals(result)) {
+      redirectAttributes.addFlashAttribute("message", result);
+      return "redirect:/profile";
+    } else {
+      redirectAttributes.addFlashAttribute("error", result);
+      return "redirect:/profile";
+    }
+  }
+
+  // UPDATE BIOGRAPHY
+  @PostMapping("/update_biography")
+  public String updateBio(@RequestParam Map<String, String> userDetails,
+      RedirectAttributes redirectAttributes) {
+    String result = userService.updateUserBiography(userDetails);
+    if ("User biography updated successfully".equals(result)) {
       redirectAttributes.addFlashAttribute("message", result);
       return "redirect:/profile";
     } else {
@@ -134,13 +148,18 @@ public class UserController {
   // DELETE USER
   @PostMapping("/delete_user")
   public String deleteUser(@RequestParam String username, RedirectAttributes redirectAttributes) {
-    String result = userService.deleteUser(username);
-    if ("User deleted successfully".equals(result)) {
-      redirectAttributes.addFlashAttribute("message", result);
-      return "redirect:/login";
-    } else {
-      redirectAttributes.addFlashAttribute("error", result);
-      return result;
+    try {
+      String result = userService.deleteUser(username);
+      if ("User deleted successfully".equals(result)) {
+        redirectAttributes.addFlashAttribute("message", result);
+        return "redirect:/login";
+      } else {
+        redirectAttributes.addFlashAttribute("error", result);
+        return "redirect:/profile";
+      }
+    } catch (Exception e) {
+      redirectAttributes.addFlashAttribute("error", "An unexpected error occurred while deleting the user.");
+      return "redirect:/profile";
     }
   }
 
