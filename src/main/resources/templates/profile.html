@@ -8,28 +8,42 @@
   </head>
   <body>
     <header>
-      <nav class="navBar flex flex-row p-3 justify-start items-center w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto">
-        <ul class="flex justify-between">
+      <nav class="navbar">
+        <ul class="flex justify-between w-full">
           <li>
-            <a class="link" href="/index">Back</a>
+            <a href="/index">
+              <span>&#8592;</span>
+            </a>
+          </li>
+          <li>
+            <a
+            href="#"
+            class=" bg-blue-500 hover:bg-blue-700 text-white text-xs px-1 py-0.5 rounded"
+            >Edit Profile</a
+            >
           </li>
         </ul>
       </nav>
+    </header>
       <div class="profileContainer">
-        <div class="flex flex-col justify-center items-center p-2">
-          <!-- profile image -->
-          <img
-          class="p-1 headerImage"
-          th:src="${user.profilePictureUrl}"
+        <div class="h-auto w-full border-b-2 
+        border-slate-300 bg-slate-200 shadow-sm">
+
+          <div class="flex flex-col justify-center items-center p-2">
+            <!-- profile image -->
+            <img
+            class="p-1 headerImage"
+            th:src="${user.profilePictureUrl}"
           alt="profile"
           />
           <!-- profile username -->
           <span class="text-md" th:text="${user.username}"></span>
           <!-- update button -->
+          
           <a
           href="#"
           class=" bg-blue-500 hover:bg-blue-700 text-white text-xs px-1 py-0.5 rounded"
-          >Edit Profile</a
+          >Share Profile</a
           >
         </div>
         <div class="flex flex-col justify-start items-start p-2 w-full">
@@ -41,7 +55,7 @@
           </div>
         </div>
       </div>
-    </header>
+      </div>
 
       <div>
         <!-- User Collections -->

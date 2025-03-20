@@ -22,7 +22,12 @@ public class ContentController {
   }
 
   @GetMapping("/index")
-  public String index() {
+  public String index(Model model) {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
+      CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+      model.addAttribute("user", userDetails);
+    }
     return "index";
   }
 

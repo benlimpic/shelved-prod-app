@@ -55,9 +55,11 @@ public class CustomUserDetails implements UserDetails {
         return biography;
     }
 
+
     public String getProfilePictureUrl() {
         return profilePictureUrl;
     }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
