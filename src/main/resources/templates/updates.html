@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="/css/output.css" />
+    <script src="/js/profileUpdates.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <ul class="flex justify-between">
+          <li>
+            <a class="link" href="/index">Home</a>
+          </li>
+          <li>
+            <a class="link" href="/profile">Profile</a>
+          </li>
+          <li>
+            <a class="link" href="/logout">Logout</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <div class="container">
+      <div class="card">
+      <div class="headerBox">
+        <h1 class="formHeader">User Profile</h1>
+      </div>
+          <div th:if="${message}" th:text="${message}" style="color: green;"></div>
+          <div th:if="${error}" th:text="${error}" style="color: red;"></div>
+
+
+        <!-- Update Profile Picture -->
+          <img class="headerImage" th:src="${user.profilePictureUrl}" alt="Profile Picture" />
+          <a class="link " id="updateProfilePictureButton" onClick="">Update Profile Picture</a>
+          
+          <div class="hidden" id="updateProfilePictureForm">
+            <form th:action="@{/update_profile_picture}" method="post" enctype="multipart/form-data">
+              <div class="labelInputBox">
+              <label class="label" for="profilePicture">Profile Picture:</label>
+              <input class="file-input" type="file" id="profilePicture" name="profilePicture" required>
+              </div>
+              <div class="cancelUpdateBox">
+                <button class="button bg-slate-600" id="updateProfilePictureCancelButton" type="button">Cancel</button>  
+                <button class="button" id="updateProfilePictureSubmitButton" type="submit">Update</button>  
+              </div>
+            </form>
+          </div>
+
+
+          <!-- Update Username -->
+          <div class="labelInputBox">
+            <span class="font-semibold" th:text="${user.username}"></span>
+          </div>
+
+          <a class="link" id="updateUsernameButton">Update Username</a>
+          
+          <div class="hidden" id="updateUsernameForm">
+            <form th:action="@{/update_username}" method="post">
+              <div class="labelInputBox">
+                <label class="label" for="username">New Username:</label>
+                <input type="text" id="username" name="username" placeholder="New Username" required>
+              </div>
+            <div class="cancelUpdateBox"> 
+              <button class="button bg-slate-600" id="updateUsernameCancelButton" type="button">Cancel</button>  
+              <button class="button" id="updateUsernameSubmitButton" type="submit">Update</button>  
+            </div>
+          </form>
+        </div>
+        
+
+         
+         <!-- Update Password -->
+         <a class="link" id="updatePasswordButton">Update Password</a>
+
+         <div class="hidden" id="updatePasswordForm">
+           <form th:action="@{/update_password}" method="post">
+             <div class="labelInputBox">
+               <label for="currentPassword">Current Password:</label>
+               <input type="password" id="currentPassword" name="currentPassword" placeholder="Current Password" required>
+              </div>
+              <div class="labelInputBox">
+                <label for="newPassword">New Password:</label>
+                <input type="password" id="newPassword" name="newPassword" placeholder="New Password" required>
+              </div>
+              <div class="labelInputBox">
+                <label for="confirmNewPassword">Confirm New Password:</label>
+                <input type="password" id="confirmNewPassword" name="confirmNewPassword" placeholder="Confirm New Password" required>
+              </div>
+              <div class="cancelUpdateBox"> 
+                <button class="button bg-slate-600" id="updatePasswordCancelButton" type="button">Cancel</button>  
+                <button class="button" id="updatePasswordSubmitButton" type="submit">Update</button>  
+              </div>
+            </form>
+          </div>
+
+
+          <!-- Update Email -->
+          <div class="labelInputBox">
+            <span class="font-semibold" th:text="${user.email}"></span>
+          </div>
+
+          <a class="link" id="updateEmailButton">Update Email</a>
+          
+          <div class="hidden" id="updateEmailForm">
+            <form th:action="@{/update_email}" method="post">
+              <div class="labelInputBox">
+                <label for="newEmail">New Email:</label>
+                <input type="email" id="newEmail" name="newEmail" placeholder="New Email" required>
+              </div>
+              <div class="labelInputBox">
+                <label for="confirmNewEmail">Confirm New Email:</label>
+                <input type="email" id="confirmNewEmail" name="confirmNewEmail" placeholder="Confirm New Email" required>
+              </div>
+              <div class="cancelUpdateBox"> 
+                <button class="button bg-slate-600" id="updateEmailCancelButton" type="button">Cancel</button>  
+                <button class="button" id="updateEmailSubmitButton" type="submit">Update</button>  
+              </div>
+            </form>
+          </div>
+
+          <!-- Update Name -->
+          <div class="labelInputBox">
+            <div>
+              <span class="font-semibold" th:text="${user.firstName}"></span> <span class="font-semibold" th:text="${user.lastName}"></span>
+            </div>  
+          </div>
+
+          <a class="link" id="updateNameButton">Update Name</a>
+          
+          <div class="hidden" id="updateNameForm">
+            <form th:action="@{/update_name}" method="post">
+              <div class="labelInputBox">
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" name="firstName" placeholder="First Name" required th:value="${user.firstName}">
+              </div>
+
+              <div class="labelInputBox">
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" name="lastName" placeholder="Last Name" required th:value="${user.lastName}">
+              </div>
+
+              <div class="cancelUpdateBox"> 
+                <button class="button bg-slate-600" id="updateNameCancelButton" type="button">Cancel</button>  
+                <button class="button" id="updateNameSubmitButton" type="submit">Update</button>  
+              </div>
+            </form>
+          </div>
+
+
+          <!-- Update Biography -->
+          <div class="labelInputBox">
+            <span class="font-semibold" th:text="${user.biography}"></span>
+          </div>
+
+          <a class="link" id="updateBioButton">Update Biography</a>
+          
+          <div class="hidden" id="updateBioForm">
+            <form th:action="@{/update_biography}" method="post">
+              <div class="labelInputBox">
+                <label for="biography">Biography:</label>
+                <textarea id="biography" name="biography" placeholder="User Biography" required th:text="${user.biography}"></textarea> 
+              </div>
+              <div class="cancelUpdateBox"> 
+                <button class="button bg-slate-600" id="updateBioCancelButton" type="button">Cancel</button>  
+                <button class="button" id="updateBioSubmitButton" type="submit">Update</button>  
+              </div>
+            </form>
+          </div>
+
+          
+          <!-- Delete User -->
+          <a class="link bg-red-600" id="deleteAccountButton" >Delete User</a>        
+          <div class="hidden" id="deleteAccountForm">
+            <form th:action="@{/delete_user}" method="post">
+              <div class="labelInputBox">
+                <label class="label text-red-600">Delete Account:</label>
+                <input type="hidden" name="username" th:value="${user.username}" />
+              </div>
+              <div class="cancelUpdateBox"> 
+                <button class="button bg-slate-600" id="deleteAccountCancelButton" type="button">Cancel</button>  
+                <button class="button bg-red-600" id="deleteAccountSubmitButton" type="submit">Delete</button>  
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </body>
+  <body>
+</html>
+

@@ -12,16 +12,20 @@ public class CustomUserDetails implements UserDetails {
     private String email;
     private String firstName;
     private String lastName;
+    private String company;
+    private String website;
     private String biography;
     private String profilePictureUrl;
     private Collection<? extends GrantedAuthority> authorities;
 
-    public CustomUserDetails(String username, String password, String email, String firstName, String lastName, String biography, String profilePictureUrl, Collection<? extends GrantedAuthority> authorities) {
+    public CustomUserDetails(String username, String password, String email, String firstName, String lastName, String company, String website, String biography, String profilePictureUrl, Collection<? extends GrantedAuthority> authorities) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.company = company;
+        this.website = website;
         this.biography = biography;
         this.profilePictureUrl = profilePictureUrl;
         this.authorities = authorities;
@@ -37,6 +41,14 @@ public class CustomUserDetails implements UserDetails {
 
     public String getLastName() {
         return lastName;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public String getWebsite() {
+        return website;
     }
 
     public String getBiography() {

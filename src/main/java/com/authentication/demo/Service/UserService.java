@@ -71,6 +71,8 @@ public class UserService implements UserDetailsService {
         user.get().getEmail(),
         user.get().getFirstName(),
         user.get().getLastName(),
+        user.get().getCompany(),
+        user.get().getWebsite(),
         user.get().getBiography(),
         user.get().getProfilePictureUrl(),
         authorities);
@@ -88,6 +90,11 @@ public class UserService implements UserDetailsService {
 
   // UPDATE USERNAME
   public String updateUsername(String newUsername) {
+
+    if (newUsername == null || newUsername.isEmpty()) {
+      return "Username is required";
+    }
+
     Optional<UserModel> existingUser = repository.findByUsername(newUsername);
     if (existingUser.isPresent()) {
       return "Username already exists";
@@ -121,6 +128,12 @@ public class UserService implements UserDetailsService {
 
   // UPDATE EMAIL
   public String updateEmail(String newEmail, String confirmNewEmail) {
+
+    if (newEmail == null || newEmail.isEmpty() ||
+        confirmNewEmail == null || confirmNewEmail.isEmpty()) {
+      return "Emails are required";
+    }
+
     if (!newEmail.equals(confirmNewEmail)) {
       return "New emails do not match";
     }
@@ -145,6 +158,12 @@ public class UserService implements UserDetailsService {
 
   // UPDATE PASSWORD
   public String updatePassword(String currentPassword, String newPassword, String confirmNewPassword) {
+    if (currentPassword == null || currentPassword.isEmpty() ||
+        newPassword == null || newPassword.isEmpty() ||
+        confirmNewPassword == null || confirmNewPassword.isEmpty()) {
+      return "All fields are required";
+    }
+
     if (!newPassword.equals(confirmNewPassword)) {
       return "New passwords do not match";
     }
@@ -173,6 +192,7 @@ public class UserService implements UserDetailsService {
 
   // UPDATE USER FIRST & LAST NAME
   public String updateUserFirstAndLastName(Map<String, String> params) {
+
     Optional<UserModel> user = getCurrentUser();
     if (user.isPresent()) {
       UserModel userModel = user.get();
@@ -187,6 +207,46 @@ public class UserService implements UserDetailsService {
       SecurityContextHolder.getContext().setAuthentication(newAuth);
 
       return "User first & last name updated successfully";
+    } else {
+      return "No authenticated user found";
+    }
+  }
+
+  // UPDATE USER COMPANY
+  public String updateUserCompany(Map<String, String> params) {
+    Optional<UserModel> user = getCurrentUser();
+    if (user.isPresent()) {
+      UserModel userModel = user.get();
+      userModel.setCompany(params.get("company"));
+      repository.save(userModel);
+
+      // Re-authenticate the user with the updated details
+      UserDetails updatedUserDetails = userDetailsService.loadUserByUsername(userModel.getUsername());
+      Authentication newAuth = new UsernamePasswordAuthenticationToken(updatedUserDetails, null,
+          updatedUserDetails.getAuthorities());
+      SecurityContextHolder.getContext().setAuthentication(newAuth);
+
+      return "User company updated successfully";
+    } else {
+      return "No authenticated user found";
+    }
+  }
+
+  // UPDATE USER WEBSITE
+  public String updateUserWebsite(Map<String, String> params) {
+    Optional<UserModel> user = getCurrentUser();
+    if (user.isPresent()) {
+      UserModel userModel = user.get();
+      userModel.setWebsite(params.get("website"));
+      repository.save(userModel);
+
+      // Re-authenticate the user with the updated details
+      UserDetails updatedUserDetails = userDetailsService.loadUserByUsername(userModel.getUsername());
+      Authentication newAuth = new UsernamePasswordAuthenticationToken(updatedUserDetails, null,
+          updatedUserDetails.getAuthorities());
+      SecurityContextHolder.getContext().setAuthentication(newAuth);
+
+      return "User website updated successfully";
     } else {
       return "No authenticated user found";
     }

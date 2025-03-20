@@ -6,21 +6,6 @@
     <link rel="stylesheet" href="/css/output.css" />
   </head>
   <body>
-    <header>
-      <nav>
-        <ul class="flex justify-between">
-          <li>
-            <a class="link" href="/index">Home</a>
-          </li>
-          <li>
-            <a class="link" href="/profile">Profile</a>
-          </li>
-          <li>
-            <a class="link" href="/logout">Logout</a>
-          </li>
-        </ul>
-      </nav>
-    </header>
     <div class="container">
       <div class="card">
         <div class="headerBox">
@@ -28,35 +13,54 @@
         </div>
         <div th:if="${error}" th:text="${error}" class="failure"></div>
         <form th:action="@{/signup}" method="post">
+          <div class="labelInputBox">
           <label class="label" for="username">Username:</label>
           <input
             class="input"
             type="text"
             id="username"
             name="username"
+            placeholder="Username"
             required
           />
+          </div>
 
+          <div class="labelInputBox">
           <label class="label" for="email">Email:</label>
-          <input class="input" type="email" id="email" name="email" required />
+          <input 
+            class="input" 
+            type="email" 
+            id="email" 
+            name="email" 
+            placeholder="Email"
+            required 
+          />
+          </div>
 
+          <div class="labelInputBox">
           <label class="label" for="password">Password:</label>
           <input
             class="input"
             type="password"
             id="password"
             name="password"
+            placeholder="Password"
             required
           />
+          </div>
 
+          <div class="labelInputBox">
           <label class="label" for="confirmPassword">Confirm Password:</label>
           <input
             class="input"
             type="password"
             id="confirmPassword"
             name="confirmPassword"
+            placeholder="Confirm Password"
             required
           />
+          </div>
+
           <button class="button" type="submit">Sign Up</button>
           <a class="link" href="/login">Login</a>
         </form>

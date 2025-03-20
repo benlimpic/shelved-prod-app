@@ -4,26 +4,32 @@
 
 @layer base {
   body {
-    @apply flex flex-col items-center w-screen h-screen overscroll-none overflow-hidden;
+    @apply flex flex-col items-center w-screen h-screen overscroll-none overflow-hidden bg-slate-300;
   }
 
   header {
-    @apply flex flex-col w-full items-center;
+    @apply w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto;
   }
 
   form {
     @apply flex flex-col w-full items-center justify-center p-4;
   }
 
-  nav {
-    @apply flex flex-row w-full h-12 justify-center items-center bg-blue-500 text-white;
-  }
 }
 
 @layer components {
   .container {
-    @apply flex flex-col items-center justify-center h-screen overscroll-none pb-12;
+    @apply flex flex-col items-center justify-center h-screen overscroll-none w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto pb-12 bg-slate-100;
   }
+
+  .profileContainer {
+    @apply flex flex-col items-center justify-start h-screen overscroll-none w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto pb-12 bg-slate-100;
+  }
+
+  .navbar {
+    @apply flex flex-row p-3 justify-center items-center w-full bg-blue-500 text-white ;
+  }
+
 
   .label {
     @apply w-full text-sm text-left text-black;
@@ -37,6 +43,22 @@
     @apply font-bold text-white bg-blue-500 rounded-md hover:bg-blue-700 drop-shadow-sm m-1 px-6 py-1;
   }
 
+  .submitButton {
+    @apply font-bold text-white bg-blue-500 rounded-md hover:bg-blue-700 drop-shadow-sm m-1 px-6 py-1;
+  }
+
+  .cancelButton {
+    @apply font-bold text-white bg-slate-600 rounded-md hover:bg-slate-800 drop-shadow-sm m-1 px-6 py-1;
+  }
+
+  .deleteButton {
+    @apply font-bold text-white bg-red-500 rounded-md hover:bg-red-700 drop-shadow-sm m-1 px-6 py-1;
+  }
+
+  .smallUpdateButton {
+    @apply font-bold text-white bg-slate-600 rounded-md hover:bg-slate-800 drop-shadow-sm m-1 px-1 py-0.5;
+  }
+
   .link {
     @apply text-xs text-white rounded-md bg-slate-600 hover:bg-slate-800 drop-shadow-sm m-1 px-1 py-0.5;
   }
@@ -44,29 +66,41 @@
   .file-input {
     @apply text-center p-1 border border-gray-300 rounded-md shadow-sm max-w-xs;
   }
+
+  .headerImage {
+    @apply w-20 h-20 rounded-full;
+  }
 }
 
 @layer utilities {
   .emptyCard {
     @apply flex flex-col items-center  
-    max-h-[80vh] overflow-y-auto overflow-x-hidden p-4 m-4
+    overflow-y-auto overflow-x-hidden p-4 m-4;
   }
 
   .card {
-    @apply flex flex-col items-center  
+    @apply 
+    m-10
+    p-4
+    flex 
+    flex-col 
+    items-center  
     bg-gray-100 border 
     border-gray-300 
     rounded-lg 
     shadow-sm
-    max-h-[80vh] overflow-y-auto overflow-x-hidden;
+    w-[300px]
+    overflow-y-auto 
+    overflow-x-hidden;
   }
-  .cardProfile {
-    @apply flex flex-col items-center  
-    bg-gray-100 border 
-    border-gray-300 
-    rounded-lg 
-    shadow-sm
-    max-h-[40vh] overflow-y-auto overflow-x-hidden;
+
+
+  .labelInputBox {
+    @apply flex flex-col items-center justify-center;
+  }
+
+  .cancelUpdateBox {
+    @apply mt-4 flex justify-center;
   }
 
   .file-input {
@@ -74,7 +108,7 @@
   }
 
   .formHeader {
-    @apply text-2xl font-bold text-center text-blue-600 p-4;
+    @apply text-2xl font-bold text-center text-blue-600 p-2;
   }
 
   .success {
@@ -85,10 +119,6 @@
     @apply my-1 text-sm font-bold text-center text-red-500 text-wrap;
   }
 
-  .headerImage {
-    @apply w-20 h-20 m-4 rounded-full;
-  }
-
   .scrollbar-hidden {
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
@@ -96,5 +126,9 @@
 
   .scrollbar-hidden::-webkit-scrollbar {
     display: none; /* Chrome, Safari, and Opera */
+  }
+
+  .hidden {
+    display: none;
   }
 }

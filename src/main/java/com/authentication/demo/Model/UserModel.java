@@ -53,6 +53,12 @@ public class UserModel implements UserDetails {
     @Column(name = "last_name")
     private String lastName;
     
+    @Column(name = "company")
+    private String company;
+
+    @Column(name = "website")
+    private String website;
+
     @Column(name = "biography")
     private String biography;
     
