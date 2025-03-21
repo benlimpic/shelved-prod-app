@@ -363,6 +363,21 @@ public class UserService implements UserDetailsService {
       directory.mkdirs();
     }
 
+    // Check if the file is empty
+    if (profilePicture.isEmpty()) {
+      throw new IOException("File is empty");
+    }
+    // Check if the file is too large
+    if (profilePicture.getSize() > 5 * 1024 * 1024) { // 5 MB limit
+      throw new IOException("File is too large");
+    }
+    // Check if the file type is allowed
+    String contentType = profilePicture.getContentType();
+    if (contentType == null || !contentType.startsWith("image/")) {
+      throw new IOException("Invalid file type");
+    }
+
+
     // GENERATE A UNIQUE FILENAME
     String filename = UUID.randomUUID().toString() + "-" + profilePicture.getOriginalFilename();
     File file = new File(directory, filename);

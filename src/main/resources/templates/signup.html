@@ -4,6 +4,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign Up</title>
     <link rel="stylesheet" href="/css/output.css" />
+    <script th:src="@{/js/fadeAnimations.js}" defer></script>
+
   </head>
   <body>
     <header>
@@ -20,7 +22,14 @@
         <div class="headerBox">
           <h1 class="formHeader">Sign Up</h1>
         </div>
-        <div th:if="${error}" th:text="${error}" class="failure"></div>
+
+        <div class="h-4 w-full flex flex-col justify-center items-center">
+          // SUCCESS MESSAGE
+          <div id="successMessageDiv" th:if="${message}" th:text="${message}" style="color: green;"></div>
+          // ERROR MESSAGE
+          <div id="errorMessageDiv" th:if="${error}" th:text="${error}" style="color: red;"></div>
+        </div>
+        
         <form th:action="@{/signup}" method="post">
           <div class="labelInputBox">
           <label class="label" for="username">Username:</label>

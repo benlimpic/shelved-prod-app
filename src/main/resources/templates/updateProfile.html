@@ -3,8 +3,10 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>User Profile</title>
-    <link rel="stylesheet" href="/css/output.css" />
-    <script src="/js/deleteAccount.js" defer></script>
+    <link rel="stylesheet" th:href="@{/css/output.css}" />
+    <script th:src="@{/js/deleteAccount.js}" defer></script>
+    <script th:src="@{/js/toggleProfilePhoto.js}" defer></script>
+    <script th:src="@{/js/fadeAnimations.js}" defer></script>
   </head>
   <body>
     <header>
@@ -27,16 +29,40 @@
     </header>
       <div class="profileContainer">
         <div class="h-auto w-full">
-        <div class="flex flex-col justify-center items-center pt-4 pb-2">
+        <div class="flex flex-col justify-center items-center mt-4 p-2">
           <!-- profile image -->
-          <a href="/update-profile-photo">
+          <a>
             <img class="h-20 w-20 rounded-full" th:src="${user?.profilePictureUrl ?: '/images/default-profile-photo.png'}" alt="Profile Picture" />
           </a>
-          <a href="/update-profile-photo">
+          <!-- update profile picture -->
+          <a id="updateProfilePhotoButton" class="mt-2">
             <span class="text-sm font-semibold text-blue-500">Update Profile Picture</span>
           </a>
+
+          <div class="h-4 w-full flex flex-col justify-center items-center">
+            // SUCCESS MESSAGE
+            <div id="successMessageDiv" th:if="${message}" th:text="${message}" style="color: green;"></div>
+            // ERROR MESSAGE
+            <div id="errorMessageDiv" th:if="${error}" th:text="${error}" style="color: red;"></div>
+          </div>
+
         </div>
-        <div class="flex flex-col justify-center items-center">
+        <div class="flex-col justify-center items-center">
+            <!-- Update Profile Picture -->
+          <div id="updateProfilePhotoForm" class="hidden w-full bg-white">
+            <div id="updateProfilePictureForm">
+              <form th:action="@{/update_profile_picture}" method="post" enctype="multipart/form-data">
+                <div class="labelInputBox">
+                <label class="label" for="profilePicture">Profile Picture:</label>
+                <input class="file-input" type="file" id="profilePicture" name="profilePicture" required>
+                </div>
+                <div class="cancelUpdateBox">
+                  <button class="button bg-slate-600" id="cancelProfilePhotoUpdateButton" type="button">Cancel</button>  
+                  <button class="button" id="updateProfilePictureSubmitButton" type="submit">Update</button>  
+                </div>
+              </form>
+            </div>
+          </div>
             <!-- Username -->
           <div class="grid grid-cols-4 w-full bg-white">
             <span class="col-span-1 text-sm p-2 border-y border-r border-slate-200">Username</span>

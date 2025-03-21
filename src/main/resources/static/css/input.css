@@ -42,11 +42,11 @@
   }
 
   .button {
-    @apply font-bold text-white bg-blue-500 rounded-md hover:bg-blue-700 drop-shadow-sm m-1 px-6 py-1;
+    @apply text-xs font-bold text-white bg-blue-500 rounded-md hover:bg-blue-700 drop-shadow-sm m-1 px-6 py-1;
   }
 
   .submitButton {
-    @apply font-bold text-white bg-blue-500 rounded-md hover:bg-blue-700 drop-shadow-sm m-1 px-6 py-1;
+    @apply text-xs font-bold text-white bg-blue-500 rounded-md hover:bg-blue-700 drop-shadow-sm m-1 px-6 py-1;
   }
 
   .cancelButton {
@@ -58,7 +58,7 @@
   }
 
   .smallUpdateButton {
-    @apply font-bold text-white bg-slate-600 rounded-md hover:bg-slate-800 drop-shadow-sm m-1 px-1 py-0.5;
+    @apply text-xs font-bold text-white bg-slate-600 rounded-md hover:bg-slate-800 drop-shadow-sm m-1 px-1 py-0.5;
   }
 
   .link {
@@ -131,5 +131,31 @@
 
   .hidden {
     display: none;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+  
+  .fade-in {
+    animation: fadeIn 0.5s ease-in forwards;
+  }
+  
+  .fade-out {
+    animation: fadeOut 0.5s ease-out forwards;
   }
 }

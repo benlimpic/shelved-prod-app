@@ -4,6 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="/css/output.css" />
+        <script th:src="@{/js/fadeAnimations.js}" defer></script>
   </head>
   <body>
     <header>
@@ -20,11 +21,16 @@
         <div class="headerBox">
           <h1 class="formHeader">Login</h1>
         </div>
-        <div th:if="${param.error}" class="failure">
-          Invalid username or password</div>
-        <div th:if="${param.logout}" class="success" >
-          You have been logged out
+
+        <div class="h-4 w-full flex flex-col justify-center items-center">
+          // SUCCESS MESSAGE
+          <div id="successMessageDiv" th:if="${param.logout}" class="success" >
+            You have been logged out</div>
+          // ERROR MESSAGE
+          <div id="errorMessageDiv" th:if="${param.error}" class="failure">
+            Invalid username or password</div>
         </div>
+        
         <div th:if="${message}" class="success" th:text="${message}"></div>
         <form th:action="@{/login}" method="post">
           <div class="labelInputBox">

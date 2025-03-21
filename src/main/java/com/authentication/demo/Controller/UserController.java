@@ -105,15 +105,15 @@ public class UserController {
 
   // UPDATE USER PROFILE PICTURE
   @PostMapping("/update_profile_picture")
-  public String updateProfilePicture(@RequestParam("profilePicture") MultipartFile profilePicture,
+  public String updateProfilePicture( MultipartFile profilePicture,
       RedirectAttributes redirectAttributes) {
     String result = userService.updateProfilePicture(profilePicture);
     if ("Profile picture updated successfully".equals(result)) {
       redirectAttributes.addFlashAttribute("message", result);
-      return "redirect:/profile";
+      return "redirect:/update-profile";
     } else {
       redirectAttributes.addFlashAttribute("error", result);
-      return "redirect:/profile";
+      return "redirect:/update-profile";
     }
   }
 
