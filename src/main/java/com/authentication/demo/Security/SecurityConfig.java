@@ -54,20 +54,18 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http
-    .csrf(csrf -> csrf.disable())
-        .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/signup", "/login", "/css/**", "/js/**", "/images/**" ).permitAll()
-            .requestMatchers("/index", "/profile").hasRole("USER")
-            .anyRequest().authenticated())
-        .formLogin(form -> form
-            .loginPage("/login")
-            .permitAll())
-        .logout(logout -> logout
-            .logoutUrl("/logout")
-            .invalidateHttpSession(true)
-            .clearAuthentication(true)
-            .deleteCookies("JSESSIONID"));
-    return http.build();
+      http// CSRF is enabled by default
+          .authorizeHttpRequests(auth -> auth
+              .requestMatchers("/signup", "/login", "/css/**", "/js/**", "/images/**").permitAll()
+              .anyRequest().authenticated())
+          .formLogin(form -> form
+              .loginPage("/login")
+              .permitAll())
+          .logout(logout -> logout
+              .logoutUrl("/logout")
+              .invalidateHttpSession(true)
+              .clearAuthentication(true)
+              .deleteCookies("JSESSIONID"));
+      return http.build();
   }
 }

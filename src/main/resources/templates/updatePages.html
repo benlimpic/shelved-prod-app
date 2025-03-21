@@ -127,3 +127,26 @@
   </body>
   <body>
 </html>
+
+<!-- IMPORTANT -->
+
+            <!-- Location -->
+            <div class="grid grid-cols-4 w-full border-1 border-slate-400 bg-slate-50">
+              <span class="col-span-1 text-sm p-2 border-r-1 border-slate-200 shadow-sm">Location</span>
+              <input class="col-span-3 text-sm p-2 border-0.5 border-slate-200" th:value="${user?.location ?: 'Default Location'}"></input>
+            </div>
+              <!-- Biography -->
+            <div class="grid grid-cols-4 w-full border-1 border-slate-400 bg-slate-50">
+              <span class="col-span-1 text-sm p-2 border-r-1 border-slate-200 shadow-sm">Biography</span>
+              <textarea class="col-span-3 text-sm p-2 border-0.5 border-slate-200" th:text="${user?.biography ?: 'Default Biography'}"></textarea>
+            </div>
+              <!-- Email -->
+            <div class="grid grid-cols-4 w-full border-1 border-slate-400 bg-slate-50">
+              <span class="col-span-1 text-sm p-2 border-r-1 border-slate-200 shadow-sm">Email</span>
+              <input class="col-span-3 text-sm p-2 border-0.5 border-slate-200" th:value="${user?.email ?: 'Default Email'}"></input>
+            </div>
+              <!-- Website -->
+            <div class="grid grid-cols-4 w-full border-spacing-0.5 border-slate-400 bg-slate-50">
+              <span class="col-span-1 text-sm p-2 border-r-1 border-slate-200 shadow-sm">Website</span>
+              <input class="col-span-3 text-sm p-1 border-0.5 border-slate-200" th:value="${user?.website ?: 'Default Website'}"></input>
+            </div>

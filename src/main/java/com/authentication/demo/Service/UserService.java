@@ -68,11 +68,11 @@ public class UserService implements UserDetailsService {
     return new CustomUserDetails(
         user.get().getUsername(),
         user.get().getPassword(),
-        user.get().getEmail(),
         user.get().getFirstName(),
         user.get().getLastName(),
-        user.get().getCompany(),
+        user.get().getEmail(),
         user.get().getWebsite(),
+        user.get().getLocation(),
         user.get().getBiography(),
         user.get().getProfilePictureUrl(),
         authorities);
@@ -212,12 +212,12 @@ public class UserService implements UserDetailsService {
     }
   }
 
-  // UPDATE USER COMPANY
-  public String updateUserCompany(Map<String, String> params) {
+  // UPDATE USER LOCATION
+  public String updateUserLocation(Map<String, String> params) {
     Optional<UserModel> user = getCurrentUser();
     if (user.isPresent()) {
       UserModel userModel = user.get();
-      userModel.setCompany(params.get("company"));
+      userModel.setLocation(params.get("location"));
       repository.save(userModel);
 
       // Re-authenticate the user with the updated details
@@ -226,7 +226,7 @@ public class UserService implements UserDetailsService {
           updatedUserDetails.getAuthorities());
       SecurityContextHolder.getContext().setAuthentication(newAuth);
 
-      return "User company updated successfully";
+      return "User location updated successfully";
     } else {
       return "No authenticated user found";
     }
@@ -275,25 +275,19 @@ public class UserService implements UserDetailsService {
   // CREATE NEW USER
   public Map<String, String> postUser(Map<String, String> params) {
     String username = params.get("username");
-    String email = params.get("email");
     String password = params.get("password");
     String confirmPassword = params.get("confirmPassword");
 
     Optional<UserModel> userUsername = repository.findByUsername(username);
-    Optional<UserModel> userEmail = repository.findByEmail(email);
 
     List<String> errors = new ArrayList<>();
     if (username == null || username.isEmpty() ||
-        email == null || email.isEmpty() ||
         password == null || password.isEmpty() ||
         confirmPassword == null || confirmPassword.isEmpty()) {
       errors.add("All fields are required");
     }
     if (userUsername.isPresent()) {
       errors.add("Username already exists");
-    }
-    if (userEmail.isPresent()) {
-      errors.add("Email already exists");
     }
     if (!password.equals(confirmPassword)) {
       errors.add("Passwords do not match");
@@ -307,11 +301,9 @@ public class UserService implements UserDetailsService {
     }
 
     UserModel user = new UserModel();
-    user.setEmail(email);
     user.setUsername(username);
     user.setPassword(passwordEncoder.encode(password));
     user.setRoles(Collections.singletonList("USER"));
-    user.setProfilePictureUrl(getDefaultProfilePictureUrl());
     repository.save(user);
 
     Map<String, String> result = new HashMap<>();
@@ -382,11 +374,6 @@ public class UserService implements UserDetailsService {
 
     // RETURN IMAGE URL
     return "/profile-pictures/" + filename;
-  }
-
-  // GET DEFAULT PROFILE PICTURE
-  public String getDefaultProfilePictureUrl() {
-    return "/profile-pictures/default-profile-photo.png";
   }
 
   // DELETE USER

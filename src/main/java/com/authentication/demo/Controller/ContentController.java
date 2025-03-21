@@ -41,4 +41,15 @@ public class ContentController {
     return "profile";
   }
 
+  @GetMapping("/update-profile")
+  public String updateProfile(Model model) {
+      // Ensure the user object is added to the model
+      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+      if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
+          CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+          model.addAttribute("user", userDetails);
+      }
+      return "updateProfile";
+  }
+
 }

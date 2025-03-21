@@ -9,23 +9,23 @@ public class CustomUserDetails implements UserDetails {
 
     private String username;
     private String password;
-    private String email;
     private String firstName;
     private String lastName;
-    private String company;
+    private String email;
     private String website;
+    private String location;
     private String biography;
     private String profilePictureUrl;
     private Collection<? extends GrantedAuthority> authorities;
 
-    public CustomUserDetails(String username, String password, String email, String firstName, String lastName, String company, String website, String biography, String profilePictureUrl, Collection<? extends GrantedAuthority> authorities) {
+    public CustomUserDetails(String username, String password, String email, String firstName, String lastName, String location, String website, String biography, String profilePictureUrl, Collection<? extends GrantedAuthority> authorities) {
         this.username = username;
         this.password = password;
-        this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.company = company;
+        this.email = email;
         this.website = website;
+        this.location = location;
         this.biography = biography;
         this.profilePictureUrl = profilePictureUrl;
         this.authorities = authorities;
@@ -43,8 +43,8 @@ public class CustomUserDetails implements UserDetails {
         return lastName;
     }
 
-    public String getCompany() {
-        return company;
+    public String getLocation() {
+        return location;
     }
 
     public String getWebsite() {

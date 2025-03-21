@@ -155,11 +155,11 @@ public class UserController {
         return "redirect:/login";
       } else {
         redirectAttributes.addFlashAttribute("error", result);
-        return "redirect:/profile";
+        return "redirect:/update-profile";
       }
     } catch (Exception e) {
       redirectAttributes.addFlashAttribute("error", "An unexpected error occurred while deleting the user.");
-      return "redirect:/profile";
+      return "redirect:/update-profile";
     }
   }
 

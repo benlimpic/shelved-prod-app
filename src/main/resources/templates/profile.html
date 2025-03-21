@@ -17,7 +17,7 @@
           </li>
           <li>
             <a
-            href="#"
+            href="/update-profile"
             class=" bg-blue-500 hover:bg-blue-700 text-white text-xs px-1 py-0.5 rounded"
             >Edit Profile</a
             >
@@ -29,28 +29,23 @@
         <div class="h-auto w-full border-b-2 
         border-slate-300 bg-slate-200 shadow-sm">
 
-          <div class="flex flex-col justify-center items-center p-2">
-            <!-- profile image -->
-            <img
-            class="p-1 headerImage"
-            th:src="${user.profilePictureUrl}"
-          alt="profile"
-          />
-          <!-- profile username -->
-          <span class="text-md" th:text="${user.username}"></span>
-          <!-- update button -->
-          
-          <a
-          href="#"
-          class=" bg-blue-500 hover:bg-blue-700 text-white text-xs px-1 py-0.5 rounded"
-          >Share Profile</a
-          >
+        <div class="flex flex-col justify-center items-center pt-4 pb-2">
+          <!-- profile image -->
+          <a href="/update-profile-photo">
+            <img class="h-20 w-20 rounded-full" th:src="${user?.profilePictureUrl ?: '/images/default-profile-photo.png'}" alt="Profile Picture" />
+          </a>
         </div>
-        <div class="flex flex-col justify-start items-start p-2 w-full">
+        <div class="flex flex-col justify-start items-start w-full">
           <div class="flex flex-col justify-start items-start p-2">
-            <h2 class="text-sm font-bold" th:text="${user?.username ?: 'Default Username'}"></h2>
-            <h2 class="text-sm font-thin" th:text="${user?.company ?: 'Default Company'}"></h2>
+            <!-- Username -->
+            <span class="text-md" th:text="${user?.username ?: 'Default Username'}"></span>
+            <!-- Location -->
+            <h2 class="text-sm font-thin" th:text="${user?.location ?: 'Default location'}"></h2>
+            <!-- Biography -->
             <p class="text-sm" th:text="${user?.biography ?: 'Default biography text goes here.'}"></p>
+            <!-- Email -->
+            <p class="text-sm font-thin" th:text="${user?.email ?: 'default@email.com'}"></p>
+            <!-- Website -->
             <p class="text-sm font-semibold" th:text="${user?.website ?: 'defaultwebsite.com'}"></p>
           </div>
         </div>

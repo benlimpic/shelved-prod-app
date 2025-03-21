@@ -35,17 +35,11 @@ public class UserModel implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    @Column(name = "email", unique = true)
-    private String email;
-
-    @Column(name = "password")
-    private String password;
-    
     @Column(name = "username", unique = true)
     private String username;
     
-    @Column(name = "profile_picture")
-    private String profilePictureUrl;
+    @Column(name = "password")
+    private String password;
     
     @Column(name = "first_name")
     private String firstName;
@@ -53,14 +47,20 @@ public class UserModel implements UserDetails {
     @Column(name = "last_name")
     private String lastName;
     
-    @Column(name = "company")
-    private String company;
-
+    @Column(name = "email", unique = true)
+    private String email;
+    
     @Column(name = "website")
     private String website;
-
+    
+    @Column(name = "location")
+    private String location;
+    
     @Column(name = "biography")
     private String biography;
+    
+    @Column(name = "profile_picture")
+    private String profilePictureUrl;
     
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;

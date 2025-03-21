@@ -1,0 +1,105 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Profile</title>
+    <link rel="stylesheet" href="/css/output.css" />
+    <script src="/js/deleteAccount.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <nav class="navbar">
+        <ul class="flex justify-between w-full">
+          <li>
+            <a href="/index">
+              <span>&#8592;</span>
+            </a>
+          </li>
+          <li>
+            <a
+            href="#"
+            class=" bg-blue-500 hover:bg-blue-700 text-white text-xs px-1 py-0.5 rounded"
+            >Edit Profile</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </header>
+      <div class="profileContainer">
+        <div class="h-auto w-full">
+        <div class="flex flex-col justify-center items-center pt-4 pb-2">
+          <!-- profile image -->
+          <a href="/update-profile-photo">
+            <img class="h-20 w-20 rounded-full" th:src="${user?.profilePictureUrl ?: '/images/default-profile-photo.png'}" alt="Profile Picture" />
+          </a>
+          <a href="/update-profile-photo">
+            <span class="text-sm font-semibold text-blue-500">Update Profile Picture</span>
+          </a>
+        </div>
+        <div class="flex flex-col justify-center items-center">
+            <!-- Username -->
+          <div class="grid grid-cols-4 w-full bg-white">
+            <span class="col-span-1 text-sm p-2 border-y border-r border-slate-200">Username</span>
+            <input class="col-span-3 text-sm p-2 border-y border-slate-200" th:value="${user?.username ?: 'Default Username'}"></input>
+          </div>
+            <!-- Location -->
+          <div class="grid grid-cols-4 w-full bg-white">
+            <span class="col-span-1 text-sm p-2 border-y border-r border-slate-200">Location</span>
+            <input class="col-span-3 text-sm p-2 border-y border-slate-200" th:value="${user?.location ?: 'Default Location'}"></input>
+          </div>
+            <!-- Biography -->
+          <div class="grid grid-cols-4 w-full bg-white">
+            <span class="col-span-1 text-sm p-2 border-y border-r border-slate-200">Biography</span>
+            <textarea class="col-span-3 text-sm p-2 border-y border-slate-200" th:text="${user?.biography ?: 'Default Biography'}" maxlength="250"></textarea>
+          </div>
+            <!-- Email -->
+          <div class="grid grid-cols-4 w-full bg-white">
+            <span class="col-span-1 text-sm p-2 border-y border-r border-slate-200">Email</span>
+            <input class="col-span-3 text-sm p-2 border-y border-slate-200" th:value="${user?.email ?: 'Default Email'}"></input>
+          </div>
+            <!-- Website -->
+          <div class="grid grid-cols-4 w-full bg-white">
+            <span class="col-span-1 text-sm p-2 border-y border-r border-slate-200">Website</span>
+            <input class="col-span-3 text-sm p-2 border-y border-slate-200" th:value="${user?.website ?: 'Default Website'}"></input>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="h-full w-full flex flex-col items-center justify-end">
+        <button class="deleteButton bg-slate-300 hover:bg-slate-400" id="deleteAccountButton">Delete Account</button>
+        <form class="hidden" id="deleteAccountForm" th:action="@{/delete_user}" method="post" >
+          <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+          <input type="hidden" name="username" th:value="${user != null ? user.username : ''}" />
+          
+          <label id="confirmDeleteLabel" for="confirmDelete" class="text-sm font-bold text-red-600">
+            Confirm Account Delete
+          </label>
+          <input
+            type="text"
+            id="confirmDelete"
+            name="confirmDelete"
+            placeholder="DELETE"
+            required
+
+            class="input focus:border-red-500 focus:ring-red-500 sm:text-sm invalid:border-red-500 invalid:ring-red-500"
+          />
+          <div class="flex flex-row justify-center items-center">
+            <button
+            id="cancelDeleteButton"
+            type="button"
+            class="cancelButton"
+          >Cancel</button>
+
+          <button
+          type="submit"
+            class="deleteButton focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+            >
+            Delete
+          </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
