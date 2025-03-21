@@ -112,6 +112,10 @@
     @apply text-2xl font-bold text-center text-blue-600 p-2;
   }
 
+  .errorBox{
+    @apply h-3 w-full flex flex-col justify-center items-center;
+  }
+
   .success {
     @apply my-1 text-sm font-bold text-center text-green-500 text-wrap;
   }
