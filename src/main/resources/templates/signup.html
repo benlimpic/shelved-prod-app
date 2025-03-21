@@ -24,12 +24,12 @@
         </div>
 
         <div class="h-4 w-full flex flex-col justify-center items-center">
-          // SUCCESS MESSAGE
+          <!-- SUCCESS MESSAGE -->
           <div id="successMessageDiv" th:if="${message}" th:text="${message}" style="color: green;"></div>
-          // ERROR MESSAGE
+          <!-- ERROR MESSAGE -->
           <div id="errorMessageDiv" th:if="${error}" th:text="${error}" style="color: red;"></div>
         </div>
-        
+
         <form th:action="@{/signup}" method="post">
           <div class="labelInputBox">
           <label class="label" for="username">Username:</label>

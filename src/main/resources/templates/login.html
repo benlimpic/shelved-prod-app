@@ -23,14 +23,14 @@
         </div>
 
         <div class="h-4 w-full flex flex-col justify-center items-center">
-          // SUCCESS MESSAGE
+          <!-- SUCCESS MESSAGE -->
           <div id="successMessageDiv" th:if="${param.logout}" class="success" >
             You have been logged out</div>
-          // ERROR MESSAGE
+          <!-- ERROR MESSAGE -->
           <div id="errorMessageDiv" th:if="${param.error}" class="failure">
             Invalid username or password</div>
         </div>
-        
+
         <div th:if="${message}" class="success" th:text="${message}"></div>
         <form th:action="@{/login}" method="post">
           <div class="labelInputBox">
