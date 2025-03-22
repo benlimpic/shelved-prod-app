@@ -13,16 +13,17 @@
       <nav class="navbar">
         <ul class="flex justify-between w-full">
           <li>
-            <a href="/index">
+            <a href="/profile">
               <span>&#8592;</span>
             </a>
           </li>
           <li>
-            <a
-            href="#"
-            class=" bg-blue-500 hover:bg-blue-700 text-white text-xs px-1 py-0.5 rounded"
-            >Edit Profile</a
-            >
+            <button
+              id="saveChangesButton"
+              type="submit"
+              class=" bg-blue-500 hover:bg-blue-700 text-white text-xs px-1 py-0.5 rounded"
+              >Save Changes
+            </button>
           </li>
         </ul>
       </nav>
@@ -64,36 +65,42 @@
             </div>
           </div>
             <!-- Username -->
-          <div class="grid grid-cols-4 w-full bg-white">
-            <span class="col-span-1 text-sm p-2 border-y border-r border-slate-200">Username</span>
-            <input class="col-span-3 text-sm p-2 border-y border-slate-200" th:value="${user?.username ?: 'Default Username'}"></input>
+          <div class="grid grid-cols-5 w-full bg-white">
+            <span class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Username</span>
+            <input id="usernameInput" class="col-span-4 text-sm p-2 border-y border-slate-200" th:value="${user?.username ?: ''}" placeholder="Username"></input>
           </div>
             <!-- Location -->
-          <div class="grid grid-cols-4 w-full bg-white">
-            <span class="col-span-1 text-sm p-2 border-y border-r border-slate-200">Location</span>
-            <input class="col-span-3 text-sm p-2 border-y border-slate-200" th:value="${user?.location ?: 'Default Location'}"></input>
+          <div class="grid grid-cols-5 w-full bg-white">
+            <span class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Location</span>
+            <input id="locationInput" class="col-span-4 text-sm p-2 border-y border-slate-200" th:value="${user?.location ?: ''}" placeholder="Location"></input>
+          </div>
+            <!-- Name -->
+          <div class="grid grid-cols-5 w-full bg-white">
+            <span class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Name</span>
+            <input id="locationInput" class="col-span-2 text-sm p-2 border-y border-slate-200" th:value="${user?.location ?: ''}" placeholder="First Name"></input>
+            <input id="locationInput" class="col-span-2 text-sm p-2 border-y border-slate-200" th:value="${user?.location ?: ''}" placeholder="Last Name"></input>
           </div>
             <!-- Biography -->
-          <div class="grid grid-cols-4 w-full bg-white">
-            <span class="col-span-1 text-sm p-2 border-y border-r border-slate-200">Biography</span>
-            <textarea class="col-span-3 text-sm p-2 border-y border-slate-200" th:text="${user?.biography ?: 'Default Biography'}" maxlength="250"></textarea>
+          <div class="grid grid-cols-5 w-full bg-white">
+            <span class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Biography</span>
+            <textarea id="biographyInput" class="col-span-4 text-sm p-2 border-y border-slate-200" th:text="${user?.biography ?: ''}" placeholder="Biography" maxlength="250"></textarea>
           </div>
             <!-- Email -->
-          <div class="grid grid-cols-4 w-full bg-white">
-            <span class="col-span-1 text-sm p-2 border-y border-r border-slate-200">Email</span>
-            <input class="col-span-3 text-sm p-2 border-y border-slate-200" th:value="${user?.email ?: 'Default Email'}"></input>
+          <div class="grid grid-cols-5 w-full bg-white">
+            <span class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Email</span>
+            <input id="emailInput"class="col-span-4 text-sm p-2 border-y border-slate-200" th:value="${user?.email ?: ''}" placeholder="Email"></input>
           </div>
             <!-- Website -->
-          <div class="grid grid-cols-4 w-full bg-white">
-            <span class="col-span-1 text-sm p-2 border-y border-r border-slate-200">Website</span>
-            <input class="col-span-3 text-sm p-2 border-y border-slate-200" th:value="${user?.website ?: 'Default Website'}"></input>
+          <div class="grid grid-cols-5 w-full bg-white">
+            <span class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Website</span>
+            <input id="websiteInput" class="col-span-4 text-sm p-2 border-y border-slate-200" th:value="${user?.website ?: ''}" placeholder="Website"></input>
           </div>
         </div>
       </div>
 
 
       <div class="h-full w-full flex flex-col items-center justify-end">
-        <button class="deleteButton bg-slate-300 hover:bg-slate-400" id="deleteAccountButton">Delete Account</button>
+        <button class="deleteButton bg-slate-400 hover:bg-slate-400" id="deleteAccountButton">Delete Account</button>
         <form class="hidden" id="deleteAccountForm" th:action="@{/delete_user}" method="post" >
           <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
           <input type="hidden" name="username" th:value="${user != null ? user.username : ''}" />
