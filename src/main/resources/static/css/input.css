@@ -11,9 +11,6 @@
     @apply w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto;
   }
 
-  form {
-    @apply flex flex-col w-full items-center justify-center px-4 mt-1;
-  }
 }
 
 @layer components {
@@ -23,6 +20,10 @@
 
   .profileContainer {
     @apply flex flex-col items-center justify-start h-screen overscroll-none w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto pb-12 bg-slate-100;
+  }
+
+  .formContainer {
+    @apply flex flex-col w-full items-center justify-center px-4 mt-1;
   }
 
   .navbar {

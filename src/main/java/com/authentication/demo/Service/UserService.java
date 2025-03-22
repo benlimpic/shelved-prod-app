@@ -272,6 +272,32 @@ public class UserService implements UserDetailsService {
     }
   }
 
+  // UPDATE USER PROFILE
+  public String updateUserProfile(Map<String, String> params) {
+    Optional<UserModel> user = getCurrentUser();
+    if (user.isPresent()) {
+      // Update user details
+      UserModel userModel = user.get();
+      userModel.setFirstName(params.get("firstName"));
+      userModel.setLastName(params.get("lastName"));
+      userModel.setEmail(params.get("email"));
+      userModel.setWebsite(params.get("website"));
+      userModel.setLocation(params.get("location"));
+      userModel.setBiography(params.get("biography"));
+      repository.save(userModel);
+
+      // Re-authenticate the user with the updated details
+      UserDetails updatedUserDetails = userDetailsService.loadUserByUsername(userModel.getUsername());
+      Authentication newAuth = new UsernamePasswordAuthenticationToken(updatedUserDetails, null,
+          updatedUserDetails.getAuthorities());
+      SecurityContextHolder.getContext().setAuthentication(newAuth);
+
+      return "User profile updated successfully";
+    } else {
+      return "No authenticated user found";
+    }
+  }
+
   // CREATE NEW USER
   public Map<String, String> postUser(Map<String, String> params) {
     String username = params.get("username");

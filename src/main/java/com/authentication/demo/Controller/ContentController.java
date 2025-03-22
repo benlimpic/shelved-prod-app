@@ -33,17 +33,17 @@ public class ContentController {
 
   @GetMapping("/profile")
   public String profile(Model model) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
-      CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-      model.addAttribute("user", userDetails);
-    }
-    return "profile";
+      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+      if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
+          CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+          System.out.println("User Location: " + (userDetails != null ? userDetails.getLocation() : "User is null"));
+          model.addAttribute("user", userDetails);
+      }
+      return "profile";
   }
 
   @GetMapping("/update-profile")
   public String updateProfile(Model model) {
-      // Ensure the user object is added to the model
       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
       if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
           CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();

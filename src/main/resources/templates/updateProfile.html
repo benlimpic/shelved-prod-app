@@ -7,6 +7,7 @@
     <script th:src="@{/js/deleteAccount.js}" defer></script>
     <script th:src="@{/js/toggleProfilePhoto.js}" defer></script>
     <script th:src="@{/js/fadeAnimations.js}" defer></script>
+    <script th:src="@{/js/updateChanges.js}" defer></script>
   </head>
   <body>
     <header>
@@ -64,39 +65,42 @@
               </form>
             </div>
           </div>
-            <!-- Username -->
-          <div class="grid grid-cols-5 w-full bg-white">
-            <span class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Username</span>
-            <input id="usernameInput" class="col-span-4 text-sm p-2 border-y border-slate-200" th:value="${user?.username ?: ''}" placeholder="Username"></input>
-          </div>
-            <!-- Location -->
-          <div class="grid grid-cols-5 w-full bg-white">
-            <span class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Location</span>
-            <input id="locationInput" class="col-span-4 text-sm p-2 border-y border-slate-200" th:value="${user?.location ?: ''}" placeholder="Location"></input>
-          </div>
+          <form th:action="@{/update_profile}" method="post" id="updateProfileForm">  
+              <!-- Username -->
+            <!-- <div class="grid grid-cols-5 w-full bg-white">
+              <span class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Username</span>
+              <input id="usernameInput" class="col-span-4 text-sm p-2 border-y border-slate-200" th:value="${user?.username ?: ''}" placeholder="Username"></input>
+            </div> -->
             <!-- Name -->
-          <div class="grid grid-cols-5 w-full bg-white">
-            <span class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Name</span>
-            <input id="locationInput" class="col-span-2 text-sm p-2 border-y border-slate-200" th:value="${user?.location ?: ''}" placeholder="First Name"></input>
-            <input id="locationInput" class="col-span-2 text-sm p-2 border-y border-slate-200" th:value="${user?.location ?: ''}" placeholder="Last Name"></input>
-          </div>
-            <!-- Biography -->
-          <div class="grid grid-cols-5 w-full bg-white">
-            <span class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Biography</span>
-            <textarea id="biographyInput" class="col-span-4 text-sm p-2 border-y border-slate-200" th:text="${user?.biography ?: ''}" placeholder="Biography" maxlength="250"></textarea>
-          </div>
+            <div class="grid grid-cols-5 w-full bg-white">
+              <span class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Name</span>
+              <input id="firstNameInput" class="col-span-2 text-sm p-2 border-y border-slate-200" name="firstName" th:value="${user?.location ?: ''}" placeholder="First Name"></input>
+              <input id="lastNameInput" class="col-span-2 text-sm p-2 border-y border-slate-200" name="lastName" th:value="${user?.location ?: ''}" placeholder="Last Name"></input>
+            </div>
+              <!-- Location -->
+            <div class="grid grid-cols-5 w-full bg-white">
+              <span class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Location</span>
+              <input id="locationInput" class="col-span-4 text-sm p-2 border-y border-slate-200" name="location" th:value="${user?.location ?: ''}" placeholder="Location"></input>
+            </div>
             <!-- Email -->
-          <div class="grid grid-cols-5 w-full bg-white">
-            <span class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Email</span>
-            <input id="emailInput"class="col-span-4 text-sm p-2 border-y border-slate-200" th:value="${user?.email ?: ''}" placeholder="Email"></input>
-          </div>
+            <div class="grid grid-cols-5 w-full bg-white">
+              <span class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Email</span>
+              <input id="emailInput"class="col-span-4 text-sm p-2 border-y border-slate-200" name="email" th:value="${user?.email ?: ''}" placeholder="Email"></input>
+            </div>
             <!-- Website -->
-          <div class="grid grid-cols-5 w-full bg-white">
-            <span class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Website</span>
-            <input id="websiteInput" class="col-span-4 text-sm p-2 border-y border-slate-200" th:value="${user?.website ?: ''}" placeholder="Website"></input>
+            <div class="grid grid-cols-5 w-full bg-white">
+              <span class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Website</span>
+              <input id="websiteInput" class="col-span-4 text-sm p-2 border-y border-slate-200" name="website" th:value="${user?.website ?: ''}" placeholder="Website"></input>
+            </div>
+              <!-- Biography -->
+            <div class="grid grid-cols-5 w-full bg-white">
+              <span class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Biography</span>
+              <textarea id="biographyInput" class="col-span-4 text-sm p-2 border-y border-slate-200" name="biography" th:text="${user?.biography ?: ''}" placeholder="Biography" maxlength="250"></textarea>
+            </div>
           </div>
         </div>
-      </div>
+        <button type="submit" id="hiddenSubmitButton" class="hidden"></button>
+      </form>
 
 
       <div class="h-full w-full flex flex-col items-center justify-end">
@@ -125,9 +129,7 @@
           >Cancel</button>
 
           <button
-          type="submit"
-            class="deleteButton focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-            >
+          type="submit" class="deleteButton focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
             Delete
           </button>
           </div>

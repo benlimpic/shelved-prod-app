@@ -97,21 +97,22 @@
         </div>
       
         <div>
-          <form th:action="@{/update_user_details}" method="post">
-            <h2>Update User Details</h2>
+          <div>
+            <form th:action="@{/update_user_details}" method="post">
+              <h2>Update User Details</h2>
 
-              <label for="firstName">First Name:</label>
-              <input type="text" id="firstName" name="firstName" required>
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" name="firstName" required>
 
-              <label for="lastName">Last Name:</label>
-              <input type="text" id="lastName" name="lastName" required>
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" name="lastName" required>
 
-              <label for="biography">Biography:</label>
-              <textarea id="biography" name="biography" required></textarea>
+                <label for="biography">Biography:</label>
+                <textarea id="biography" name="biography" required></textarea>
 
-              <button type="submit">Update User Details</button>
-
-          </form>
+                <button type="submit">Update User Details</button>
+            </form>
+          </div>
           </div>
       
           <div>
