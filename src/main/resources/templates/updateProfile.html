@@ -74,8 +74,8 @@
             <!-- Name -->
             <div class="grid grid-cols-5 w-full bg-white">
               <span class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Name</span>
-              <input id="firstNameInput" class="col-span-2 text-sm p-2 border-y border-slate-200" name="firstName" th:value="${user?.location ?: ''}" placeholder="First Name"></input>
-              <input id="lastNameInput" class="col-span-2 text-sm p-2 border-y border-slate-200" name="lastName" th:value="${user?.location ?: ''}" placeholder="Last Name"></input>
+              <input id="firstNameInput" class="col-span-2 text-sm p-2 border-y border-slate-200" name="firstName" th:value="${user?.firstName ?: ''}" placeholder="First Name"></input>
+              <input id="lastNameInput" class="col-span-2 text-sm p-2 border-y border-slate-200" name="lastName" th:value="${user?.lastName ?: ''}" placeholder="Last Name"></input>
             </div>
               <!-- Location -->
             <div class="grid grid-cols-5 w-full bg-white">

@@ -22,9 +22,6 @@ public class SecurityHandler {
     public AuthenticationSuccessHandler loginSuccessHandler() {
         return (HttpServletRequest request, HttpServletResponse response, Authentication authentication) -> {
             // LOGIN SUCCESS HANDLING
-            String username = request.getParameter("username");
-            String password = request.getParameter("password");
-
             AuthenticationLogger.log("Login successful: " + authentication.getName());
             AuthenticationLogger.logAuthenticationDetails();
             response.sendRedirect("/index");

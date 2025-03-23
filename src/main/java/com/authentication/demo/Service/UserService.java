@@ -12,10 +12,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,30 +25,23 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.authentication.demo.Model.CustomUserDetails;
 import com.authentication.demo.Model.UserModel;
 import com.authentication.demo.Repository.UserRepository;
 
 @Service
 public class UserService implements UserDetailsService {
 
-  private static final Logger logger = LoggerFactory.getLogger(UserService.class);
-
   private final UserRepository repository;
   private final PasswordEncoder passwordEncoder;
-  private AuthenticationManager authenticationManager;
   private final UserDetailsService userDetailsService;
 
-  public UserService(UserRepository repository, @Lazy PasswordEncoder passwordEncoder,
-      UserDetailsService userDetailsService) {
-    this.repository = repository;
+  public UserService(
+      UserRepository repository,
+      PasswordEncoder passwordEncoder,
+      @Lazy UserDetailsService userDetailsService) {
     this.passwordEncoder = passwordEncoder;
     this.userDetailsService = userDetailsService;
-  }
-
-  @Lazy
-  public void setAuthenticationManager(AuthenticationManager authenticationManager) {
-    this.authenticationManager = authenticationManager;
+    this.repository = repository;
   }
 
   @Override
@@ -61,20 +51,14 @@ public class UserService implements UserDetailsService {
       throw new UsernameNotFoundException("User not found with username: " + username);
     }
 
-    List<GrantedAuthority> authorities = user.get().getRoles().stream()
-        .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+    UserModel userModel = user.get();
+    List<GrantedAuthority> authorities = userModel.getRoles().stream()
+        .map(SimpleGrantedAuthority::new)
         .collect(Collectors.toList());
 
-    return new CustomUserDetails(
-        user.get().getUsername(),
-        user.get().getPassword(),
-        user.get().getFirstName(),
-        user.get().getLastName(),
-        user.get().getEmail(),
-        user.get().getWebsite(),
-        user.get().getLocation(),
-        user.get().getBiography(),
-        user.get().getProfilePictureUrl(),
+    return new org.springframework.security.core.userdetails.User(
+        userModel.getUsername(),
+        userModel.getPassword(),
         authorities);
   }
 
@@ -90,7 +74,6 @@ public class UserService implements UserDetailsService {
 
   // UPDATE USERNAME
   public String updateUsername(String newUsername) {
-
     if (newUsername == null || newUsername.isEmpty()) {
       return "Username is required";
     }
@@ -100,27 +83,19 @@ public class UserService implements UserDetailsService {
       return "Username already exists";
     }
 
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-      UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-      String currentUsername = userDetails.getUsername();
+    Optional<UserModel> user = getCurrentUser();
+    if (user.isPresent()) {
+      UserModel userModel = user.get();
+      userModel.setUsername(newUsername);
+      repository.save(userModel);
 
-      Optional<UserModel> user = repository.findByUsername(currentUsername);
-      if (user.isPresent()) {
-        UserModel userModel = user.get();
-        userModel.setUsername(newUsername);
-        repository.save(userModel);
+      // Re-authenticate the user with the new username
+      UserDetails updatedUserDetails = userDetailsService.loadUserByUsername(newUsername);
+      Authentication newAuth = new UsernamePasswordAuthenticationToken(updatedUserDetails, null,
+          updatedUserDetails.getAuthorities());
+      SecurityContextHolder.getContext().setAuthentication(newAuth);
 
-        // Re-authenticate the user with the new username
-        UserDetails updatedUserDetails = userDetailsService.loadUserByUsername(newUsername);
-        Authentication newAuth = new UsernamePasswordAuthenticationToken(updatedUserDetails,
-            authentication.getCredentials(), updatedUserDetails.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(newAuth);
-
-        return "Username updated successfully";
-      } else {
-        return "User not found";
-      }
+      return "Username updated successfully";
     } else {
       return "No authenticated user found";
     }
@@ -144,7 +119,7 @@ public class UserService implements UserDetailsService {
       userModel.setEmail(newEmail);
       repository.save(userModel);
 
-      // Re-authenticate the user with the new email
+      // Re-authenticate the user with the current username
       UserDetails updatedUserDetails = userDetailsService.loadUserByUsername(userModel.getUsername());
       Authentication newAuth = new UsernamePasswordAuthenticationToken(updatedUserDetails, null,
           updatedUserDetails.getAuthorities());
@@ -177,7 +152,7 @@ public class UserService implements UserDetailsService {
 
         // Re-authenticate the user with the new password
         UserDetails updatedUserDetails = userDetailsService.loadUserByUsername(userModel.getUsername());
-        Authentication newAuth = new UsernamePasswordAuthenticationToken(updatedUserDetails, newPassword,
+        Authentication newAuth = new UsernamePasswordAuthenticationToken(updatedUserDetails, null,
             updatedUserDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(newAuth);
 
@@ -190,94 +165,13 @@ public class UserService implements UserDetailsService {
     }
   }
 
-  // UPDATE USER FIRST & LAST NAME
-  public String updateUserFirstAndLastName(Map<String, String> params) {
-
-    Optional<UserModel> user = getCurrentUser();
-    if (user.isPresent()) {
-      UserModel userModel = user.get();
-      userModel.setFirstName(params.get("firstName"));
-      userModel.setLastName(params.get("lastName"));
-      repository.save(userModel);
-
-      // Re-authenticate the user with the updated details
-      UserDetails updatedUserDetails = userDetailsService.loadUserByUsername(userModel.getUsername());
-      Authentication newAuth = new UsernamePasswordAuthenticationToken(updatedUserDetails, null,
-          updatedUserDetails.getAuthorities());
-      SecurityContextHolder.getContext().setAuthentication(newAuth);
-
-      return "User first & last name updated successfully";
-    } else {
-      return "No authenticated user found";
-    }
-  }
-
-  // UPDATE USER LOCATION
-  public String updateUserLocation(Map<String, String> params) {
-    Optional<UserModel> user = getCurrentUser();
-    if (user.isPresent()) {
-      UserModel userModel = user.get();
-      userModel.setLocation(params.get("location"));
-      repository.save(userModel);
-
-      // Re-authenticate the user with the updated details
-      UserDetails updatedUserDetails = userDetailsService.loadUserByUsername(userModel.getUsername());
-      Authentication newAuth = new UsernamePasswordAuthenticationToken(updatedUserDetails, null,
-          updatedUserDetails.getAuthorities());
-      SecurityContextHolder.getContext().setAuthentication(newAuth);
-
-      return "User location updated successfully";
-    } else {
-      return "No authenticated user found";
-    }
-  }
-
-  // UPDATE USER WEBSITE
-  public String updateUserWebsite(Map<String, String> params) {
-    Optional<UserModel> user = getCurrentUser();
-    if (user.isPresent()) {
-      UserModel userModel = user.get();
-      userModel.setWebsite(params.get("website"));
-      repository.save(userModel);
-
-      // Re-authenticate the user with the updated details
-      UserDetails updatedUserDetails = userDetailsService.loadUserByUsername(userModel.getUsername());
-      Authentication newAuth = new UsernamePasswordAuthenticationToken(updatedUserDetails, null,
-          updatedUserDetails.getAuthorities());
-      SecurityContextHolder.getContext().setAuthentication(newAuth);
-
-      return "User website updated successfully";
-    } else {
-      return "No authenticated user found";
-    }
-  }
-
-  // UPDATE USER BIOGRAPHY
-  public String updateUserBiography(Map<String, String> params) {
-    Optional<UserModel> user = getCurrentUser();
-    if (user.isPresent()) {
-      UserModel userModel = user.get();
-      userModel.setBiography(params.get("biography"));
-      repository.save(userModel);
-
-      // Re-authenticate the user with the updated details
-      UserDetails updatedUserDetails = userDetailsService.loadUserByUsername(userModel.getUsername());
-      Authentication newAuth = new UsernamePasswordAuthenticationToken(updatedUserDetails, null,
-          updatedUserDetails.getAuthorities());
-      SecurityContextHolder.getContext().setAuthentication(newAuth);
-
-      return "User biography updated successfully";
-    } else {
-      return "No authenticated user found";
-    }
-  }
-
   // UPDATE USER PROFILE
   public String updateUserProfile(Map<String, String> params) {
     Optional<UserModel> user = getCurrentUser();
     if (user.isPresent()) {
       // Update user details
       UserModel userModel = user.get();
+
       userModel.setFirstName(params.get("firstName"));
       userModel.setLastName(params.get("lastName"));
       userModel.setEmail(params.get("email"));
@@ -296,60 +190,6 @@ public class UserService implements UserDetailsService {
     } else {
       return "No authenticated user found";
     }
-  }
-
-  // CREATE NEW USER
-  public Map<String, String> postUser(Map<String, String> params) {
-    String username = params.get("username");
-    String password = params.get("password");
-    String confirmPassword = params.get("confirmPassword");
-
-    Optional<UserModel> userUsername = repository.findByUsername(username);
-
-    List<String> errors = new ArrayList<>();
-    if (username == null || username.isEmpty() ||
-        password == null || password.isEmpty() ||
-        confirmPassword == null || confirmPassword.isEmpty()) {
-      errors.add("All fields are required");
-    }
-    if (userUsername.isPresent()) {
-      errors.add("Username already exists");
-    }
-    if (!password.equals(confirmPassword)) {
-      errors.add("Passwords do not match");
-    }
-
-    if (!errors.isEmpty()) {
-      Map<String, String> result = new HashMap<>();
-      result.put("status", "error");
-      result.put("message", String.join(",", errors));
-      return result;
-    }
-
-    UserModel user = new UserModel();
-    user.setUsername(username);
-    user.setPassword(passwordEncoder.encode(password));
-    user.setRoles(Collections.singletonList("USER"));
-    repository.save(user);
-
-    Map<String, String> result = new HashMap<>();
-    result.put("status", "success");
-    result.put("message", "User registered successfully");
-    return result;
-  }
-
-  // LOGIN USER
-  public void login(Map<String, String> params) {
-    // GET FORM DATA PARAMS
-    String username = params.get("username");
-    String password = params.get("password");
-
-  }
-
-  // LOGOUT USER
-  public String logout() {
-    SecurityContextHolder.clearContext();
-    return "login";
   }
 
   // UPDATE PROFILE PICTURE
@@ -403,7 +243,6 @@ public class UserService implements UserDetailsService {
       throw new IOException("Invalid file type");
     }
 
-
     // GENERATE A UNIQUE FILENAME
     String filename = UUID.randomUUID().toString() + "-" + profilePicture.getOriginalFilename();
     File file = new File(directory, filename);
@@ -415,6 +254,73 @@ public class UserService implements UserDetailsService {
 
     // RETURN IMAGE URL
     return "/profile-pictures/" + filename;
+  }
+
+  // CREATE NEW USER
+  public Map<String, String> postUser(Map<String, String> params) {
+    String username = params.get("username");
+    String password = params.get("password");
+    String confirmPassword = params.get("confirmPassword");
+
+    Optional<UserModel> userUsername = repository.findByUsername(username);
+
+    List<String> errors = new ArrayList<>();
+    if (username == null || username.isEmpty() ||
+        password == null || password.isEmpty() ||
+        confirmPassword == null || confirmPassword.isEmpty()) {
+      errors.add("All fields are required");
+    }
+    if (userUsername.isPresent()) {
+      errors.add("Username already exists");
+    }
+    if (password == null || !password.equals(confirmPassword)) {
+      errors.add("Passwords do not match");
+    }
+
+    if (!errors.isEmpty()) {
+      Map<String, String> result = new HashMap<>();
+      result.put("status", "error");
+      result.put("message", String.join(",", errors));
+      return result;
+    }
+
+    UserModel user = new UserModel();
+    user.setUsername(username);
+    user.setPassword(passwordEncoder.encode(password));
+    user.setRoles(Collections.singletonList("USER"));
+    repository.save(user);
+
+    Map<String, String> result = new HashMap<>();
+    result.put("status", "success");
+    result.put("message", "User registered successfully");
+    return result;
+  }
+
+  // LOGIN USER
+  public String login(Map<String, String> params) {
+    // GET FORM DATA PARAMS
+    String username = params.get("username");
+    String password = params.get("password");
+
+    if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
+      return "Username and password are required";
+    }
+
+    Optional<UserModel> user = repository.findByUsername(username);
+    if (user.isPresent() && passwordEncoder.matches(password, user.get().getPassword())) {
+      UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+      Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+      SecurityContextHolder.getContext().setAuthentication(auth);
+      return "Login successful";
+    } else {
+      return "Invalid username or password";
+    }
+  }
+
+  // LOGOUT USER
+  public String logout() {
+    SecurityContextHolder.clearContext();
+    return "login";
   }
 
   // DELETE USER
