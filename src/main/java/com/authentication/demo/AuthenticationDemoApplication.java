@@ -3,7 +3,7 @@ package com.authentication.demo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication(scanBasePackages = "com.authentication.demo")
+@SpringBootApplication
 public class AuthenticationDemoApplication {
 
 	public static void main(String[] args) {
