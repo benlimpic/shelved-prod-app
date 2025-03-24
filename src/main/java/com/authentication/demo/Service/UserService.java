@@ -78,9 +78,16 @@ public class UserService implements UserDetailsService {
       return "Username is required";
     }
 
+    // Check if the new username already exists
     Optional<UserModel> existingUser = repository.findByUsername(newUsername);
     if (existingUser.isPresent()) {
       return "Username already exists";
+    }
+
+    // Check if the new username is the same as the current username
+    Optional<UserModel> currentUser = getCurrentUser();
+    if (currentUser.isPresent() && currentUser.get().getUsername().equals(newUsername)) {
+      return "New username is the same as the current username";
     }
 
     Optional<UserModel> user = getCurrentUser();
@@ -109,8 +116,25 @@ public class UserService implements UserDetailsService {
       return "Emails are required";
     }
 
+    // Check if the new email is valid
+    if (!newEmail.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+      return "Invalid email format";
+    }
+    // Check if the new email is the same as the current email
+    Optional<UserModel> currentUser = getCurrentUser();
+    if (currentUser.isPresent() && currentUser.get().getEmail().equals(newEmail)) {
+      return "New email is the same as the current email";
+    } 
+
+    // Check if the new email and confirm email match
     if (!newEmail.equals(confirmNewEmail)) {
       return "New emails do not match";
+    }
+
+    // Check if the new email already exists
+    Optional<UserModel> existingUser = repository.findByEmail(newEmail);
+    if (existingUser.isPresent()) {
+      return "Email already exists";
     }
 
     Optional<UserModel> user = getCurrentUser();
@@ -174,7 +198,6 @@ public class UserService implements UserDetailsService {
 
       userModel.setFirstName(params.get("firstName"));
       userModel.setLastName(params.get("lastName"));
-      userModel.setEmail(params.get("email"));
       userModel.setWebsite(params.get("website"));
       userModel.setLocation(params.get("location"));
       userModel.setBiography(params.get("biography"));
@@ -259,6 +282,7 @@ public class UserService implements UserDetailsService {
   // CREATE NEW USER
   public Map<String, String> postUser(Map<String, String> params) {
     String username = params.get("username");
+    String email = params.get("email"); 
     String password = params.get("password");
     String confirmPassword = params.get("confirmPassword");
 
@@ -267,12 +291,22 @@ public class UserService implements UserDetailsService {
     List<String> errors = new ArrayList<>();
     if (username == null || username.isEmpty() ||
         password == null || password.isEmpty() ||
+        email == null || email.isEmpty() ||
         confirmPassword == null || confirmPassword.isEmpty()) {
       errors.add("All fields are required");
     }
     if (userUsername.isPresent()) {
       errors.add("Username already exists");
     }
+
+    if (email != null && !email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+      errors.add("Invalid email format");
+    }
+
+    if (email != null && repository.findByEmail(email).isPresent()) {
+      errors.add("Email already exists");
+    }
+
     if (password == null || !password.equals(confirmPassword)) {
       errors.add("Passwords do not match");
     }

@@ -24,8 +24,10 @@
             <img class="h-5 " href="/index" src="/images/Shelved_Logo_White.png" alt="Shelved Logo" />
           </li>
           <li>
-            <a  href="/profile" >
-              <img class="h-7 w-7 rounded-full" th:src="${user != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}" alt="Profile Picture" /></a>
+
+              <a href="/profile">
+                <img class="h-7 w-7 rounded-full" th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}" alt="Profile Picture" />
+              </a>
           </li>
         </ul>
       </nav>

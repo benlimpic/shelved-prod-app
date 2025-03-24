@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>User Profile</title>
     <link rel="stylesheet" th:href="@{/css/output.css}" />
-    <script th:src="@{/js/deleteAccount.js}" defer></script>
+    <script th:src="@{/js/accountDetails.js}" defer></script>
     <script th:src="@{/js/toggleProfilePhoto.js}" defer></script>
     <script th:src="@{/js/fadeAnimations.js}" defer></script>
     <script th:src="@{/js/updateChanges.js}" defer></script>
@@ -65,12 +65,8 @@
               </form>
             </div>
           </div>
+
           <form th:action="@{/update_profile}" method="post" id="updateProfileForm">  
-              <!-- Username -->
-            <!-- <div class="grid grid-cols-5 w-full bg-white">
-              <span class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Username</span>
-              <input id="usernameInput" class="col-span-4 text-sm p-2 border-y border-slate-200" th:value="${user?.username ?: ''}" placeholder="Username"></input>
-            </div> -->
             <!-- Name -->
             <div class="grid grid-cols-5 w-full bg-white">
               <span class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Name</span>
@@ -81,11 +77,6 @@
             <div class="grid grid-cols-5 w-full bg-white">
               <span class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Location</span>
               <input id="locationInput" class="col-span-4 text-sm p-2 border-y border-slate-200" name="location" th:value="${user?.location ?: ''}" placeholder="Location"></input>
-            </div>
-            <!-- Email -->
-            <div class="grid grid-cols-5 w-full bg-white">
-              <span class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Email</span>
-              <input id="emailInput"class="col-span-4 text-sm p-2 border-y border-slate-200" name="email" th:value="${user?.email ?: ''}" placeholder="Email"></input>
             </div>
             <!-- Website -->
             <div class="grid grid-cols-5 w-full bg-white">
@@ -104,36 +95,7 @@
 
 
       <div class="h-full w-full flex flex-col items-center justify-end">
-        <button class="deleteButton bg-slate-400 hover:bg-slate-400" id="deleteAccountButton">Delete Account</button>
-        <form class="hidden" id="deleteAccountForm" th:action="@{/delete_user}" method="post" >
-          <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
-          <input type="hidden" name="username" th:value="${user != null ? user.username : ''}" />
-          
-          <label id="confirmDeleteLabel" for="confirmDelete" class="text-sm font-bold text-red-600">
-            Confirm Account Delete
-          </label>
-          <input
-            type="text"
-            id="confirmDelete"
-            name="confirmDelete"
-            placeholder="DELETE"
-            required
-
-            class="input focus:border-red-500 focus:ring-red-500 sm:text-sm invalid:border-red-500 invalid:ring-red-500"
-          />
-          <div class="flex flex-row justify-center items-center">
-            <button
-            id="cancelDeleteButton"
-            type="button"
-            class="cancelButton"
-          >Cancel</button>
-
-          <button
-          type="submit" class="deleteButton focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
-            Delete
-          </button>
-          </div>
-        </form>
+        <a class="deleteButton bg-slate-400 hover:bg-slate-400" id="redirectUpdateUserDetails" href="./update-user-details">Account Details</a>
       </div>
     </div>
   </body>

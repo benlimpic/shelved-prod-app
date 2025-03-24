@@ -42,6 +42,11 @@ public class ContentController {
   public String updateProfile(Model model) {
       return handleAuthentication(model, "updateProfile");
   }
+  
+  @GetMapping("/update-user-details")
+  public String updateUserDetails(Model model) {
+      return handleAuthentication(model, "updateUserDetails");
+  }
 
   private String handleAuthentication(Model model, String viewName) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
