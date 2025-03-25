@@ -26,14 +26,17 @@
 
         <div class="errorBox"> 
           <!-- SUCCESS MESSAGE -->
-          <div id="successMessageDiv" th:if="${param.logout}" class="success" >
-            You have been logged out</div>
+          <div id="successMessageDiv" th:if="${param.logout != null}" class="success">
+              You have been logged out
+          </div>
           <!-- ERROR MESSAGE -->
-          <div id="errorMessageDiv" th:if="${param.error}" class="failure">
-            Invalid username or password</div>
+          <div id="errorMessageDiv" th:if="${param.error != null}" class="failure">
+              Invalid username or password
+          </div>
+          <div th:if="${message}" class="success" th:text="${message}"></div>
+          <div th:if="${error}" class="success" th:text="${error}"></div>
         </div>
 
-        <div th:if="${message}" class="success" th:text="${message}"></div>
         <form class="formContainer" th:action="@{/login}" method="post">
           <div class="labelInputBox">
             <label class="label" for="Username">Username:</label>

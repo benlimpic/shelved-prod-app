@@ -2,10 +2,14 @@ package com.authentication.demo.Controller;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -123,10 +127,15 @@ public class UserController {
   }
 
   // LOGOUT USER
-  @PostMapping("/logout")
-  public String logout() {
-    return "login";
-  }
+@PostMapping("/logout")
+public String logout(HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes) {
+    // Invalidate the session and clear authentication
+    request.getSession().invalidate();
+    SecurityContextHolder.clearContext();
+
+    // Redirect to login with the `logout` parameter
+    return "redirect:/login?logout";
+}
 
   // DELETE USER
   @PostMapping("/delete_user")
