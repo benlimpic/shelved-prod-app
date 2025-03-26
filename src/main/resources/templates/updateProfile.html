@@ -41,11 +41,11 @@
             <span class="text-sm font-semibold text-blue-500">Update Profile Picture</span>
           </a>
 
-          <div class="errorBox">  
+          <div class="errorBox">
             <!-- SUCCESS MESSAGE -->
-            <div id="successMessageDiv" th:if="${message}" th:text="${message}" style="color: green;"></div>
+            <div id="successMessageDiv" th:if="${message}" th:text="${message}" class="success"></div>
             <!-- ERROR MESSAGE -->
-            <div id="errorMessageDiv" th:if="${error}" th:text="${error}" style="color: red;"></div>
+            <div id="errorMessageDiv" th:if="${error}" th:text="${error}" class="failure"></div>
           </div>
 
         </div>
@@ -59,20 +59,14 @@
                 <input class="file-input" type="file" id="profilePicture" name="profilePicture" required>
                 </div>
                 <div class="cancelUpdateBox">
-                  <button class="button bg-slate-600" id="cancelProfilePhotoUpdateButton" type="button">Cancel</button>  
-                  <button class="button" id="updateProfilePictureSubmitButton" type="submit">Update</button>  
+                  <button class="button bg-slate-600" id="cancelProfilePhotoUpdateButton" type="button">Cancel</button>
+                  <button class="button" id="updateProfilePictureSubmitButton" type="submit">Update</button>
                 </div>
               </form>
             </div>
           </div>
 
-          <form th:action="@{/update_profile}" method="post" id="updateProfileForm">  
-            <!-- Name -->
-            <div class="grid grid-cols-5 w-full bg-white">
-              <span class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Name</span>
-              <input id="firstNameInput" class="col-span-2 text-sm p-2 border-y border-slate-200" name="firstName" th:value="${user?.firstName ?: ''}" placeholder="First Name"></input>
-              <input id="lastNameInput" class="col-span-2 text-sm p-2 border-y border-slate-200" name="lastName" th:value="${user?.lastName ?: ''}" placeholder="Last Name"></input>
-            </div>
+          <form th:action="@{/update_profile}" method="post" id="updateProfileForm">
               <!-- Location -->
             <div class="grid grid-cols-5 w-full bg-white">
               <span class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Location</span>

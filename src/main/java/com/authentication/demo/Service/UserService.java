@@ -110,31 +110,17 @@ public class UserService implements UserDetailsService {
 
   // UPDATE EMAIL
   public String updateEmail(String newEmail, String confirmNewEmail) {
-
     if (newEmail == null || newEmail.isEmpty() ||
         confirmNewEmail == null || confirmNewEmail.isEmpty()) {
-      return "Emails are required";
+      return "Email is required";
     }
 
-    // Check if the new email is valid
     if (!newEmail.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
       return "Invalid email format";
     }
-    // Check if the new email is the same as the current email
-    Optional<UserModel> currentUser = getCurrentUser();
-    if (currentUser.isPresent() && currentUser.get().getEmail().equals(newEmail)) {
-      return "New email is the same as the current email";
-    } 
 
-    // Check if the new email and confirm email match
     if (!newEmail.equals(confirmNewEmail)) {
-      return "New emails do not match";
-    }
-
-    // Check if the new email already exists
-    Optional<UserModel> existingUser = repository.findByEmail(newEmail);
-    if (existingUser.isPresent()) {
-      return "Email already exists";
+      return "Emails do not match";
     }
 
     Optional<UserModel> user = getCurrentUser();
@@ -143,7 +129,7 @@ public class UserService implements UserDetailsService {
       userModel.setEmail(newEmail);
       repository.save(userModel);
 
-      // Re-authenticate the user with the current username
+      // Re-authenticate the user with the new email
       UserDetails updatedUserDetails = userDetailsService.loadUserByUsername(userModel.getUsername());
       Authentication newAuth = new UsernamePasswordAuthenticationToken(updatedUserDetails, null,
           updatedUserDetails.getAuthorities());
@@ -188,6 +174,28 @@ public class UserService implements UserDetailsService {
       return "No authenticated user found";
     }
   }
+  // UPDATE NAME
+  public String updateName(Map<String, String> params) {
+    Optional<UserModel> user = getCurrentUser();
+    if (user.isPresent()) {
+      // Update user details
+      UserModel userModel = user.get();
+
+      userModel.setFirstName(params.get("firstName"));
+      userModel.setLastName(params.get("lastName"));
+      repository.save(userModel);
+
+      // Re-authenticate the user with the updated details
+      UserDetails updatedUserDetails = userDetailsService.loadUserByUsername(userModel.getUsername());
+      Authentication newAuth = new UsernamePasswordAuthenticationToken(updatedUserDetails, null,
+          updatedUserDetails.getAuthorities());
+      SecurityContextHolder.getContext().setAuthentication(newAuth);
+
+      return "Name updated successfully";
+    } else {
+      return "No authenticated user found";
+    }
+  }
 
   // UPDATE USER PROFILE
   public String updateUserProfile(Map<String, String> params) {
@@ -196,8 +204,6 @@ public class UserService implements UserDetailsService {
       // Update user details
       UserModel userModel = user.get();
 
-      userModel.setFirstName(params.get("firstName"));
-      userModel.setLastName(params.get("lastName"));
       userModel.setWebsite(params.get("website"));
       userModel.setLocation(params.get("location"));
       userModel.setBiography(params.get("biography"));

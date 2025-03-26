@@ -1187,6 +1187,11 @@ header {
   margin-bottom: 0.25rem;
 }
 
+.my-2 {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
 .mb-3 {
   margin-bottom: 0.75rem;
 }
@@ -1553,6 +1558,11 @@ header {
   line-height: 2rem;
 }
 
+.text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
 .text-sm {
   font-size: 0.875rem;
   line-height: 1.25rem;
@@ -1687,8 +1697,6 @@ header {
   width: 300px;
   flex-direction: column;
   align-items: center;
-  overflow-y: auto;
-  overflow-x: hidden;
   border-radius: 0.5rem;
   border-width: 1px;
   --tw-border-opacity: 1;
@@ -1738,6 +1746,26 @@ header {
   color: rgb(37 99 235 / var(--tw-text-opacity, 1));
 }
 
+.formSubHeader {
+  padding: 0.5rem;
+  text-align: center;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  font-weight: 700;
+  --tw-text-opacity: 1;
+  color: rgb(37 99 235 / var(--tw-text-opacity, 1));
+}
+
+.deleteHeader {
+  padding: 0.5rem;
+  text-align: center;
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+  --tw-text-opacity: 1;
+  color: rgb(220 38 38 / var(--tw-text-opacity, 1));
+}
+
 .errorBox {
   display: flex;
   height: 0.75rem;
@@ -1760,8 +1788,8 @@ header {
 }
 
 .failure {
-  margin-top: 0.25rem;
-  margin-bottom: 0.25rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
   text-wrap: wrap;
   text-align: center;
   font-size: 0.875rem;

@@ -38,7 +38,20 @@ public class UserController {
     } else {
       redirectAttributes.addFlashAttribute("error", result);
     }
-    return "redirect:/profile";
+    return "redirect:/update-user-details";
+  }
+
+  // UPDATE USER FULL NAME
+  @PostMapping("/update_name")
+  public String updateName(@RequestParam String firstName, @RequestParam String lastName, RedirectAttributes redirectAttributes) {
+    Map<String, String> nameDetails = Map.of("firstName", firstName, "lastName", lastName);
+    String result = userService.updateName(nameDetails);
+    if ("Name updated successfully".equals(result)) {
+      redirectAttributes.addFlashAttribute("message", result);
+    } else {
+      redirectAttributes.addFlashAttribute("error", result);
+    }
+    return "redirect:/update-user-details";
   }
 
   // UPDATE USER EMAIL
@@ -51,7 +64,7 @@ public class UserController {
     } else {
       redirectAttributes.addFlashAttribute("error", result);
     }
-    return "redirect:/profile";
+    return "redirect:/update-user-details";
   }
 
   // UPDATE USER PASSWORD
@@ -64,7 +77,7 @@ public class UserController {
     } else {
       redirectAttributes.addFlashAttribute("error", result);
     }
-    return "redirect:/profile";
+    return "redirect:/update-user-details";
   }
 
   // UPDATE USER PROFILE PICTURE
