@@ -26,14 +26,18 @@
       </nav>
     </header>
       <div class="profileContainer">
-        <div class="h-auto w-full border-b-2 
+        <div class="h-auto w-full border-b-2
         border-slate-300 bg-slate-200 shadow-sm">
 
-        <div class="flex flex-col justify-center items-center pt-4 pb-2">
+        <div class="flex flex-col justify-center items-center mt-8 pb-2">
           <!-- profile image -->
           <a href="/update-profile">
-            <img class="h-20 w-20 rounded-full" th:src="${user?.profilePictureUrl ?: '/images/default-profile-photo.png'}" alt="Profile Picture" />
+            <img class="h-32 w-32 rounded-full" th:src="${user?.profilePictureUrl ?: '/images/default-profile-photo.png'}" alt="Profile Picture" />
           </a>
+          <div class="m-2 ">
+            <!-- Username -->
+            <span class="text-md" th:if="${user?.username != null}" th:text="${user?.username}"></span>
+          </div>
         </div>
 
         <div class="errorBox">
@@ -45,16 +49,40 @@
 
         <div class="flex flex-col justify-start items-start w-full">
           <div class="flex flex-col justify-start items-start p-2">
-            <!-- Username -->
-            <span class="text-md" th:text="${user?.username ?: 'Default Username'}"></span>
+
             <!-- Location -->
-            <h2 class="text-sm font-thin" th:text="${user?.location ?: 'Default Location'}"></h2>
-            <!-- Biography -->
-            <p class="text-sm" th:text="${user?.biography ?: 'Default Biography'}"></p>
-            <!-- Email -->
-            <p class="text-sm font-thin" th:text="${user?.email ?: 'default@email.com'}"></p>
+            <div>
+              <!-- Display Location if it exists -->
+              <h2 class="text-sm font-thin" th:if="${user?.location != null}" th:text="${user?.location}" ></h2>
+            
+              <!-- Display link to update Location if it is null -->
+              <a th:if="${user?.location == null || user?.location == ''}" href="/update-profile" class="text-sm text-blue-600">
+                Add Location
+            </a>
+            </div>
+
             <!-- Website -->
-            <p class="text-sm font-semibold" th:text="${user?.website ?: 'defaultwebsite.com'}"></p>
+            <div>
+              <!-- Display Website if it exists -->
+              <p class="text-sm font-semibold" th:if="${user?.website != null}" th:text="${user?.website}"></p>
+            
+              <!-- Display link to update Website if it is null -->
+              <a th:if="${user?.website == null || user?.website == ''}" href="/update-profile" class="text-sm text-blue-600">
+                Add Website
+            </a>
+            </div>
+
+            <!-- Biography -->
+            <div>
+              <!-- Display Biography if it exists -->
+              <p class="text-sm" th:if="${user?.biography != null}" th:text="${user?.biography}"></p>
+            
+              <!-- Display link to update Biography if it is null -->
+              <a th:if="${user?.biography == null || user?.biography == ''}" href="/update-profile" class="text-sm text-blue-600">
+                Add Biography
+            </a>
+            </div>
+
           </div>
         </div>
       </div>

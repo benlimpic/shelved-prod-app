@@ -105,7 +105,7 @@ public class UserController {
       redirectAttributes.addFlashAttribute("error", result);
       return "redirect:/updateProfile";
     }
-  } 
+  }
 
   // CREATE USER
   @PostMapping("/signup")

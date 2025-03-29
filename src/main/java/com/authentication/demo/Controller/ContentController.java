@@ -50,7 +50,6 @@ public class ContentController {
 
   private String handleAuthentication(Model model, String viewName) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    System.out.println("Authentication: " + authentication); // Debug log
     if (authentication != null && authentication.getName() != null) {
         Optional<UserModel> user = repository.findByUsername(authentication.getName());
         if (user.isPresent()) {
@@ -60,6 +59,6 @@ public class ContentController {
         }
     }
     return "redirect:/login";
-  } 
+  }
 
 }

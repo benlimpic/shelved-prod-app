@@ -291,6 +291,8 @@ public class UserService implements UserDetailsService {
     String email = params.get("email"); 
     String password = params.get("password");
     String confirmPassword = params.get("confirmPassword");
+    String firstNameString = params.get("firstName");
+    String lastNameString = params.get("lastName");
 
     Optional<UserModel> userUsername = repository.findByUsername(username);
 
@@ -298,7 +300,8 @@ public class UserService implements UserDetailsService {
     if (username == null || username.isEmpty() ||
         password == null || password.isEmpty() ||
         email == null || email.isEmpty() ||
-        confirmPassword == null || confirmPassword.isEmpty()) {
+        confirmPassword == null || confirmPassword.isEmpty()
+      ) {
       errors.add("All fields are required");
     }
     if (userUsername.isPresent()) {
@@ -327,6 +330,10 @@ public class UserService implements UserDetailsService {
     UserModel user = new UserModel();
     user.setUsername(username);
     user.setPassword(passwordEncoder.encode(password));
+    user.setEmail(email);
+    user.setFirstName(firstNameString);
+    user.setLastName(lastNameString);
+
     user.setRoles(Collections.singletonList("USER"));
     repository.save(user);
 

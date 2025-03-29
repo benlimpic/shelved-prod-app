@@ -121,7 +121,7 @@
   }
 
   .errorBox{
-    @apply h-3 w-full flex flex-col justify-center items-center;
+    @apply h-3 p-3 w-full flex flex-col justify-center items-center;
   }
 
   .success {

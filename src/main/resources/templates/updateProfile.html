@@ -31,10 +31,10 @@
     </header>
       <div class="profileContainer">
         <div class="h-auto w-full">
-        <div class="flex flex-col justify-center items-center mt-4 p-2">
+        <div class="flex flex-col justify-center items-center mt-8 p-2">
           <!-- profile image -->
           <a>
-            <img class="h-20 w-20 rounded-full" th:src="${user?.profilePictureUrl ?: '/images/default-profile-photo.png'}" alt="Profile Picture" />
+            <img class="h-32 w-32 rounded-full" th:src="${user?.profilePictureUrl ?: '/images/default-profile-photo.png'}" alt="Profile Picture" />
           </a>
           <!-- update profile picture -->
           <a id="updateProfilePhotoButton" class="mt-2">
