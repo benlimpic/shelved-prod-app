@@ -13,12 +13,12 @@
     <header>
       <nav class="navbar">
         <ul class="flex justify-between w-full">
-          <li>
+          <li class="flex items-center">
             <a href="/profile">
               <span>&#8592;</span>
             </a>
           </li>
-          <li>
+          <li class="flex items-center">
             <button
               id="saveChangesButton"
               type="submit"
@@ -29,6 +29,7 @@
         </ul>
       </nav>
     </header>
+
       <div class="profileContainer">
         <div class="h-auto w-full">
         <div class="flex flex-col justify-center items-center mt-8 p-2">
@@ -86,11 +87,6 @@
         </div>
         <button type="submit" id="hiddenSubmitButton" class="hidden"></button>
       </form>
-
-
-      <div class="h-full w-full flex flex-col items-center justify-end">
-        <a class="deleteButton bg-slate-400 hover:bg-slate-400" id="redirectUpdateUserDetails" href="./update-user-details">Account Details</a>
-      </div>
     </div>
   </body>
 </html>
