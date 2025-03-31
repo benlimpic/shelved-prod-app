@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 @layer base {
+  a {
+    @apply cursor-default;
+  }
+
   body {
     @apply flex flex-col items-center w-screen h-screen overscroll-none overflow-hidden bg-slate-300;
   }
@@ -10,7 +14,6 @@
   header {
     @apply w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto;
   }
-
 }
 
 @layer components {
@@ -82,8 +85,7 @@
   }
 
   .card {
-    @apply
-    m-10
+    @apply m-10
     p-4
     flex
     flex-col
@@ -93,7 +95,7 @@
     border-slate-300
     rounded-lg
     shadow-sm
-    w-[300px]
+    w-[300px];
   }
 
   .labelInputBox {
@@ -120,7 +122,7 @@
     @apply text-2xl font-bold text-center text-red-600 p-2;
   }
 
-  .errorBox{
+  .errorBox {
     @apply h-3 p-3 w-full flex flex-col justify-center items-center;
   }
 
@@ -153,7 +155,7 @@
       opacity: 1;
     }
   }
-  
+
   @keyframes fadeOut {
     from {
       opacity: 1;
@@ -162,11 +164,11 @@
       opacity: 0;
     }
   }
-  
+
   .fade-in {
     animation: fadeIn 0.5s ease-in forwards;
   }
-  
+
   .fade-out {
     animation: fadeOut 0.5s ease-out forwards;
   }

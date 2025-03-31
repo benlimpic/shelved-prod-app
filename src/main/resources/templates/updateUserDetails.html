@@ -36,23 +36,23 @@
 
         <!-- Username -->
         <div id="updateUsernameButton" class="grid grid-cols-5 w-full bg-white">
-          <span class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Username</span>
-          <span id="updateUsername" class="col-span-4 text-sm text-blue-600 p-2 border-y border-slate-200" name="username" th:text="${user?.username ?: ''}"></span>
+          <p class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Username</p>
+          <a id="updateUsername" class="col-span-4 text-sm text-blue-600 p-2 border-y border-slate-200" name="username" th:text="${user?.username ?: ''}"></a>
         </div>
           <!-- Name -->
           <div id="updateNameButton" class="grid grid-cols-5 w-full bg-white">
-            <span class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Name</span>
-            <span id="name" class="col-span-4 text-sm text-blue-600 p-2 border-y border-slate-200" name="name" th:text="${user?.firstName != null || user?.lastName != null ? (user?.firstName + ' ' + user?.lastName) : 'Add Name'}"></span>
+            <p class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Name</p>
+            <a id="name" class="col-span-4 text-sm text-blue-600 p-2 border-y border-slate-200" name="name" th:text="${user?.firstName != null || user?.lastName != null ? (user?.firstName + ' ' + user?.lastName) : 'Add Name'}"></a>
           </div>
           <!-- Email -->
           <div id="updateEmailButton" class="grid grid-cols-5 w-full bg-white">
-            <span class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Email</span>
-            <span id="updateEmail" class="col-span-4 text-sm text-blue-600 p-2 border-y border-slate-200" name="email" th:text="${user?.email != null ? user?.email : 'Add Email'}"></span>
+            <p class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Email</p>
+            <a id="updateEmail" class="col-span-4 text-sm text-blue-600 p-2 border-y border-slate-200" name="email" th:text="${user?.email != null ? user?.email : 'Add Email'}"></a>
           </div>
           <!-- Password -->
           <div id="updatePasswordButton" class="grid grid-cols-5 w-full bg-white">
-            <span class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Password</span>
-            <span id="updatePassword" class="col-span-4 text-sm text-blue-600 p-2 border-y border-slate-200" name="password">Update Password</span>
+            <p class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Password</p>
+            <a id="updatePassword" class="col-span-4 text-sm text-blue-600 p-2 border-y border-slate-200" name="password">Update Password</a>
           </div>
         </div>
 
