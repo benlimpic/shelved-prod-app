@@ -21,12 +21,11 @@
       <nav class="navbar">
         <ul class="flex justify-between items-center w-full">
           <li>
-            <img class="h-5 " href="/index" src="/images/Shelved_Logo_White.png" alt="Shelved Logo" />
+            <img class="h-5" href="/index" src="/images/Shelved_Logo_White.png" alt="Shelved Logo" />
           </li>
           <li>
-
               <a href="/profile">
-                <img class="h-7 w-7 rounded-full" th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}" alt="Profile Picture" />
+                <img class="h-7 w-7 rounded-full bg-white" th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}" alt="Profile Picture" />
               </a>
           </li>
         </ul>

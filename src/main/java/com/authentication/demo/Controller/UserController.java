@@ -35,10 +35,11 @@ public class UserController {
     String result = userService.updateUsername(username);
     if ("Username updated successfully".equals(result)) {
       redirectAttributes.addFlashAttribute("message", result);
+      return "redirect:/profile";
     } else {
       redirectAttributes.addFlashAttribute("error", result);
+      return "redirect:/update-user-details";
     }
-    return "redirect:/update-user-details";
   }
 
   // UPDATE USER FULL NAME
@@ -48,10 +49,11 @@ public class UserController {
     String result = userService.updateName(nameDetails);
     if ("Name updated successfully".equals(result)) {
       redirectAttributes.addFlashAttribute("message", result);
+      return "redirect:/profile";
     } else {
       redirectAttributes.addFlashAttribute("error", result);
+      return "redirect:/update-user-details";
     }
-    return "redirect:/update-user-details";
   }
 
   // UPDATE USER EMAIL
@@ -61,10 +63,11 @@ public class UserController {
     String result = userService.updateEmail(newEmail, confirmNewEmail);
     if ("Email updated successfully".equals(result)) {
       redirectAttributes.addFlashAttribute("message", result);
+      return "redirect:/profile";
     } else {
       redirectAttributes.addFlashAttribute("error", result);
+      return "redirect:/update-user-details";
     }
-    return "redirect:/update-user-details";
   }
 
   // UPDATE USER PASSWORD
@@ -74,10 +77,11 @@ public class UserController {
     String result = userService.updatePassword(currentPassword, newPassword, confirmNewPassword);
     if ("Password updated successfully".equals(result)) {
       redirectAttributes.addFlashAttribute("message", result);
+      return "redirect:/profile";
     } else {
       redirectAttributes.addFlashAttribute("error", result);
+      return "redirect:/update-user-details";
     }
-    return "redirect:/update-user-details";
   }
 
   // UPDATE USER PROFILE PICTURE
@@ -87,7 +91,7 @@ public class UserController {
     String result = userService.updateProfilePicture(profilePicture);
     if ("Profile picture updated successfully".equals(result)) {
       redirectAttributes.addFlashAttribute("message", result);
-      return "redirect:/update-profile";
+      return "redirect:/profile";
     } else {
       redirectAttributes.addFlashAttribute("error", result);
       return "redirect:/update-profile";

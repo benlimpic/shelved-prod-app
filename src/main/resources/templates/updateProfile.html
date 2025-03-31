@@ -35,7 +35,7 @@
         <div class="flex flex-col justify-center items-center mt-8 p-2">
           <!-- profile image -->
           <a>
-            <img class="h-32 w-32 rounded-full" th:src="${user?.profilePictureUrl ?: '/images/default-profile-photo.png'}" alt="Profile Picture" />
+            <img class="h-32 w-32 rounded-full bg-white" th:src="${user?.profilePictureUrl ?: '/images/default-profile-photo.png'}" alt="Profile Picture" />
           </a>
           <!-- update profile picture -->
           <a id="updateProfilePhotoButton" class="mt-2">
