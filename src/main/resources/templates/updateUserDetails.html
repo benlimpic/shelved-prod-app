@@ -142,8 +142,10 @@
       </div>
 
         <!-- DELETE USER FORM -->
-        <div class="h-full flex flex-col items-center justify-end w-full">
-          <button class="deleteButton bg-slate-400 hover:bg-slate-400 w-2/3 px-4" type="button" id="deleteAccountButton">Delete Account</button>
+        <div class="h-full w-full flex flex-col items-center justify-end">
+          <div class="h-full w-full flex flex-col items-center justify-end">
+            <a class="deleteButton bg-slate-400 hover:bg-slate-400" id="deleteAccountButton">Delete Account</a>
+          </div>
           <form class="hidden" id="deleteAccountForm" th:action="@{/delete_user}" method="post" >
             <h2 id="accountDetailsHeader" class="deleteHeader">Confirm Delete</h2>
             <input type="hidden" name="_csrf" th:value="${_csrf.token}" />

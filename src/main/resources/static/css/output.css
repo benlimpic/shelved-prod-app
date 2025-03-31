@@ -1240,6 +1240,10 @@ header {
   height: 0.75rem;
 }
 
+.h-32 {
+  height: 8rem;
+}
+
 .h-5 {
   height: 1.25rem;
 }
@@ -1258,14 +1262,6 @@ header {
 
 .h-screen {
   height: 100vh;
-}
-
-.h-32 {
-  height: 8rem;
-}
-
-.h-2 {
-  height: 0.5rem;
 }
 
 .w-1 {
@@ -1288,6 +1284,10 @@ header {
   width: 0.75rem;
 }
 
+.w-32 {
+  width: 8rem;
+}
+
 .w-7 {
   width: 1.75rem;
 }
@@ -1302,10 +1302,6 @@ header {
 
 .w-screen {
   width: 100vw;
-}
-
-.w-32 {
-  width: 8rem;
 }
 
 .flex-shrink {
@@ -1555,10 +1551,6 @@ header {
 
 .pb-4 {
   padding-bottom: 1rem;
-}
-
-.pt-8 {
-  padding-top: 2rem;
 }
 
 .text-left {
