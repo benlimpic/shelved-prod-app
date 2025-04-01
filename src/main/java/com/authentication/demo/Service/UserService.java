@@ -174,6 +174,7 @@ public class UserService implements UserDetailsService {
       return "No authenticated user found";
     }
   }
+
   // UPDATE NAME
   public String updateName(Map<String, String> params) {
     Optional<UserModel> user = getCurrentUser();
@@ -288,7 +289,7 @@ public class UserService implements UserDetailsService {
   // CREATE NEW USER
   public Map<String, String> postUser(Map<String, String> params) {
     String username = params.get("username");
-    String email = params.get("email"); 
+    String email = params.get("email");
     String password = params.get("password");
     String confirmPassword = params.get("confirmPassword");
     String firstNameString = params.get("firstName");
@@ -300,8 +301,7 @@ public class UserService implements UserDetailsService {
     if (username == null || username.isEmpty() ||
         password == null || password.isEmpty() ||
         email == null || email.isEmpty() ||
-        confirmPassword == null || confirmPassword.isEmpty()
-      ) {
+        confirmPassword == null || confirmPassword.isEmpty()) {
       errors.add("All fields are required");
     }
     if (userUsername.isPresent()) {
@@ -345,19 +345,19 @@ public class UserService implements UserDetailsService {
 
   // LOGIN USER
   public String login(Map<String, String> params) {
-    // GET FORM DATA PARAMS
+    // Get form data parameters
     String username = params.get("username");
     String password = params.get("password");
 
+    // Validate input
     if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
       return "Username and password are required";
     }
 
+    // Find user by username
     Optional<UserModel> user = repository.findByUsername(username);
     if (user.isPresent() && passwordEncoder.matches(password, user.get().getPassword())) {
-      UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-      Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-      SecurityContextHolder.getContext().setAuthentication(auth);
+
       return "Login successful";
     } else {
       return "Invalid username or password";

@@ -1,5 +1,6 @@
 package com.authentication.demo.Model;
 
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,9 +9,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.authentication.demo.Listener.UserModelListener;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,6 +23,7 @@ import jakarta.persistence.Table;
 
 
 @Entity
+@EntityListeners(UserModelListener.class)
 @Table(name = "users")
 public class UserModel implements UserDetails {
 
@@ -57,12 +62,32 @@ public class UserModel implements UserDetails {
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;
+    
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Timestamp created_at;
+    
+    @Column(name = "updated_at", nullable = false)
+    private Timestamp updated_at;
 
     public UserModel() {
     }
 
-    public UserModel(String username, String password, String firstName, String lastName, String email,
-            String website, String location, String biography, String profilePictureUrl, List<String> roles) {
+    public UserModel(
+        Long id,
+        String username,
+        String password,
+        String firstName,
+        String lastName,
+        String email,
+        String website,
+        String location,
+        String biography,
+        String profilePictureUrl,
+        List<String> roles,
+        java.sql.Timestamp created_at,
+        java.sql.Timestamp updated_at) {
+
+        this.id = id;
         this.username = username;
         this.password = password;
         this.firstName = firstName;
@@ -73,13 +98,12 @@ public class UserModel implements UserDetails {
         this.biography = biography;
         this.profilePictureUrl = profilePictureUrl;
         this.roles = roles;
+        this.created_at = (created_at == null) ? new Timestamp(System.currentTimeMillis()) : created_at;
+        this.updated_at = new Timestamp(System.currentTimeMillis());
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream()
-                    .map(SimpleGrantedAuthority::new)
-                    .collect(Collectors.toList());
+    public Long getId() {
+        return id;
     }
 
     @Override
@@ -156,6 +180,13 @@ public class UserModel implements UserDetails {
         this.profilePictureUrl = profilePictureUrl;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles.stream()
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
+    }
+
     public List<String> getRoles() {
         return roles;
     }
@@ -164,6 +195,21 @@ public class UserModel implements UserDetails {
         this.roles = roles;
     }
 
+    public Timestamp getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(Timestamp created_at) {
+        this.created_at = (created_at == null) ? new Timestamp(System.currentTimeMillis()) : created_at;
+    }
+
+    public Timestamp getUpdated_at() {
+        return updated_at;
+    }
+    
+    public void setUpdated_at(Timestamp updated_at) {
+        this.updated_at = new Timestamp(System.currentTimeMillis());
+    }
 
     @Override
     public boolean isAccountNonExpired() {
