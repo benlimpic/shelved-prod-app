@@ -1,8 +1,14 @@
 module.exports = {
+  devServer: {
+    watchOptions: {
+      ignored: /node_modules|dist|logs|target/
+    }
+  },
   content: [
-    "./src/main/resources/templates/**/*.html",
-    "./src/main/resources/static/**/*.css",
-    "./src/main/resources/static/**/*.js",
+    "./src/main/resources/templates/**/*.html", // HTML templates
+    "./src/main/resources/static/**/*.css",     // Static CSS files
+    "./src/main/resources/static/**/*.js",      // Static JS files
+    "!./target/**",                              // Exclude Spring Boot's build directory
   ],
   theme: {
     extend: {},
@@ -24,7 +30,7 @@ module.exports = {
     //# Forms is a plugin that provides a set of form styles to help you design rich form content.
     //! Docs:https://github.com/tailwindlabs/tailwindcss-forms
     require('@tailwindcss/forms')({
-      strategy: 'base', 
+      strategy: 'base',
     }),
     //# Scrollbar is a plugin that adds a scrollbar-hide utility to your Tailwind CSS project.
     //! Docs: https://github.com/reslear/tailwind-scrollbar-hide

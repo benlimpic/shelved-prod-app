@@ -48,6 +48,13 @@ public class ContentController {
       return handleAuthentication(model, "updateUserDetails");
   }
 
+  @GetMapping("/create-collection")
+  public String createCollection(Model model) {
+      return handleAuthentication(model, "createCollection");
+  }
+
+  
+
   private String handleAuthentication(Model model, String viewName) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     if (authentication != null && authentication.getName() != null) {

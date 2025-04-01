@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Login</title>
+    <script th:src="@{/js/previewFile.js}" defer></script>
+
+    <link rel="stylesheet" href="/css/output.css" />
+  </head>
+  <body>
+    <header>
+      <nav class="navbar">
+        <ul class="flex justify-between items-center w-full">
+          <li>
+            <a href="/index">
+              <img
+                class="h-5"
+                src="/images/Shelved_Logo_White.png"
+                alt="Shelved Logo"
+              />
+            </a>
+          </li>
+          <li>
+            <a href="/profile">
+              <img
+                class="h-7 w-7 rounded-full bg-white"
+                th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}"
+                alt="Profile Picture"
+              />
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <div class="container">
+      <div class="card">
+        <div class="headerBox">
+          <h4 class="formHeader">Create New Collection</h4>
+            <!-- ERROR / SUCCESS -->
+            <div class="errorBox">
+              <!-- SUCCESS MESSAGE -->
+              <div
+                id="successMessageDiv"
+                th:if="${message}"
+                th:text="${message}"
+                style="color: green"
+              ></div>
+              <!-- ERROR MESSAGE -->
+              <div
+                id="errorMessageDiv"
+                th:if="${error}"
+                th:text="${error}"
+                style="color: red"
+              ></div>
+            </div>
+
+            <form action="/create_collection" method="POST" enctype="multipart/form-data">
+              <input type="hidden" name="_csrf" value="${_csrf.token}">
+
+              <!-- File Upload Field -->
+              <div class="labelInputBox">
+                <img
+                  class="h-32 w-32 rounded-full bg-white"
+                  id="previewImage"
+                  th:src="${'/images/collection_image.png'}"
+                  alt="Default Collection Image"
+                />
+                <a href="#" id="triggerUpload" class="mt-2">
+                  <span class="text-sm font-semibold text-blue-500"
+                    >Update Collection Cover</span
+                  >
+                </a>
+                <input
+                  type="file"
+                  id="hiddenFileInput"
+                  name="collectionImage"
+                  style="display: none"
+                  accept="image/*"
+                />
+              </div>
+
+              <!-- Caption Field -->
+
+              <div class="labelInputBox">
+                <label class="label" for="caption">Caption:</label>
+                <input
+                  class="input"
+                  type="text"
+                  id="caption"
+                  name="caption"
+                  placeholder="Caption"
+                />
+              </div>
+
+              <!-- Description Field -->
+
+              <div class="labelInputBox">
+                <label class="label" for="description">Description:</label>
+                <textarea
+                  class="input"
+                  type="text"
+                  id="description"
+                  name="description"
+                  placeholder="Description"
+                ></textarea>
+              </div>
+          
+              <!-- Submit Button -->
+              <button class="submitButton" type="submit">Create Collection</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

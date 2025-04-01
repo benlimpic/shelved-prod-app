@@ -333,7 +333,6 @@ public class UserService implements UserDetailsService {
     user.setEmail(email);
     user.setFirstName(firstNameString);
     user.setLastName(lastNameString);
-
     user.setRoles(Collections.singletonList("USER"));
     repository.save(user);
 
