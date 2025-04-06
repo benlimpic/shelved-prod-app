@@ -44,7 +44,8 @@ public class UserController {
 
   // UPDATE USER FULL NAME
   @PostMapping("/update_name")
-  public String updateName(@RequestParam String firstName, @RequestParam String lastName, RedirectAttributes redirectAttributes) {
+  public String updateName(@RequestParam String firstName, @RequestParam String lastName,
+      RedirectAttributes redirectAttributes) {
     Map<String, String> nameDetails = Map.of("firstName", firstName, "lastName", lastName);
     String result = userService.updateName(nameDetails);
     if ("Name updated successfully".equals(result)) {
@@ -86,7 +87,7 @@ public class UserController {
 
   // UPDATE USER PROFILE PICTURE
   @PostMapping("/update_profile_picture")
-  public String updateProfilePicture( MultipartFile profilePicture,
+  public String updateProfilePicture(MultipartFile profilePicture,
       RedirectAttributes redirectAttributes) {
     String result = userService.updateProfilePicture(profilePicture);
     if ("Profile picture updated successfully".equals(result)) {
@@ -144,15 +145,16 @@ public class UserController {
   }
 
   // LOGOUT USER
-@PostMapping("/logout")
-public String logout(HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes) {
+  @PostMapping("/logout")
+  public String logout(HttpServletRequest request, HttpServletResponse response,
+      RedirectAttributes redirectAttributes) {
     // Invalidate the session and clear authentication
     request.getSession().invalidate();
     SecurityContextHolder.clearContext();
 
     // Redirect to login with the `logout` parameter
     return "redirect:/login?logout";
-}
+  }
 
   // DELETE USER
   @PostMapping("/delete_user")

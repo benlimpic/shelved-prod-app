@@ -20,12 +20,13 @@ public class CollectionController {
         this.collectionService = collectionService;
     }
 
+    // POST handler for submitting the form
     @PostMapping("/create_collection")
     public String postCollection(@RequestParam Map<String, String> collectionDetails, @RequestParam MultipartFile collectionImage,
         RedirectAttributes redirectAttributes) {
-        
         collectionService.createCollection(collectionDetails, collectionImage);
         redirectAttributes.addFlashAttribute("message", "Collection created successfully");
         return "redirect:/create-collection";
     }
+
 }

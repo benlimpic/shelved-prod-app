@@ -19,9 +19,9 @@
             </a>
           </li>
           <li>
-            <a class="text-sm" href="/logout">
-              <span>Logout</span>
-            </a>
+            <form class="text-sm" th:action="@{/logout}" method="post">
+              <button type="submit" class="logoutButton">Logout</button>
+            </form>
           </li>
         </ul>
       </nav>

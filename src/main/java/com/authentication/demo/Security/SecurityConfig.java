@@ -33,7 +33,6 @@ public class SecurityConfig {
             )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/login", "/signup", "/css/**", "/js/**", "/images/**").permitAll()
-                .requestMatchers("/create_collection").authenticated() // Require authentication for this endpoint
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
@@ -42,7 +41,6 @@ public class SecurityConfig {
                 .permitAll()
             )
             .logout(logout -> logout
-                .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout")
                 .permitAll()
             );
