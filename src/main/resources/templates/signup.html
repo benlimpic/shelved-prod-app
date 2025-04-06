@@ -33,6 +33,7 @@
         </div>
 
         <form class="formContainer" th:action="@{/signup}" method="post">
+          <input type="hidden" name="_csrf" value="${_csrf.token}" />
           <div class="labelInputBox">
           <label class="label" for="username">Username:</label>
           <input

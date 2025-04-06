@@ -938,6 +938,43 @@ nav {
   }
 }
 
+.profileContainerScroll {
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  overflow-y: auto;
+  --tw-bg-opacity: 1;
+  background-color: rgb(241 245 249 / var(--tw-bg-opacity, 1));
+}
+
+@media (min-width: 640px) {
+  .profileContainerScroll {
+    width: 75%;
+  }
+}
+
+@media (min-width: 768px) {
+  .profileContainerScroll {
+    width: 50%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .profileContainerScroll {
+    width: 50%;
+  }
+}
+
+@media (min-width: 1280px) {
+  .profileContainerScroll {
+    width: 50%;
+  }
+}
+
 .formContainer {
   margin-top: 0.25rem;
   display: flex;
@@ -1247,6 +1284,10 @@ nav {
   display: none;
 }
 
+.aspect-square {
+  aspect-ratio: 1 / 1;
+}
+
 .h-12 {
   height: 3rem;
 }
@@ -1313,6 +1354,10 @@ nav {
 
 .w-screen {
   width: 100vw;
+}
+
+.grid-cols-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .grid-cols-4 {
@@ -1473,6 +1518,11 @@ nav {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
 }
 
+.object-cover {
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
 .p-1 {
   padding: 0.25rem;
 }
@@ -1492,6 +1542,11 @@ nav {
 .px-1 {
   padding-left: 0.25rem;
   padding-right: 0.25rem;
+}
+
+.px-2 {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 
 .px-4 {

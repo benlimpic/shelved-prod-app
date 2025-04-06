@@ -5,6 +5,14 @@
     <title>User Profile</title>
     <link rel="stylesheet" href="/css/output.css" />
     <script src="/js/fadeAnimations.js" defer></script>
+    <style>
+      html, body {
+        height: auto;
+        min-height: 100%;
+        overflow-y: auto;
+        margin: 0;
+      }
+      </style>
   </head>
   <body>
     <header>
@@ -16,100 +24,164 @@
             </a>
           </li>
           <li class="flex items-center">
-            <a class=" bg-blue-500 hover:bg-blue-700 text-white text-xs px-1 py-0.5 rounded" id="redirectUpdateUserDetails" href="./update-user-details"><span class="text-lg">&#9776;</span></a>
+            <a
+              class="bg-blue-500 hover:bg-blue-700 text-white text-xs px-1 py-0.5 rounded"
+              id="redirectUpdateUserDetails"
+              href="./update-user-details"
+              ><span class="text-lg">&#9776;</span></a
+            >
           </li>
         </ul>
       </nav>
     </header>
-      <div class="profileContainer">
-        <div class="h-auto w-full border-b-2 border-slate-300 bg-slate-200 shadow-sm">
-          <!-- PROFILE CONTENT -->
-          <div class="flex flex-col justify-start items-start w-full">
+    <div class="profileContainerScroll">
+      <div
+        class="h-auto w-full border-b-2 border-slate-300 bg-slate-200 shadow-sm"
+      >
+        <!-- PROFILE CONTENT -->
+        <div class="flex flex-col justify-start items-start w-full px-2">
+          <!-- ERROR / SUCCESS -->
+          <div class="errorBox">
+            <!-- SUCCESS MESSAGE -->
+            <div
+              id="successMessageDiv"
+              th:if="${message}"
+              th:text="${message}"
+              style="color: green"
+            ></div>
+            <!-- ERROR MESSAGE -->
+            <div
+              id="errorMessageDiv"
+              th:if="${error}"
+              th:text="${error}"
+              style="color: red"
+            ></div>
+          </div>
 
-            <!-- ERROR / SUCCESS -->
-            <div class="errorBox">
-              <!-- SUCCESS MESSAGE -->
-              <div id="successMessageDiv" th:if="${message}" th:text="${message}" style="color: green;"></div>
-              <!-- ERROR MESSAGE -->
-              <div id="errorMessageDiv" th:if="${error}" th:text="${error}" style="color: red;"></div>
+          <!-- PROFILE INFO HEADER -->
+          <div class="grid grid-cols-4 gap-4 w-full">
+            <!-- Profile Picture -->
+            <div class="flex justify-center items-center">
+              <img
+                class="w-16 h-16 rounded-full bg-white"
+                th:src="${user?.profilePictureUrl ?: '/images/default-profile-photo.png'}"
+                alt="Profile Picture"
+              />
             </div>
-
-            <!-- PROFILE INFO HEADER -->
-            <div class="grid grid-cols-4 gap-4 w-full">
-              <!-- Profile Picture -->
-              <div class="flex justify-center items-center">
-              <img class="w-16 h-16 rounded-full bg-white" th:src="${user?.profilePictureUrl ?: '/images/default-profile-photo.png'}" alt="Profile Picture" />
-              </div>
-              <!-- Collections -->
-              <div class="flex flex-col justify-center items-center">
+            <!-- Collections -->
+            <div class="flex flex-col justify-center items-center">
               <h2 class="text-sm font-bold">20</h2>
               <p class="text-xs">collections</p>
-              </div>
-              <!-- Followers -->
-              <div class="flex flex-col justify-center items-center">
+            </div>
+            <!-- Followers -->
+            <div class="flex flex-col justify-center items-center">
               <h2 class="text-sm font-bold">3094</h2>
               <p class="text-xs">followers</p>
-              </div>
-              <!-- Following -->
-              <div class="flex flex-col justify-center items-center">
+            </div>
+            <!-- Following -->
+            <div class="flex flex-col justify-center items-center">
               <h2 class="text-sm font-bold">666</h2>
               <p class="text-xs">following</p>
-              </div>
             </div>
-          </div>
-            
-          
-          <div class="flex flex-col justify-start items-start p-2">
-            <!-- Username -->
-            <div class="">
-              <span class="text-md" th:if="${user?.username != null}" th:text="${user?.username}"></span>
-            </div>
-
-            <!-- Location -->
-            <div>
-              <!-- Display Location if it exists -->
-              <h2 class="text-sm font-thin" th:if="${user?.location != null}" th:text="${user?.location}" ></h2>
-            
-              <!-- Display link to update Location if it is null -->
-              <a th:if="${user?.location == null || user?.location == ''}" href="/update-profile" class="text-sm text-blue-600">
-                Add Location
-              </a>
-            </div>
-
-            <!-- Website -->
-            <div>
-              <!-- Display Website if it exists -->
-              <p class="text-sm font-semibold" th:if="${user?.website != null}" th:text="${user?.website}"></p>
-            
-              <!-- Display link to update Website if it is null -->
-              <a th:if="${user?.website == null || user?.website == ''}" href="/update-profile" class="text-sm text-blue-600">
-                Add Website
-              </a>
-            </div>
-
-            <!-- Biography -->
-            <div>
-              <!-- Display Biography if it exists -->
-              <p class="text-sm" th:if="${user?.biography != null}" th:text="${user?.biography}"></p>
-            
-              <!-- Display link to update Biography if it is null -->
-              <a th:if="${user?.biography == null || user?.biography == ''}" href="/update-profile" class="text-sm text-blue-600">
-                Add Biography
-              </a>
-            </div>
-          </div>
-          <!-- LOWER PROFILE BUTTONS -->
-          <div class="grid grid-cols-4 w-full">
-            <a class="deleteButton bg-slate-400 hover:bg-slate-400 flex item-center justify-center col-span-2" id="redirectUpdateUserDetails" href="/update-profile">Edit Profile</a>
-            <a class="deleteButton bg-slate-400 hover:bg-slate-400 flex item-center justify-center col-span-2" id="redirectShareProfile" href="#">Share Profile</a>
-          </div>
           </div>
         </div>
-      </div>
 
-      <div>
-        <!-- User Collections -->
-         
+        <div class="flex flex-col justify-start items-start p-2">
+          <!-- Username -->
+          <div class="">
+            <span
+              class="text-md"
+              th:if="${user?.username != null}"
+              th:text="${user?.username}"
+            ></span>
+          </div>
+
+          <!-- Location -->
+          <div>
+            <!-- Display Location if it exists -->
+            <h2
+              class="text-sm font-thin"
+              th:if="${user?.location != null}"
+              th:text="${user?.location}"
+            ></h2>
+
+            <!-- Display link to update Location if it is null -->
+            <a
+              th:if="${user?.location == null || user?.location == ''}"
+              href="/update-profile"
+              class="text-sm text-blue-600"
+            >
+              Add Location
+            </a>
+          </div>
+
+          <!-- Website -->
+          <div>
+            <!-- Display Website if it exists -->
+            <p
+              class="text-sm font-semibold"
+              th:if="${user?.website != null}"
+              th:text="${user?.website}"
+            ></p>
+
+            <!-- Display link to update Website if it is null -->
+            <a
+              th:if="${user?.website == null || user?.website == ''}"
+              href="/update-profile"
+              class="text-sm text-blue-600"
+            >
+              Add Website
+            </a>
+          </div>
+
+          <!-- Biography -->
+          <div>
+            <!-- Display Biography if it exists -->
+            <p
+              class="text-sm"
+              th:if="${user?.biography != null}"
+              th:text="${user?.biography}"
+            ></p>
+
+            <!-- Display link to update Biography if it is null -->
+            <a
+              th:if="${user?.biography == null || user?.biography == ''}"
+              href="/update-profile"
+              class="text-sm text-blue-600"
+            >
+              Add Biography
+            </a>
+          </div>
+        </div>
+        <!-- LOWER PROFILE BUTTONS -->
+        <div class="grid grid-cols-4 w-full">
+          <a
+            class="deleteButton bg-slate-400 hover:bg-slate-400 flex item-center justify-center col-span-2"
+            id="redirectUpdateUserDetails"
+            href="/update-profile"
+            >Edit Profile</a
+          >
+          <a
+            class="deleteButton bg-slate-400 hover:bg-slate-400 flex item-center justify-center col-span-2"
+            id="redirectShareProfile"
+            href="#"
+            >Share Profile</a
+          >
+        </div>
+      </div>
+      <div class="w-full h-full grid grid-cols-3 overflow-hidden">
+        <div th:each="partition : ${partitionedCollections}">
+          <div th:each="collection : ${partition}">
+            <div th:if="${collection != null}">
+              <img
+              th:src="${#strings.defaultString(collection?.getImageUrl(), '/collection-images/collection_image.png')}"
+              alt="Collection Image"
+              class="aspect-square col-span-1 w-full h-auto object-cover"
+            />
+            <p th:text="${collection?.id}"></p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </body>

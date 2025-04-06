@@ -9,15 +9,15 @@ import jakarta.persistence.PreUpdate;
 
 public class CollectionModelListener {
 
-    @PrePersist
+        @PrePersist
     public void prePersist(CollectionModel collection) {
         Timestamp now = new Timestamp(System.currentTimeMillis());
-        collection.setCreated_at(now);
-        collection.setUpdated_at(now);
+        collection.setCreatedAt(now);
+        collection.setUpdatedAt(now);
     }
 
     @PreUpdate
     public void preUpdate(CollectionModel collection) {
-        collection.setUpdated_at(new Timestamp(System.currentTimeMillis()));
+        collection.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
     }
 }

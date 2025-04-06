@@ -9,4 +9,5 @@ import com.authentication.demo.Model.CollectionModel;
 public interface CollectionRepository extends JpaRepository<CollectionModel, Long> {
     public CollectionModel findByUserId(Long userId);
     List<CollectionModel> findAllByUserId(Long userId);
+    List<CollectionModel> findAllByUserIdOrderByCreatedAtDesc(Long userId);
 }

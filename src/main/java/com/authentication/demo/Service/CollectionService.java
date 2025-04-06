@@ -3,6 +3,7 @@ package com.authentication.demo.Service;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -28,25 +29,32 @@ public class CollectionService {
     this.repository = repository;
   }
 
-public Map<String, String> createCollection(Map<String, String> params, MultipartFile collectionImage) {
+  // CREATE COLLECTION
+  public Map<String, String> createCollection(Map<String, String> params, MultipartFile collectionImage) {
     try {
+      // Validate input parameters
+      if (collectionImage == null || collectionImage.isEmpty()) {
+        throw new CollectionCreationException("Collection image is required");
+      }
 
-        // Save collection logic
-        String imageUrl = saveCollectionImage(collectionImage);
-        Long userId = userService.getCurrentUserId();
-        Timestamp createdAt = new Timestamp(System.currentTimeMillis());
-        Timestamp updatedAt = new Timestamp(System.currentTimeMillis());
+      // Save collection logic
+      String imageUrl = saveCollectionImage(collectionImage);
+      Long userId = userService.getCurrentUserId();
+      Timestamp createdAt = new Timestamp(System.currentTimeMillis());
+      Timestamp updatedAt = new Timestamp(System.currentTimeMillis());
+      
+      CollectionModel newCollection = new CollectionModel(
+          null, userId, params.get("caption"), params.get("description"), imageUrl, createdAt, updatedAt
+      );
 
-        CollectionModel newCollection = new CollectionModel(
-            null, userId, params.get("caption"), params.get("description"), imageUrl, createdAt, updatedAt);
-
-        repository.save(newCollection);
-        return Map.of("message", "Collection created successfully");
-    } catch (Exception e) {
-        throw new CollectionCreationException("Failed to create collection", e);
+      repository.save(newCollection);
+      return Map.of("message", "Collection created successfully");
+    } catch (IllegalArgumentException | NullPointerException e) {
+      throw new CollectionCreationException("Invalid input parameters", e);
+    } catch (RuntimeException e) {
+      throw new CollectionCreationException("Unexpected error occurred while creating collection", e);
     }
-}
-
+  }
 
   // SAVE PROFILE PICTURE
   public String saveCollectionImage(MultipartFile collectionImage) {
@@ -72,10 +80,18 @@ public Map<String, String> createCollection(Map<String, String> params, Multipar
     } catch (Exception e) {
       throw new RuntimeException("Failed to save collection image", e);
     }
-    
 
     // RETURN IMAGE URL
     return "/collection-images/" + filename;
+  }
+
+  // GET COLLECTIONS FOR CURRENT USER
+  public List<CollectionModel> getCollectionsForCurrentUser() {
+    // Fetch the current user's ID using UserService
+    Long userId = userService.getCurrentUserId();
+
+    // RETURN COLLECTION BY USER ID AND SORTED BY CREATED AT DESC
+    return repository.findAllByUserIdOrderByCreatedAtDesc(userId);
   }
 
 }

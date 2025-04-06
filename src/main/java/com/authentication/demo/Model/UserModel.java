@@ -64,10 +64,10 @@ public class UserModel implements UserDetails {
     private List<String> roles;
     
     @Column(name = "created_at", nullable = false, updatable = false)
-    private Timestamp created_at;
+    private Timestamp createdAt;
     
     @Column(name = "updated_at", nullable = false)
-    private Timestamp updated_at;
+    private Timestamp updatedAt;
 
     public UserModel() {
     }
@@ -84,8 +84,8 @@ public class UserModel implements UserDetails {
         String biography,
         String profilePictureUrl,
         List<String> roles,
-        java.sql.Timestamp created_at,
-        java.sql.Timestamp updated_at) {
+        java.sql.Timestamp createdAt,
+        java.sql.Timestamp updatedAt) {
 
         this.id = id;
         this.username = username;
@@ -98,8 +98,8 @@ public class UserModel implements UserDetails {
         this.biography = biography;
         this.profilePictureUrl = profilePictureUrl;
         this.roles = roles;
-        this.created_at = (created_at == null) ? new Timestamp(System.currentTimeMillis()) : created_at;
-        this.updated_at = new Timestamp(System.currentTimeMillis());
+        this.createdAt = (createdAt == null) ? new Timestamp(System.currentTimeMillis()) : createdAt;
+        this.updatedAt = new Timestamp(System.currentTimeMillis());
     }
 
     public Long getId() {
@@ -195,20 +195,20 @@ public class UserModel implements UserDetails {
         this.roles = roles;
     }
 
-    public Timestamp getCreated_at() {
-        return created_at;
+    public Timestamp getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreated_at(Timestamp created_at) {
-        this.created_at = (created_at == null) ? new Timestamp(System.currentTimeMillis()) : created_at;
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = (createdAt == null) ? new Timestamp(System.currentTimeMillis()) : createdAt;
     }
 
-    public Timestamp getUpdated_at() {
-        return updated_at;
+    public Timestamp getUpdatedAt() {
+        return updatedAt;
     }
     
-    public void setUpdated_at(Timestamp updated_at) {
-        this.updated_at = new Timestamp(System.currentTimeMillis());
+    public void setUpdatedAt(Timestamp updatedAt) {
+        this.updatedAt = new Timestamp(System.currentTimeMillis());
     }
 
     @Override

@@ -16,15 +16,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.authentication.demo.Service.CollectionService;
 import com.authentication.demo.Service.UserService;
 
 @Controller
 public class UserController {
 
-  private final UserService userService;
   private final AuthenticationManager authenticationManager;
+  private final UserService userService;
 
-  public UserController(@Lazy UserService userService, AuthenticationManager authenticationManager) {
+  public UserController(@Lazy UserService userService, AuthenticationManager authenticationManager, CollectionService collectionService) {
     this.userService = userService;
     this.authenticationManager = authenticationManager;
   }
@@ -116,14 +117,14 @@ public class UserController {
   @PostMapping("/signup")
   public String createUser(@RequestParam Map<String, String> userDetails,
       RedirectAttributes redirectAttributes) {
-
+  
     Map<String, String> result = userService.postUser(userDetails);
-
+  
     if ("error".equals(result.get("status"))) {
       redirectAttributes.addFlashAttribute("error", result.get("message"));
       return "redirect:/signup";
     }
-
+  
     redirectAttributes.addFlashAttribute("message", result.get("message"));
     return "redirect:/login";
   }

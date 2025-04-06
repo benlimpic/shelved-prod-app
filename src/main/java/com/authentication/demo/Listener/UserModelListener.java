@@ -12,12 +12,12 @@ public class UserModelListener {
     @PrePersist
     public void prePersist(UserModel user) {
         Timestamp now = new Timestamp(System.currentTimeMillis());
-        user.setCreated_at(now);
-        user.setUpdated_at(now);
+        user.setCreatedAt(now);
+        user.setUpdatedAt(now);
     }
 
     @PreUpdate
     public void preUpdate(UserModel user) {
-        user.setUpdated_at(new Timestamp(System.currentTimeMillis()));
+        user.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
     }
 }
