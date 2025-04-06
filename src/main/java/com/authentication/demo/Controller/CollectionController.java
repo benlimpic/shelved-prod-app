@@ -26,7 +26,7 @@ public class CollectionController {
         RedirectAttributes redirectAttributes) {
         collectionService.createCollection(collectionDetails, collectionImage);
         redirectAttributes.addFlashAttribute("message", "Collection created successfully");
-        return "redirect:/create-collection";
+        return "redirect:/profile";
     }
 
 
