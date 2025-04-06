@@ -40,7 +40,7 @@
         <div class="headerBox">
           <h4 class="formHeader">Create New Collection</h4>
             <!-- ERROR / SUCCESS -->
-            <div class="errorBox">
+            <div class="errorBox mb-4">
               <!-- SUCCESS MESSAGE -->
               <div
                 id="successMessageDiv"
@@ -59,7 +59,6 @@
 
             <form action="/create_collection" method="POST" enctype="multipart/form-data">
               <input type="hidden" name="_csrf" value="${_csrf.token}">
-
               <!-- File Upload Field -->
               <div class="labelInputBox">
                 <img
@@ -69,7 +68,7 @@
                   alt="Default Collection Image"
                 />
                 <a href="#" id="triggerUpload" class="mt-2">
-                  <span class="text-sm font-semibold text-blue-500"
+                  <span class="text-sm font-semibold text-blue-500 mb-1"
                     >Update Collection Cover</span
                   >
                 </a>
@@ -109,7 +108,9 @@
               </div>
           
               <!-- Submit Button -->
-              <button class="submitButton" type="submit">Create Collection</button>
+              <div class="flex flex-row justify-center items-center">
+                <button class="deleteButton bg-blue-600 hover:bg-blue-800" type="submit">Create Collection</button>
+              </div>
           </form>
         </div>
       </div>

@@ -17,6 +17,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -61,6 +62,19 @@ public class UserService implements UserDetailsService {
         userModel.getPassword(),
         authorities);
   }
+
+  // GET CURRENT USER ID
+    public Long getCurrentUserId() {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        if (securityContext.getAuthentication() == null || !securityContext.getAuthentication().isAuthenticated()) {
+            throw new RuntimeException("No authenticated user found");
+        }
+
+        String username = securityContext.getAuthentication().getName();
+        return repository.findByUsername(username)
+            .map(user -> user.getId())
+            .orElseThrow(() -> new RuntimeException("User not found for username: " + username));
+    }
 
   // GET CURRENT USER
   private Optional<UserModel> getCurrentUser() {

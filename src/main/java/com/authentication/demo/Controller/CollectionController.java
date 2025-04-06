@@ -23,15 +23,9 @@ public class CollectionController {
     @PostMapping("/create_collection")
     public String postCollection(@RequestParam Map<String, String> collectionDetails, @RequestParam MultipartFile collectionImage,
         RedirectAttributes redirectAttributes) {
-
-        Map<String, String> result = collectionService.createCollection(collectionDetails, collectionImage);
-
-        if ("error".equals(result.get("status"))) {
-            redirectAttributes.addFlashAttribute("error", result.get("message"));
-            return "redirect:/create-collection";
-        }
-
-        redirectAttributes.addFlashAttribute("message", result.get("message"));
+        
+        collectionService.createCollection(collectionDetails, collectionImage);
+        redirectAttributes.addFlashAttribute("message", "Collection created successfully");
         return "redirect:/create-collection";
     }
 }
