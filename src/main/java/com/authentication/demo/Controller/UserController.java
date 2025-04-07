@@ -86,30 +86,23 @@ public class UserController {
     }
   }
 
-  // UPDATE USER PROFILE PICTURE
-  @PostMapping("/update_profile_picture")
-  public String updateProfilePicture(MultipartFile profilePicture,
-      RedirectAttributes redirectAttributes) {
-    String result = userService.updateProfilePicture(profilePicture);
-    if ("Profile picture updated successfully".equals(result)) {
-      redirectAttributes.addFlashAttribute("message", result);
-      return "redirect:/profile";
-    } else {
-      redirectAttributes.addFlashAttribute("error", result);
-      return "redirect:/update-profile";
-    }
-  }
-
+  // UPDATE USER PROFILE DETAILS
   @PostMapping("/update_profile")
   public String updateProfile(@RequestParam Map<String, String> userDetails,
+      @RequestParam MultipartFile profilePicture,
       RedirectAttributes redirectAttributes) {
-    String result = userService.updateUserProfile(userDetails);
-    if ("User profile updated successfully".equals(result)) {
-      redirectAttributes.addFlashAttribute("message", result);
-      return "redirect:/profile";
-    } else {
-      redirectAttributes.addFlashAttribute("error", result);
-      return "redirect:/updateProfile";
+    try {
+      String result = userService.updateProfile(userDetails, profilePicture, redirectAttributes);
+      if ("User profile updated successfully".equals(result)) {
+        redirectAttributes.addFlashAttribute("message", result);
+        return "redirect:/profile"; // Correctly redirect to the profile page
+      } else {
+        redirectAttributes.addFlashAttribute("error", result);
+        return "redirect:/update-profile"; // Redirect back to the update profile page on error
+      }
+    } catch (Exception e) {
+      redirectAttributes.addFlashAttribute("error", "An unexpected error occurred while updating the profile.");
+      return "redirect:/update-profile";
     }
   }
 

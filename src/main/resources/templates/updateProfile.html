@@ -8,6 +8,7 @@
     <script th:src="@{/js/toggleProfilePhoto.js}" defer></script>
     <script th:src="@{/js/fadeAnimations.js}" defer></script>
     <script th:src="@{/js/updateChanges.js}" defer></script>
+    <script th:src="@{/js/previewFile.js}" defer></script>
   </head>
   <body>
     <header>
@@ -33,13 +34,21 @@
       <div class="profileContainer">
         <div class="h-auto w-full">
         <div class="flex flex-col justify-center items-center mt-8 p-2">
-          <!-- profile image -->
+          <!-- PROFILE PICTURE -->
           <a>
-            <img class="h-32 w-32 rounded-full bg-white" th:src="${user?.profilePictureUrl ?: '/images/default-profile-photo.png'}" alt="Profile Picture" />
+            <img
+            class="h-32 w-32 rounded-full bg-white"
+            id="previewImage"
+            th:src="${user?.profilePictureUrl ?: '/images/default-profile-photo.png'}"
+            alt="Profile Picture"
+            />
           </a>
-          <!-- update profile picture -->
-          <a id="updateProfilePhotoButton" class="mt-2">
-            <span class="text-sm font-semibold text-blue-500">Update Profile Picture</span>
+
+          <!-- UPDATE PROFILE PICTURE BUTTON -->
+          <a href="#" id="triggerUpload" class="mt-2">
+            <span class="text-sm font-semibold text-blue-500 mb-1"
+              >Update Profile Picture</span
+            >
           </a>
 
           <div class="errorBox">
@@ -51,42 +60,40 @@
 
         </div>
         <div class="flex-col justify-center items-center">
+          <form th:action="@{/update_profile}" method="post" enctype="multipart/form-data" id="updateProfileForm">
             <!-- Update Profile Picture -->
-          <div id="updateProfilePhotoForm" class="hidden w-full bg-white">
-            <div id="updateProfilePictureForm">
-              <form th:action="@{/update_profile_picture}" method="post" enctype="multipart/form-data">
-                <div class="labelInputBox">
-                <label class="label" for="profilePicture">Profile Picture:</label>
-                <input class="file-input" type="file" id="profilePicture" name="profilePicture" required>
-                </div>
-                <div class="cancelUpdateBox">
-                  <button class="button bg-slate-600" id="cancelProfilePhotoUpdateButton" type="button">Cancel</button>
-                  <button class="button" id="updateProfilePictureSubmitButton" type="submit">Update</button>
-                </div>
-              </form>
+            <div class="labelInputBox">
+              <input
+                type="file"
+                id="hiddenFileInput"
+                name="profilePicture"
+                style="display: none"
+                accept="image/*"
+              />
             </div>
-          </div>
-
-          <form th:action="@{/update_profile}" method="post" id="updateProfileForm">
-              <!-- Location -->
+          
+            <!-- Location -->
             <div class="grid grid-cols-5 w-full bg-white">
-              <span class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Location</span>
-              <input id="locationInput" class="col-span-4 text-sm p-2 border-y border-slate-200" name="location" th:value="${user?.location ?: ''}" placeholder="Location"></input>
+              <span class="text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Location</span>
+              <input id="locationInput" class="col-span-4 text-sm p-2 border-y border-slate-200" name="location" th:value="${user?.location ?: ''}" placeholder="Location" />
             </div>
+          
             <!-- Website -->
             <div class="grid grid-cols-5 w-full bg-white">
-              <span class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Website</span>
-              <input id="websiteInput" class="col-span-4 text-sm p-2 border-y border-slate-200" name="website" th:value="${user?.website ?: ''}" placeholder="Website"></input>
+              <span class="text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Website</span>
+              <input id="websiteInput" class="col-span-4 text-sm p-2 border-y border-slate-200" name="website" th:value="${user?.website ?: ''}" placeholder="Website" />
             </div>
-              <!-- Biography -->
+          
+            <!-- Biography -->
             <div class="grid grid-cols-5 w-full bg-white">
-              <span class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Biography</span>
+              <span class="text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Biography</span>
               <textarea id="biographyInput" class="col-span-4 text-sm p-2 border-y border-slate-200" name="biography" th:text="${user?.biography ?: ''}" placeholder="Biography" maxlength="250"></textarea>
             </div>
-          </div>
+          
+            <button type="submit" id="hiddenSubmitButton" class="hidden"></button>
+          </form>
         </div>
-        <button type="submit" id="hiddenSubmitButton" class="hidden"></button>
-      </form>
+      </div>
     </div>
   </body>
 </html>

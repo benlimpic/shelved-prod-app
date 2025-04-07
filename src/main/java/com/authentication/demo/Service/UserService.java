@@ -25,6 +25,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.authentication.demo.Model.UserModel;
 import com.authentication.demo.Repository.UserRepository;
@@ -64,17 +65,17 @@ public class UserService implements UserDetailsService {
   }
 
   // GET CURRENT USER ID
-    public Long getCurrentUserId() {
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        if (securityContext.getAuthentication() == null || !securityContext.getAuthentication().isAuthenticated()) {
-            throw new RuntimeException("No authenticated user found");
-        }
-
-        String username = securityContext.getAuthentication().getName();
-        return repository.findByUsername(username)
-            .map(user -> user.getId())
-            .orElseThrow(() -> new RuntimeException("User not found for username: " + username));
+  public Long getCurrentUserId() {
+    SecurityContext securityContext = SecurityContextHolder.getContext();
+    if (securityContext.getAuthentication() == null || !securityContext.getAuthentication().isAuthenticated()) {
+      throw new RuntimeException("No authenticated user found");
     }
+
+    String username = securityContext.getAuthentication().getName();
+    return repository.findByUsername(username)
+        .map(user -> user.getId())
+        .orElseThrow(() -> new RuntimeException("User not found for username: " + username));
+  }
 
   // GET CURRENT USER
   private Optional<UserModel> getCurrentUser() {
@@ -213,90 +214,54 @@ public class UserService implements UserDetailsService {
   }
 
   // UPDATE USER PROFILE
-  public String updateUserProfile(Map<String, String> params) {
-    Optional<UserModel> user = getCurrentUser();
-    if (user.isPresent()) {
-      // Update user details
-      UserModel userModel = user.get();
-
-      userModel.setWebsite(params.get("website"));
-      userModel.setLocation(params.get("location"));
-      userModel.setBiography(params.get("biography"));
-      repository.save(userModel);
-
-      // Re-authenticate the user with the updated details
-      UserDetails updatedUserDetails = userDetailsService.loadUserByUsername(userModel.getUsername());
-      Authentication newAuth = new UsernamePasswordAuthenticationToken(updatedUserDetails, null,
-          updatedUserDetails.getAuthorities());
-      SecurityContextHolder.getContext().setAuthentication(newAuth);
-
-      return "User profile updated successfully";
-    } else {
-      return "No authenticated user found";
-    }
-  }
-
-  // UPDATE PROFILE PICTURE
-  public String updateProfilePicture(MultipartFile profilePicture) {
-    if (profilePicture.isEmpty()) {
-      return "Profile picture is empty";
-    }
-
+  public String updateProfile(Map<String, String> userDetails, MultipartFile profilePicture, RedirectAttributes redirectAttributes) {
     try {
-      String profilePictureUrl = saveProfilePicture(profilePicture);
+      // Fetch the current user
       Optional<UserModel> user = getCurrentUser();
       if (user.isPresent()) {
         UserModel userModel = user.get();
-        userModel.setProfilePictureUrl(profilePictureUrl);
+  
+        // Update profile picture if provided
+        if (profilePicture != null && !profilePicture.isEmpty()) {
+          String profilePictureUrl = saveProfilePicture(profilePicture);
+          userModel.setProfilePictureUrl(profilePictureUrl);
+        }
+  
+        // Update other user details
+        userModel.setLocation(userDetails.get("location"));
+        userModel.setWebsite(userDetails.get("website"));
+        userModel.setBiography(userDetails.get("biography"));
+  
+        // Save the updated user back to the database
         repository.save(userModel);
-
-        // Re-authenticate the user with the updated profile picture URL
-        UserDetails updatedUserDetails = userDetailsService.loadUserByUsername(userModel.getUsername());
-        Authentication newAuth = new UsernamePasswordAuthenticationToken(updatedUserDetails, null,
-            updatedUserDetails.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(newAuth);
-
-        return "Profile picture updated successfully";
+  
+        return "User profile updated successfully";
       } else {
         return "User not found";
       }
     } catch (IOException e) {
-      return "Failed to update profile picture";
+      throw new RuntimeException("Failed to update profile", e);
     }
   }
 
   // SAVE PROFILE PICTURE
-  private String saveProfilePicture(MultipartFile profilePicture) throws IOException {
+  public String saveProfilePicture(MultipartFile profilePicture) throws IOException {
     // Create the directory if it doesn't exist
     File directory = new File("profile-pictures");
     if (!directory.exists()) {
       directory.mkdirs();
     }
-
-    // Check if the file is empty
-    if (profilePicture.isEmpty()) {
-      throw new IOException("File is empty");
-    }
-    // Check if the file is too large
-    if (profilePicture.getSize() > 5 * 1024 * 1024) { // 5 MB limit
-      throw new IOException("File is too large");
-    }
-    // Check if the file type is allowed
-    String contentType = profilePicture.getContentType();
-    if (contentType == null || !contentType.startsWith("image/")) {
-      throw new IOException("Invalid file type");
-    }
-
-    // GENERATE A UNIQUE FILENAME
+  
+    // Generate a unique filename
     String filename = UUID.randomUUID().toString() + "-" + profilePicture.getOriginalFilename();
     File file = new File(directory, filename);
-
-    // Save the file to the directory
+  
+    // Save the file
     try (FileOutputStream fos = new FileOutputStream(file)) {
       fos.write(profilePicture.getBytes());
     }
-
-    // RETURN IMAGE URL
+  
+    // Return the file URL
     return "/profile-pictures/" + filename;
   }
 
