@@ -29,6 +29,15 @@ public class CollectionService {
     this.repository = repository;
   }
 
+  // GET COLLECTION BY COLLECTION ID
+  public CollectionModel getCollectionById(Long id) {
+    CollectionModel collection = repository.findById(id).orElse(null);
+    if (collection == null) {
+      throw new CollectionCreationException("Collection not found");
+    }
+    return collection;
+  }
+
   // CREATE COLLECTION
   public Map<String, String> createCollection(Map<String, String> params, MultipartFile collectionImage) {
     try {

@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.authentication.demo.Model.CollectionModel;
 import com.authentication.demo.Model.UserModel;
@@ -65,6 +66,21 @@ public class ContentController {
   @GetMapping("/create-collection")
   public String createCollection(Model model) {
       return handleAuthentication(model, "createCollection");
+  }
+
+  @GetMapping("/collection/{Id}")
+  public String collection(@PathVariable("Id") Long id, Model model) {
+      // GET COLLECTION BY ID
+      CollectionModel collection = collectionService.getCollectionById(id);
+      if (collection == null) {
+          // REDIRECT TO PROFILE IF COLLECTION NOT FOUND
+          return "redirect:/profile";
+      }
+      // FETCH SINGLE COLLECTION
+      model.addAttribute("collection", collection);
+
+      model.addAttribute("collectionId", id);
+      return handleAuthentication(model, "collection");
   }
 
   

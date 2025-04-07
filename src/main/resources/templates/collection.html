@@ -1,0 +1,147 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Profile</title>
+    <link rel="stylesheet" href="/css/output.css" />
+    <script src="/js/fadeAnimations.js" defer></script>
+    <style>
+      html, body {
+        height: auto;
+        min-height: 100%;
+        overflow-y: auto;
+        margin: 0;
+      }
+      </style>
+  </head>
+  <body>
+    <header>
+      <nav class="navbar">
+        <ul class="flex justify-between w-full">
+          <li class="flex items-center">
+            <a href="/profile">
+              <span>&#8592;</span>
+            </a>
+          </li>
+          <li class="flex items-center">
+            <a
+              class="bg-blue-500 hover:bg-blue-700 text-white text-xs px-1 py-0.5 rounded"
+              id="redirectUpdateCollectionDetails"
+              href="./collection/${collection.id}/update"
+              >
+              <span class="text-lg">&#9776;</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <div class="profileContainerScroll">
+      <div class="h-auto w-full border-b-2 border-slate-300 bg-white shadow-sm">
+        <div class="collectionNavbar shadow-sm">
+          <div class="flex justify-between items-center w-full">
+            <ul class="flex justify-start items-center w-full">
+              <li class="pr-2">
+                <a href="/profile">
+                  <img
+                    class="h-7 w-7 rounded-full bg-white"
+                    th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}"
+                    alt="Profile Picture"
+                  />
+                </a>
+              </li>
+              <li>
+                <a href="/profile">
+                  <span
+                    class="text-sm font-semibold"
+                    th:if="${user?.username != null}"
+                    th:text="${user?.username}">
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <!-- COLLECTION CONTENT -->
+        <div class=" flex flex-col justify-center items-center">
+          <!-- COLLECTION PICTURE -->
+          <a>
+            <img
+              class="aspect-square w-full bg-white"
+              id="previewImage"
+              th:src="${collection != null && collection.imageUrl != null ? collection.imageUrl : '/images/collection_image.png'}"
+              alt="Profile Picture"/>
+          </a>
+        <div class="w-full px-2">
+          <div class="flex flex-row w-full  h-4 pt-2">
+            <ul class="flex justify-start items-center w-full">
+              <li class="pr-2">
+                <a>
+                  <span class="text-sm font-medium">&#9825;</span>
+                </a>
+              </li>
+              <li class="pr-2">
+                <a>
+                  <span class="text-xs font-medium">comment</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="w-full h-auto flex justify-start items-center">
+            <!-- Caption -->
+            <p>
+              <a href="/profile">
+              <span
+                class="text-xs font-medium pr-1"
+                th:if="${user?.username != null}"
+                th:text="${user?.username}">
+              </span>
+            </a>
+            <span
+            class="text-xs font-light"
+                th:if="${collection?.caption != null}"
+                th:text="${collection?.caption}">
+              </span>
+            </p>
+          </div>
+        <div class="w-full flex flex-col justify-center items-start">
+          <span
+            style="font-size: 9px;" class="font-extralight"
+            th:if="${collection?.updatedAt != null}"
+            th:text="${#dates.format(collection?.updatedAt, 'MMMM-YYYY')}">
+          </span>
+        </div>
+      </div>
+      <!-- LOWER PROFILE BUTTONS -->
+      <div class="grid grid-cols-4 w-full">
+        <a
+          class="deleteButton bg-slate-400 hover:bg-slate-400 flex item-center justify-center col-span-2"
+          id="redirectAddCollectionItem"
+          href="/create_collection_item/${collection.id}">
+          Add Collection Item</a>
+        <a
+          class="deleteButton bg-slate-400 hover:bg-slate-400 flex item-center justify-center col-span-2"
+          id="redirectShareCollection"
+          href="#">
+          Share Collection</a>
+      </div>
+      </div>
+      <div class="w-full h-full overflow-hidden">
+        <div class="grid">
+          <div th:each="row : ${partitionedCollections}" class="grid grid-cols-3">
+            <div th:each="collection : ${row}" class="flex flex-col items-center">
+              <a href="">
+                <img
+                th:src="${#strings.defaultString(collection?.getImageUrl(), '/images/default-image.png')}"
+                alt="Collection Image"
+                class="aspect-square w-full h-auto object-cover"
+                />
+              </a>
+              <!-- CHECK TO VERIFY DESC ORDER IN GRID -->
+              <!-- <p th:text="${collection.id}" class="text-center mt-2"></p> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

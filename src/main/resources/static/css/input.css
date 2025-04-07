@@ -45,6 +45,10 @@
     @apply flex flex-row p-3 justify-between items-center w-full bg-slate-100 text-white;
   }
 
+  .collectionNavbar {
+    @apply flex flex-row p-2 justify-between items-center w-full;
+  }
+
   .label {
     @apply w-full text-sm text-left text-black;
   }
