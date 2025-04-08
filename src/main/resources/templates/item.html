@@ -20,15 +20,17 @@
       <nav class="navbar">
         <ul class="flex justify-between w-full">
           <li class="flex items-center">
-            <a href="/profile">
+            <a
+              id="redirectCollection"
+              th:href="@{/collection/{collectionId}(collectionId=${collectionId})}">
               <span>&#8592;</span>
             </a>
           </li>
           <li class="flex items-center">
             <a
               class="bg-blue-500 hover:bg-blue-700 text-white text-xs px-1 py-0.5 rounded"
-              id="redirectUpdateUserDetails"
-              href="./update-user-details"
+              id="redirectUpdateItemDetails"
+              href="./update-item-details"
               ><span class="text-lg">&#9776;</span></a
             >
           </li>
@@ -61,15 +63,15 @@
             </ul>
           </div>
         </div>
-        <!-- COLLECTION CONTENT -->
+        <!-- ITEM CONTENT -->
         <div class=" flex flex-col justify-center items-center">
-          <!-- COLLECTION PICTURE -->
+          <!-- ITEM PICTURE -->
           <a>
             <img
               class="aspect-square w-full bg-white"
               id="previewImage"
-              th:src="${collection != null && collection.imageUrl != null ? collection.imageUrl : '/images/collection_image.png'}"
-              alt="Profile Picture"/>
+              th:src="${item != null && item.imageUrl != null ? item.imageUrl : '/images/item_image.png'}"
+              alt="Item Image"/>
           </a>
         <div class="w-full px-2">
           <div class="flex flex-row w-full h-auto py-1 text-sm">
@@ -105,8 +107,8 @@
             <span
                 class="font-light"
                 onclick="toggleTruncate()"
-                th:if="${collection?.caption != null}"
-                th:text="${collection?.caption}">
+                th:if="${item?.caption != null}"
+                th:text="${item?.caption}">
             </span>
             </p>
           </div>
@@ -115,32 +117,11 @@
             <div class="w-full flex flex-col justify-center items-start pt-1">
               <span
                 style="font-size: 9px;" class="font-extralight"
-                th:if="${collection?.updatedAt != null}"
-                th:text="${#dates.format(collection?.updatedAt, 'MMMM-YYYY')}">
+                th:if="${item?.updatedAt != null}"
+                th:text="${#dates.format(item?.updatedAt, 'MMMM-YYYY')}">
               </span>
             </div>
-            <!-- LOWER PROFILE BUTTONS -->
-            <div class="flex flex-row justify-center items-center">
-              <a
-                class="font-semibold text-xl text-blue-500 pr-2"
-                id="redirectAddCollectionItem"
-                th:href="@{/create-item/{collectionId}(collectionId=${collection.id})}"
-                >&#43;</a>
-            </div>
           </div>
-        </div>
-      </div>
-    </div>
-    <div class="grid">
-      <div th:each="row : ${partitionedItems}" class="grid grid-cols-3">
-        <div th:each="item : ${row}" class="flex flex-col items-center">
-          <a th:href="@{/item/{id}(id=${item.id})}">
-            <img
-              th:src="${#strings.defaultString(item?.getImageUrl(), '/images/item_image.png')}"
-              alt="Item Image"
-              class="aspect-square w-full h-auto object-cover"
-            />
-          </a>
         </div>
       </div>
     </div>

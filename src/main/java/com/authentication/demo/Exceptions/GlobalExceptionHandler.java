@@ -16,7 +16,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public String handleException(Exception e, RedirectAttributes redirectAttributes) {
         // Log the error (optional)
-        e.printStackTrace();
 
         // Add an error message to the redirect attributes
         redirectAttributes.addFlashAttribute("error", "An unexpected error occurred: " + e.getMessage());

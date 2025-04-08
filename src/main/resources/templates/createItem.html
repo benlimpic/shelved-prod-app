@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Login</title>
+    <script th:src="@{/js/previewFile.js}" defer></script>
+
+    <link rel="stylesheet" href="/css/output.css" />
+  </head>
+  <body>
+    <header>
+      <nav class="navbar">
+        <ul class="flex justify-between items-center w-full">
+          <li class="flex items-center">
+            <a href="/index">
+              <span>&#8592;</span>
+            </a>
+          </li>
+          <li>
+            <a href="/profile">
+              <img
+                class="h-7 w-7 rounded-full bg-white"
+                th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}"
+                alt="Profile Picture"
+              />
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <div class="containerSimple bg-slate-200">
+      <div class="collectionHeader bg-slate-100">
+        <span class="text-sm font-semibold text-slate-600">Create Item</span>
+      </div>
+
+      <div class="bg-white pb-4">
+        <div class="flex flex-col w-full items-center justify-center">
+          <img
+            class="aspect-square w-full bg-white"
+            id="previewImage"
+            th:src="${'/images/item_image.png'}"
+            alt="Default Collection Image"
+          />
+          <a href="#" id="triggerUpload" class="mt-2">
+            <span class="text-sm font-semibold text-blue-500"
+              >Update Item Image</span
+            >
+          </a>
+        </div>
+        <!-- ERROR / SUCCESS -->
+        <div class="errorBox">
+          <!-- SUCCESS MESSAGE -->
+          <div
+            id="successMessageDiv"
+            th:if="${message}"
+            th:text="${message}"
+            style="color: green"
+          ></div>
+          <!-- ERROR MESSAGE -->
+          <div
+            id="errorMessageDiv"
+            th:if="${error}"
+            th:text="${error}"
+            style="color: red"
+          ></div>
+        </div>
+
+        <form
+          class="flex flex-col w-full items-center justify-center px-2 bg-white"
+          th:action="@{/create_item/{collectionId}(collectionId=${collectionId})}"
+          method="post"
+          enctype="multipart/form-data"
+        >
+          <input type="hidden" name="collectionId" th:value="${collectionId}" />
+          <input type="hidden" name="_csrf" value="${_csrf.token}" />
+          <!-- File Upload Field -->
+
+          <input
+            type="file"
+            id="hiddenFileInput"
+            name="itemImage"
+            style="display: none"
+            accept="image/*"
+            required
+          />
+
+          <!-- Caption Field -->
+          <div class="flex flex-col w-full h-auto justify-center items-between">
+            <div class="labelInputBox w-full">
+              <label class="label" for="caption">Caption:</label>
+              <input
+                class="input w-full"
+                type="text"
+                id="caption"
+                name="caption"
+                placeholder="Caption"
+              />
+            </div>
+
+            <!-- Submit Button -->
+            <div class="flex flex-row justify-center items-center">
+              <button
+                class="deleteButton bg-blue-600 hover:bg-blue-800"
+                type="submit"
+              >
+                Create Item
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

@@ -29,7 +29,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
             .csrf(csrf -> csrf
-                .ignoringRequestMatchers("/create_collection") // Ignore CSRF for this endpoint
+                .ignoringRequestMatchers("/create_collection")
+                .ignoringRequestMatchers("/create_item")
             )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/login", "/signup", "/css/**", "/js/**", "/images/**").permitAll()

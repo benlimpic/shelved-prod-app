@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,8 +17,6 @@ import com.authentication.demo.Repository.CollectionRepository;
 @Service
 public class CollectionService {
 
-  private static final Logger logger = LoggerFactory.getLogger(CollectionService.class);
-
   private final CollectionRepository repository;
   private final UserService userService;
 
@@ -30,7 +26,7 @@ public class CollectionService {
   }
 
   // GET COLLECTION BY COLLECTION ID
-  public CollectionModel getCollectionById(Long id) {
+  public CollectionModel getCollectionById(Long id) throws CollectionCreationException {
     CollectionModel collection = repository.findById(id).orElse(null);
     if (collection == null) {
       throw new CollectionCreationException("Collection not found");
