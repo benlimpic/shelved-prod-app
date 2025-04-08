@@ -14,13 +14,9 @@
     <header>
       <nav class="navbar">
         <ul class="flex justify-between items-center w-full">
-          <li>
+          <li class="flex items-center">
             <a href="/index">
-              <img
-                class="h-5"
-                src="/images/Shelved_Logo_White.png"
-                alt="Shelved Logo"
-              />
+              <span>&#8592;</span>
             </a>
           </li>
           <li>
@@ -36,32 +32,11 @@
       </nav>
     </header>
     <div class="containerSimple bg-slate-200">
-      <div class="collectionNavbar shadow-sm  bg-slate-100">
-        <div class="flex justify-between items-center w-full">
-          <ul class="flex justify-start items-center w-full">
-            <li class="pr-2">
-              <a href="/profile">
-                <img
-                  class="h-7 w-7 rounded-full bg-white"
-                  th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}"
-                  alt="Profile Picture"
-                />
-              </a>
-            </li>
-            <li>
-              <a href="/profile">
-                <span
-                  class="text-sm font-semibold"
-                  th:if="${user?.username != null}"
-                  th:text="${user?.username}"
-                >
-                </span>
-              </a>
-            </li>
-          </ul>
-        </div>
+      <div class="collectionHeader bg-slate-100">
+        <span class="text-sm font-semibold text-slate-600">Create Collection</span>
       </div>
-      <div class=" bg-white pb-4">
+
+      <div class="bg-white pb-4">
         <div class="flex flex-col w-full items-center justify-center">
           <img
             class="aspect-square w-full bg-white"
@@ -92,7 +67,7 @@
             style="color: red"
           ></div>
         </div>
-  
+
         <form
           class="flex flex-col w-full items-center justify-center px-2 bg-white"
           action="/create_collection"
@@ -102,15 +77,14 @@
           <input type="hidden" name="_csrf" value="${_csrf.token}" />
           <!-- File Upload Field -->
 
-            <input
-              type="file"
-              id="hiddenFileInput"
-              name="collectionImage"
-              style="display: none"
-              accept="image/*"
-            />
+          <input
+            type="file"
+            id="hiddenFileInput"
+            name="collectionImage"
+            style="display: none"
+            accept="image/*"
+          />
 
-  
           <!-- Caption Field -->
           <div class="flex flex-col w-full h-auto justify-center items-between">
             <div class="labelInputBox w-full">
@@ -123,7 +97,7 @@
                 placeholder="Caption"
               />
             </div>
-    
+
             <!-- Submit Button -->
             <div class="flex flex-row justify-center items-center">
               <button

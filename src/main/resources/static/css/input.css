@@ -57,6 +57,10 @@
     @apply flex flex-row p-2 justify-between items-center w-full;
   }
 
+  .collectionHeader {
+    @apply flex flex-row p-2 justify-center items-center w-full;
+  }
+
   .label {
     @apply w-full text-sm text-left text-black;
   }

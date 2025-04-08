@@ -12,13 +12,13 @@
   <body>
     <header>
       <nav class="navbar">
-        <ul class="flex justify-between w-full">
-          <li class="flex items-center">
-            <a class="text-xl" href="/profile">
+        <ul class="flex justify-between items-center w-full">
+          <li class="flex">
+            <a href="/profile">
               <span>&#8592;</span>
             </a>
           </li>
-          <li>
+          <li class="flex">
             <form class="text-sm" th:action="@{/logout}" method="post">
               <button type="submit" class="logoutButton">Logout</button>
             </form>
@@ -28,7 +28,7 @@
     </header>
     <div class="profileContainer">
       <div class="h-auto w-full">
-        <div class="flex flex-col justify-end items-center mt-4 p-2">
+        <div class="flex flex-col justify-end items-center mt-2 p-2">
           <h1 class="formHeader">Account Details</h1>
         </div>
 
