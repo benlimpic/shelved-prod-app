@@ -5,6 +5,7 @@
     <title>User Profile</title>
     <link rel="stylesheet" href="/css/output.css" />
     <script src="/js/fadeAnimations.js" defer></script>
+    <script src="/js/toggleTruncate.js" defer></script>
     <style>
       html, body {
         height: auto;
@@ -35,8 +36,8 @@
         </ul>
       </nav>
     </header>
-    <div class="profileContainerScroll">
-      <div class="h-auto w-full border-b-2 border-slate-300 bg-white shadow-sm">
+    <div class="profileContainerScroll bg-slate-200">
+      <div class="h-auto w-full border-b-2 bg-slate-100 shadow-sm">
         <div class="collectionNavbar shadow-sm">
           <div class="flex justify-between items-center w-full">
             <ul class="flex justify-start items-center w-full">
@@ -72,58 +73,66 @@
               alt="Profile Picture"/>
           </a>
         <div class="w-full px-2">
-          <div class="flex flex-row w-full  h-4 pt-2">
-            <ul class="flex justify-start items-center w-full">
-              <li class="pr-2">
+          <div class="flex flex-row w-full h-auto py-1 text-sm">
+            <ul class="flex flex-row justify-start items-center pr-2">
+              <li class="flex flex-row justify-start items-center pr-2">
                 <a>
-                  <span class="text-sm font-medium">&#9825;</span>
+                  <span class="pr-2 font-medium">&#9825;</span>
                 </a>
+                <p class="font-thin">
+                  0
+                </p>
               </li>
-              <li class="pr-2">
+              <li class="flex flex-row justify-start items-center pr-2">
                 <a>
-                  <span class="text-xs font-medium">comment</span>
+                  <span class="pr-2 font-medium">comment</span>
                 </a>
+                <p class="font-thin">
+                  0
+                </p>
               </li>
             </ul>
           </div>
-          <div class="w-full h-auto flex justify-start items-center">
+          <div class="w-full h-auto flex justify-start items-center text-sm">
             <!-- Caption -->
-            <p>
+            <p id="toggle_truncate" class="truncate leading-[1rem]">
               <a href="/profile">
               <span
-                class="text-xs font-medium pr-1"
+                class="font-semibold"
                 th:if="${user?.username != null}"
                 th:text="${user?.username}">
               </span>
             </a>
             <span
-            class="text-xs font-light"
+                class="font-light"
+                onclick="toggleTruncate()"
                 th:if="${collection?.caption != null}"
                 th:text="${collection?.caption}">
-              </span>
+            </span>
             </p>
           </div>
-        <div class="w-full flex flex-col justify-center items-start">
-          <span
-            style="font-size: 9px;" class="font-extralight"
-            th:if="${collection?.updatedAt != null}"
-            th:text="${#dates.format(collection?.updatedAt, 'MMMM-YYYY')}">
-          </span>
+          <div class="w-full flex justify-between items-center py-1">
+            <div class="w-full flex flex-col justify-center items-start pt-1">
+              <span
+                style="font-size: 9px;" class="font-extralight"
+                th:if="${collection?.updatedAt != null}"
+                th:text="${#dates.format(collection?.updatedAt, 'MMMM-YYYY')}">
+              </span>
+            </div>
+            <!-- LOWER PROFILE BUTTONS -->
+            <div class="flex flex-row justify-center items-center">
+              <a
+                class="font-normal text-sm pr-2"
+                id="redirectAddCollectionItem"
+                href="#">
+                &#43;</a>
+              <a
+              class="font-normal text-sm"
+                id="redirectEditCollectionDetails"
+                href="#">&#9776;</a>
+            </div>
+          </div>
         </div>
-      </div>
-      <!-- LOWER PROFILE BUTTONS -->
-      <div class="grid grid-cols-4 w-full">
-        <a
-          class="deleteButton bg-slate-400 hover:bg-slate-400 flex item-center justify-center col-span-2"
-          id="redirectAddCollectionItem"
-          href="#">
-          Add Collection Item</a>
-        <a
-          class="deleteButton bg-slate-400 hover:bg-slate-400 flex item-center justify-center col-span-2"
-          id="redirectEditCollectionDetails"
-          href="#">
-          Edit Collection</a>
-      </div>
       </div>
       <div class="w-full h-full overflow-hidden">
         <div class="grid">
