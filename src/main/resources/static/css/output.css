@@ -795,6 +795,37 @@ header {
   }
 }
 
+footer {
+  margin-left: auto;
+  margin-right: auto;
+  height: 3rem;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  footer {
+    width: 75%;
+  }
+}
+
+@media (min-width: 768px) {
+  footer {
+    width: 50%;
+  }
+}
+
+@media (min-width: 1024px) {
+  footer {
+    width: 50%;
+  }
+}
+
+@media (min-width: 1280px) {
+  footer {
+    width: 50%;
+  }
+}
+
 nav {
   margin-left: auto;
   margin-right: auto;
@@ -934,6 +965,46 @@ nav {
   }
 }
 
+.indexContainer {
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overscroll-behavior: none;
+  --tw-bg-opacity: 1;
+  background-color: rgb(241 245 249 / var(--tw-bg-opacity, 1));
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+@media (min-width: 640px) {
+  .indexContainer {
+    width: 75%;
+  }
+}
+
+@media (min-width: 768px) {
+  .indexContainer {
+    width: 50%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .indexContainer {
+    width: 50%;
+  }
+}
+
+@media (min-width: 1280px) {
+  .indexContainer {
+    width: 50%;
+  }
+}
+
 .containerTop {
   margin-left: auto;
   margin-right: auto;
@@ -1016,7 +1087,7 @@ nav {
   margin-left: auto;
   margin-right: auto;
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
   width: 100%;
   flex-direction: column;
   align-items: center;
@@ -1024,6 +1095,7 @@ nav {
   overflow-y: auto;
   --tw-bg-opacity: 1;
   background-color: rgb(241 245 249 / var(--tw-bg-opacity, 1));
+  padding-bottom: 3rem;
 }
 
 @media (min-width: 640px) {
@@ -1069,6 +1141,22 @@ nav {
   justify-content: space-between;
   --tw-bg-opacity: 1;
   background-color: rgb(59 130 246 / var(--tw-bg-opacity, 1));
+  padding: 0.75rem;
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+  --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.footerNav {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  --tw-bg-opacity: 1;
+  background-color: rgb(203 213 225 / var(--tw-bg-opacity, 1));
   padding: 0.75rem;
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
@@ -1401,6 +1489,10 @@ nav {
   height: 8rem;
 }
 
+.h-4 {
+  height: 1rem;
+}
+
 .h-5 {
   height: 1.25rem;
 }
@@ -1421,8 +1513,9 @@ nav {
   height: 100vh;
 }
 
-.min-h-screen {
-  min-height: 100vh;
+.min-h-fit {
+  min-height: -moz-fit-content;
+  min-height: fit-content;
 }
 
 .w-16 {
@@ -1435,6 +1528,10 @@ nav {
 
 .w-32 {
   width: 8rem;
+}
+
+.w-4 {
+  width: 1rem;
 }
 
 .w-7 {
@@ -1451,6 +1548,10 @@ nav {
 
 .w-screen {
   width: 100vw;
+}
+
+.grow {
+  flex-grow: 1;
 }
 
 .grid-cols-3 {
@@ -1606,6 +1707,11 @@ nav {
   background-color: rgb(226 232 240 / var(--tw-bg-opacity, 1));
 }
 
+.bg-slate-300 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(203 213 225 / var(--tw-bg-opacity, 1));
+}
+
 .bg-slate-400 {
   --tw-bg-opacity: 1;
   background-color: rgb(148 163 184 / var(--tw-bg-opacity, 1));
@@ -1675,6 +1781,11 @@ nav {
 .py-1 {
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
+}
+
+.py-12 {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
 }
 
 .pb-12 {

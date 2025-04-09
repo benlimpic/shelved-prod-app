@@ -1,7 +1,7 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
   <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -21,12 +21,21 @@
       <nav class="navbar">
         <ul class="flex justify-between items-center w-full">
           <li>
-            <img class="h-5" href="/index" src="/images/Shelved_Logo_White.png" alt="Shelved Logo" />
+            <img
+              class="h-5"
+              href="/index"
+              src="/images/Shelved_Logo_White.png"
+              alt="Shelved Logo"
+            />
           </li>
           <li>
-              <a href="/profile">
-                <img class="h-7 w-7 rounded-full bg-white" th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}" alt="Profile Picture" />
-              </a>
+            <a href="/profile">
+              <img
+                class="h-7 w-7 rounded-full bg-white"
+                th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}"
+                alt="Profile Picture"
+              />
+            </a>
           </li>
         </ul>
       </nav>
@@ -36,10 +45,46 @@
         <div class="headerBox">
           <h4 class="formHeader">This will be the collection feed...</h4>
           <div class="flex justify-center items-center">
-            <a href="/create-collection" class="deleteButton bg-slate-400 hover:bg-slate-400">Create A Collection</a>
+            <a
+              href="/create-collection"
+              class="deleteButton bg-slate-400 hover:bg-slate-400"
+            >
+              Create A Collection
+            </a>
           </div>
         </div>
       </div>
     </div>
+    <footer>
+      <div class="h-12 w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto flex items-center">
+        <div class="footerNav">
+          <ul class="flex justify-between items-center w-full">
+            <li>
+              <div class="h-4 w-4 flex items-center justify-center">
+                <a class="text-2xl font-bold" href="/index">
+                  &#8962;
+                </a>
+              </div>
+            </li>
+            <li>
+              <div class="h-4 w-4 flex items-center justify-center">
+                <a class="text-2xl font-bold" href="/create-collection">
+                  &#43;
+                </a>
+              </div>
+            </li>
+            <li>
+              <a href="/profile">
+                <img
+                  class="h-7 w-7 rounded-full bg-white"
+                  th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}"
+                  alt="Profile Picture"
+                />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>
