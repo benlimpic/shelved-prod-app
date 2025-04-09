@@ -15,7 +15,9 @@
       <nav class="navbar">
         <ul class="flex justify-between items-center w-full">
           <li class="flex items-center">
-            <a href="/index">
+            <a
+              id="redirectCollection"
+              th:href="@{/collection/{collectionId}(collectionId=${collectionId})}">
               <span>&#8592;</span>
             </a>
           </li>

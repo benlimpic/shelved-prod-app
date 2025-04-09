@@ -84,7 +84,6 @@ public class ContentController {
 
         // Fetch items for the collection
         List<ItemModel> items = itemService.getAllItemsByCollectionId(collectionId);
-        System.out.println("Number of items fetched: " + (items != null ? items.size() : "null"));
 
         // Partition items into rows of 3 for display
         List<List<ItemModel>> partitionedItems = items != null ? ListUtils.partition(items, 3) : List.of();
@@ -92,8 +91,6 @@ public class ContentController {
         // Add data to the model
         model.addAttribute("collection", collection);
         model.addAttribute("partitionedItems", partitionedItems);
-
-        System.out.println("Model attributes: " + model.asMap());
 
         return handleAuthentication(model, "collection");
     }
