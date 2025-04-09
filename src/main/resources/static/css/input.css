@@ -46,7 +46,7 @@
   }
 
   .profileContainerScroll {
-    @apply flex flex-col items-center justify-start overflow-y-auto w-full h-screen pb-12 sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto bg-slate-100;
+    @apply flex flex-col items-center justify-start overflow-y-auto w-full h-screen sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto bg-slate-100;
   }
 
   .formContainer {

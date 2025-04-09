@@ -1095,7 +1095,6 @@ nav {
   overflow-y: auto;
   --tw-bg-opacity: 1;
   background-color: rgb(241 245 249 / var(--tw-bg-opacity, 1));
-  padding-bottom: 3rem;
 }
 
 @media (min-width: 640px) {
@@ -1550,10 +1549,6 @@ nav {
   width: 100vw;
 }
 
-.grow {
-  flex-grow: 1;
-}
-
 .grid-cols-3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -1837,11 +1832,6 @@ nav {
 .text-sm {
   font-size: 0.875rem;
   line-height: 1.25rem;
-}
-
-.text-xl {
-  font-size: 1.25rem;
-  line-height: 1.75rem;
 }
 
 .text-xs {
