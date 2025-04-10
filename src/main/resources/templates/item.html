@@ -11,7 +11,7 @@
     <script src="/js/toggleCommentBox.js" defer></script>
 
   </head>
-  <body>
+  <body class="scroll-none">
     <header>
       <nav class="navbar">
         <ul class="flex justify-between w-full">
@@ -57,7 +57,7 @@
         </div>
       </div>
     </header>
-    <div class="profileContainerScroll bg-slate-200">
+    <div class="profileContainerNoScroll bg-slate-200">
       <div class="h-auto w-full border-b-2 bg-slate-100 shadow-sm">
       <div>
         <!-- ITEM CONTENT -->
@@ -121,9 +121,7 @@
                 </p>
               </li>
               <li class="flex flex-row justify-start items-center pr-2">
-                <a id="commentToggle">
-                  <span class="pr-2 font-medium">comment</span>
-                </a>
+                <a id="commentToggle" class="pr-2 font-medium cursor-pointer">comment</a>
                 <p class="font-thin">
                   0
                 </p>
@@ -161,34 +159,91 @@
         </div>
       </div>
     </div>
-      <div id="commentBox" class="hidden w-full bg-red-500 overflow-y-auto">
-        <div class="p-4">
-          <p>Comment 1</p>
-          <p>Comment 2</p>
-          <p>Comment 3</p>
-          <p>Comment 4</p>
-          <p>Comment 5</p>
-          <p>Comment 6</p>
-          <p>Comment 1</p>
-          <p>Comment 2</p>
-          <p>Comment 3</p>
-          <p>Comment 4</p>
-          <p>Comment 5</p>
-          <p>Comment 6</p>
-          <p>Comment 1</p>
-          <p>Comment 2</p>
-          <p>Comment 3</p>
-          <p>Comment 4</p>
-          <p>Comment 5</p>
-          <p>Comment 6</p>
-          <p>Comment 1</p>
-          <p>Comment 2</p>
-          <p>Comment 3</p>
-          <p>Comment 4</p>
-          <p>Comment 5</p>
-          <p>Comment 6</p>
+    <div class="relative scroll-none">
+      <!-- Items Grid -->
+      <div id="itemGrid" class="w-full min-h-fit overflow-hidden">
+        <div class="grid">
+          <div th:each="row : ${partitionedItems}" class="grid grid-cols-3">
+            <div th:each="item : ${row}" class="flex flex-col items-center">
+              <a th:href="@{/item/{id}(id=${item.id})}">
+                <img
+                  th:src="${#strings.defaultString(item?.getImageUrl(), '/images/item_image.png')}"
+                  alt="Item Image"
+                  class="aspect-square w-full h-auto object-cover"
+                />
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+    </div>
+    <div id="commentBox" class="hidden w-full bg-red-500 overflow-y-auto">
+      <div class="p-4">
+        <p>Comment 1</p>
+        <p>Comment 2</p>
+        <p>Comment 3</p>
+        <p>Comment 4</p>
+        <p>Comment 5</p>
+        <p>Comment 6</p>
+        <p>Comment 1</p>
+        <p>Comment 2</p>
+        <p>Comment 3</p>
+        <p>Comment 4</p>
+        <p>Comment 5</p>
+        <p>Comment 6</p>
+        <p>Comment 1</p>
+        <p>Comment 2</p>
+        <p>Comment 3</p>
+        <p>Comment 4</p>
+        <p>Comment 5</p>
+        <p>Comment 6</p>
+        <p>Comment 1</p>
+        <p>Comment 2</p>
+        <p>Comment 3</p>
+        <p>Comment 4</p>
+        <p>Comment 5</p>
+        <p>Comment 6</p>
+      </div>
+    </div>
+  </div>
+  </div>
+
+
+
+
+  <footer class="">
+    <div class="h-12 w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto flex items-center">
+      <div class="footerNav">
+        <ul class="flex justify-between items-center w-full">
+          <li>
+            <div class="h-4 w-4 flex items-center justify-center">
+              <a class="text-2xl font-bold" href="/index">
+                &#8962;
+              </a>
+            </div>
+          </li>
+          <li>
+            <div class="h-4 w-4 flex items-center justify-center">
+              <a
+                class="text-2xl font-bold"
+                th:href="@{/create-item/{collectionId}(collectionId=${collection.id})}"
+                >&#43;
+              </a>
+            </div>
+          </li>
+          <li>
+            <a href="/profile">
+              <img
+                class="h-7 w-7 rounded-full bg-white"
+                th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}"
+                alt="Profile Picture"
+              />
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    </footer>
   </body>
 </html>

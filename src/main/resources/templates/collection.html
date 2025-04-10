@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/output.css" />
     <script src="/js/fadeAnimations.js" defer></script>
     <script src="/js/toggleTruncate.js" defer></script>
+    <script src="/js/toggleCommentBox.js" defer></script>
   </head>
   <body>
     <header>
@@ -28,7 +29,10 @@
         </ul>
       </nav>
     </header>
-    <div class="profileContainerScroll bg-slate-200">
+
+
+
+    <div class="profileContainerScroll overflow-hidden bg-slate-200">
       <div class="h-auto w-full border-b-2 bg-slate-100 shadow-sm">
         <div class="collectionNavbar shadow-sm">
           <div class="flex justify-between items-center w-full">
@@ -76,7 +80,7 @@
                 </p>
               </li>
               <li class="flex flex-row justify-start items-center pr-2">
-                <a>
+                <a id="commentToggle">
                   <span class="pr-2 font-medium">comment</span>
                 </a>
                 <p class="font-thin">
@@ -115,8 +119,39 @@
           </div>
         </div>
       </div>
+      <div id="commentBox" class="hidden w-full bg-red-500 overflow-y-auto">
+        <div class="p-4">
+          <p>Comment 1</p>
+          <p>Comment 2</p>
+          <p>Comment 3</p>
+          <p>Comment 4</p>
+          <p>Comment 5</p>
+          <p>Comment 6</p>
+          <p>Comment 1</p>
+          <p>Comment 2</p>
+          <p>Comment 3</p>
+          <p>Comment 4</p>
+          <p>Comment 5</p>
+          <p>Comment 6</p>
+          <p>Comment 1</p>
+          <p>Comment 2</p>
+          <p>Comment 3</p>
+          <p>Comment 4</p>
+          <p>Comment 5</p>
+          <p>Comment 6</p>
+          <p>Comment 1</p>
+          <p>Comment 2</p>
+          <p>Comment 3</p>
+          <p>Comment 4</p>
+          <p>Comment 5</p>
+          <p>Comment 6</p>
+        </div>
+      </div>
     </div>
-    <div class="w-full min-h-fit overflow-hidden">
+
+
+
+    <div id="itemGrid" class="w-full min-h-fit overflow-hidden ">
       <div class="grid">
         <div th:each="row : ${partitionedItems}" class="grid grid-cols-3">
           <div th:each="item : ${row}" class="flex flex-col items-center">
@@ -131,8 +166,18 @@
         </div>
       </div>
     </div>
+
+
+
+
     </div>
-    <footer>
+
+
+
+
+
+
+    <footer class="">
     <div class="h-12 w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto flex items-center">
       <div class="footerNav">
         <ul class="flex justify-between items-center w-full">
@@ -165,5 +210,9 @@
       </div>
     </div>
     </footer>
+
+
+
+
   </body>
 </html>
