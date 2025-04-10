@@ -222,7 +222,30 @@
   .fade-out {
     animation: fadeOut 0.5s ease-out forwards;
   }
+
+
+  #commentBox {
+    transition: all 0.3s ease-in-out; /* Smooth transition for toggling */
+  }
+
+  .hidden {
+    display: none; /* Hide the comment box when not visible */
+  }
+
+  .fixed {
+    position: fixed; /* Fix the comment box to the bottom of the screen */
+  }
+
+  .overflow-y-scroll {
+    overflow-y: scroll; /* Enable vertical scrolling */
+  }
+
+  .bg-white {
+    background-color: white; /* Set the background color */
+  }
+  
 }
+
 
 
 

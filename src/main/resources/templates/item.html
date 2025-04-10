@@ -8,6 +8,7 @@
     <script src="/js/toggleTruncate.js" defer></script>
     <script src="/js/toggleOverlay.js" defer></script>
     <script src="/js/windowOpen.js" defer></script>
+    <script src="/js/toggleCommentBox.js" defer></script>
 
   </head>
   <body>
@@ -31,33 +32,34 @@
           </li>
         </ul>
       </nav>
+      <div class="collectionNavbar shadow-sm">
+        <div class="flex justify-between items-center w-full">
+          <ul class="flex justify-start items-center w-full">
+            <li class="pr-2">
+              <a th:href="@{/collection/{collectionId}(collectionId=${collection?.id})}">
+                <img
+                  class="h-7 w-7 rounded-full bg-white"
+                  th:src="${collection?.imageUrl ?: '/item_image.png'}"
+                  alt="Profile Picture"
+                />
+              </a>
+            </li>
+            <li>
+              <a th:href="@{/collection/{collectionId}(collectionId=${collection?.id})}">
+                <span
+                  class="text-sm font-semibold"
+                  th:if="${collection?.title!= null}"
+                  th:text="${collection?.title}">
+                </span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
     </header>
     <div class="profileContainerScroll bg-slate-200">
       <div class="h-auto w-full border-b-2 bg-slate-100 shadow-sm">
-        <div class="collectionNavbar shadow-sm">
-          <div class="flex justify-between items-center w-full">
-            <ul class="flex justify-start items-center w-full">
-              <li class="pr-2">
-                <a th:href="@{/collection/{collectionId}(collectionId=${collection?.id})}">
-                  <img
-                    class="h-7 w-7 rounded-full bg-white"
-                    th:src="${collection?.imageUrl ?: '/item_image.png'}"
-                    alt="Profile Picture"
-                  />
-                </a>
-              </li>
-              <li>
-                <a th:href="@{/collection/{collectionId}(collectionId=${collection?.id})}">
-                  <span
-                    class="text-sm font-semibold"
-                    th:if="${collection?.title!= null}"
-                    th:text="${collection?.title}">
-                  </span>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
+      <div>
         <!-- ITEM CONTENT -->
         <div class=" flex flex-col justify-center items-center">
           <div>
@@ -119,7 +121,7 @@
                 </p>
               </li>
               <li class="flex flex-row justify-start items-center pr-2">
-                <a>
+                <a id="commentToggle">
                   <span class="pr-2 font-medium">comment</span>
                 </a>
                 <p class="font-thin">
@@ -156,6 +158,35 @@
               </span>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+      <div id="commentBox" class="hidden w-full bg-red-500 overflow-y-auto">
+        <div class="p-4">
+          <p>Comment 1</p>
+          <p>Comment 2</p>
+          <p>Comment 3</p>
+          <p>Comment 4</p>
+          <p>Comment 5</p>
+          <p>Comment 6</p>
+          <p>Comment 1</p>
+          <p>Comment 2</p>
+          <p>Comment 3</p>
+          <p>Comment 4</p>
+          <p>Comment 5</p>
+          <p>Comment 6</p>
+          <p>Comment 1</p>
+          <p>Comment 2</p>
+          <p>Comment 3</p>
+          <p>Comment 4</p>
+          <p>Comment 5</p>
+          <p>Comment 6</p>
+          <p>Comment 1</p>
+          <p>Comment 2</p>
+          <p>Comment 3</p>
+          <p>Comment 4</p>
+          <p>Comment 5</p>
+          <p>Comment 6</p>
         </div>
       </div>
     </div>
