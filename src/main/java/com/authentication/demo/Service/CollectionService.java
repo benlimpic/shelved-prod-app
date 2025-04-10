@@ -42,6 +42,10 @@ public class CollectionService {
         throw new CollectionCreationException("Collection image is required");
       }
 
+      if (params.get("title") == null || params.get("title").isEmpty()) {
+        throw new CollectionCreationException("Title is required");
+      }
+
       // Save collection logic
       String imageUrl = saveCollectionImage(collectionImage);
       Long userId = userService.getCurrentUserId();
@@ -49,7 +53,7 @@ public class CollectionService {
       Timestamp updatedAt = new Timestamp(System.currentTimeMillis());
       
       CollectionModel newCollection = new CollectionModel(
-          null, userId, params.get("caption"), params.get("description"), imageUrl, createdAt, updatedAt
+          null, userId, params.get("title"), params.get("caption"), params.get("description"), imageUrl, createdAt, updatedAt
       );
 
       repository.save(newCollection);

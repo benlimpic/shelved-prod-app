@@ -22,9 +22,12 @@
   nav {
     @apply h-12 w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto;
   }
+
 }
 
 @layer components {
+
+  
   .containerSimple {
     @apply h-screen overscroll-none w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto pb-12 bg-slate-100;
   }
@@ -85,6 +88,10 @@
     @apply text-xs font-bold text-white bg-blue-500 rounded-md hover:bg-blue-700 drop-shadow-sm m-1 px-6 py-1;
   }
 
+  .itemLinkButton {
+    @apply text-xs font-bold text-white bg-blue-500 rounded-md hover:bg-blue-700 drop-shadow-sm px-6 py-1;
+  }
+
   .submitButton {
     @apply text-xs font-bold text-white bg-blue-500 rounded-md hover:bg-blue-700 drop-shadow-sm m-1 px-6 py-1;
   }
@@ -95,6 +102,10 @@
 
   .deleteButton {
     @apply text-xs font-bold text-white bg-red-500 rounded-md hover:bg-red-700 drop-shadow-sm m-1 px-6 py-1;
+  }
+
+  .itemButton {
+    @apply text-xs font-bold text-white drop-shadow-sm m-1 px-6 py-1;
   }
 
   .littleButton {
@@ -116,6 +127,7 @@
   .headerImage {
     @apply w-20 h-20 rounded-full;
   }
+  
 }
 
 @layer utilities {
@@ -211,3 +223,6 @@
     animation: fadeOut 0.5s ease-out forwards;
   }
 }
+
+
+

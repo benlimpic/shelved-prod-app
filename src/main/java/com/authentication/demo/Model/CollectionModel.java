@@ -19,6 +19,9 @@ public class CollectionModel {
   @Column(name = "user_id")
   private Long userId;
 
+  @Column(name = "title", nullable = false)
+  private String title;
+
   @Column(name = "caption")
   private String caption;
 
@@ -41,6 +44,7 @@ public class CollectionModel {
   public CollectionModel(
       Long id,
       Long userId,
+      String title,
       String caption,
       String description,
       String imageUrl,
@@ -49,6 +53,7 @@ public class CollectionModel {
 
     this.id = id;
     this.userId = userId;
+    this.title = title;
     this.caption = caption;
     this.description = description;
     this.imageUrl = imageUrl;
@@ -62,6 +67,14 @@ public class CollectionModel {
 
   public Long getUserId() {
     return userId;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
   }
 
   public String getCaption() {

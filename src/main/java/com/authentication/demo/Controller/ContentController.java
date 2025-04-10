@@ -110,11 +110,15 @@ public class ContentController {
             return "redirect:/profile"; // Redirect if the item is not found
         }
     
-        // Add the item to the model
+        // Fetch the collection associated with the item
+        CollectionModel collection = collectionService.getCollectionById(item.getCollectionId());
+        if (collection == null) {
+            return "redirect:/profile"; // Redirect if the collection is not found
+        }
+
+        // Add the item and collection to the model
         model.addAttribute("item", item);
-    
-        // Add the collectionId to the model
-        model.addAttribute("collectionId", item.getCollectionId());
+        model.addAttribute("collection", collection);
 
         return handleAuthentication(model, "item");
     }

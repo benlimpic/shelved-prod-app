@@ -23,6 +23,15 @@ public class ItemModel {
   @Column(name = "user_id", nullable = false)
   private Long userId;
 
+  @Column(name = "title")
+  private String title;
+
+  @Column(name = "description")
+  private String description;
+
+  @Column(name = "item_link")
+  private String itemLink;
+
   @Column(name = "caption")
   private String caption;
 
@@ -39,11 +48,14 @@ public class ItemModel {
 
   }
 
-  public ItemModel(Long id, Long userId, Long collectionId, String caption, String imageUrl, Timestamp createdAt,
+  public ItemModel(Long id, Long userId, Long collectionId, String title, String description, String itemLink, String caption, String imageUrl, Timestamp createdAt,
       Timestamp updatedAt) {
     this.id = id;
     this.userId = userId;
     this.collectionId = collectionId;
+    this.title = title;
+    this.description = description;
+    this.itemLink = itemLink;
     this.caption = caption;
     this.imageUrl = imageUrl;
     this.createdAt = createdAt;
@@ -60,6 +72,30 @@ public class ItemModel {
 
   public Long getUserId() {
     return userId;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public String getItemLink() {
+    return itemLink;
+  }
+
+  public void setItemLink(String itemLink) {
+    this.itemLink = itemLink;
   }
 
   public String getCaption() {

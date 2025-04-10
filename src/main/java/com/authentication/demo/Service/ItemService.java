@@ -34,12 +34,12 @@ public class ItemService {
   }
 
   // CREATE ITEM
-  public void createItem(Long collectionId, String caption, MultipartFile itemImage) {
+  public void createItem(Long collectionId, String title, String description, String itemLink, String caption, MultipartFile itemImage) {
     // VALIDATE INPUT PARAMETERS
     if (itemImage == null || itemImage.isEmpty()) {
       throw new ItemCreationException("Item image is required");
     }
-    
+
     // GET USER ID
     Long userId = userService.getCurrentUserId();
 
@@ -51,6 +51,9 @@ public class ItemService {
         null,
         userId,
         collectionId,
+        title,
+        description,
+        itemLink,
         caption,
         imageUrl,
         new Timestamp(System.currentTimeMillis()),

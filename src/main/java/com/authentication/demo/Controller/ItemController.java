@@ -24,10 +24,13 @@ public class ItemController {
     @PostMapping("/create_item/{collectionId}")
     public String createItem(
             @PathVariable Long collectionId,
+            @RequestParam("title") String title,
+            @RequestParam("description") String description,
+            @RequestParam("itemLink") String itemLink,
             @RequestParam("caption") String caption,
             @RequestParam("itemImage") MultipartFile itemImage,
             RedirectAttributes redirectAttributes) {
-        itemService.createItem(collectionId, caption, itemImage);
+        itemService.createItem(collectionId, title, description, itemLink, caption, itemImage);
         redirectAttributes.addFlashAttribute("message", "Item created successfully");
         return "redirect:/collection/" + collectionId;
     }
