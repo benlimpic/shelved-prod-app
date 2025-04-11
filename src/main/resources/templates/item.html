@@ -9,16 +9,18 @@
     <script src="/js/toggleOverlay.js" defer></script>
     <script src="/js/windowOpen.js" defer></script>
     <script src="/js/toggleCommentBox.js" defer></script>
-
+    <script src="/js/toggleReply.js" defer></script>
   </head>
-  <body class="scroll-none">
+
+  <body>
     <header>
       <nav class="navbar">
         <ul class="flex justify-between w-full">
           <li class="flex items-center">
             <a
               id="redirectCollection"
-              th:href="@{/collection/{collectionId}(collectionId=${collection?.id})}">
+              th:href="@{/collection/{collectionId}(collectionId=${collection?.id})}"
+            >
               <span>&#8592;</span>
             </a>
           </li>
@@ -27,223 +29,413 @@
               class="bg-blue-500 hover:bg-blue-700 text-white text-xs px-1 py-0.5 rounded"
               id="redirectUpdateItemDetails"
               href="./update-item-details"
-              ><span class="text-lg">&#9776;</span></a
             >
+              <span class="text-lg">&#9776;</span>
+            </a>
           </li>
         </ul>
       </nav>
-      <div class="collectionNavbar shadow-sm">
-        <div class="flex justify-between items-center w-full">
-          <ul class="flex justify-start items-center w-full">
-            <li class="pr-2">
-              <a th:href="@{/collection/{collectionId}(collectionId=${collection?.id})}">
-                <img
-                  class="h-7 w-7 rounded-full bg-white"
-                  th:src="${collection?.imageUrl ?: '/item_image.png'}"
-                  alt="Profile Picture"
-                />
-              </a>
-            </li>
-            <li>
-              <a th:href="@{/collection/{collectionId}(collectionId=${collection?.id})}">
-                <span
-                  class="text-sm font-semibold"
-                  th:if="${collection?.title!= null}"
-                  th:text="${collection?.title}">
-                </span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
     </header>
-    <div class="profileContainerNoScroll bg-slate-200">
-      <div class="h-auto w-full border-b-2 bg-slate-100 shadow-sm">
-      <div>
-        <!-- ITEM CONTENT -->
-        <div class=" flex flex-col justify-center items-center">
-          <div>
 
-            <div class="image-container relative">
-              <!-- Image -->
-              <a>
-                <img
-                  class="aspect-square w-full bg-white"
-                  id="previewImage"
-                  th:src="${item != null && item.imageUrl != null ? item.imageUrl : '/images/item_image.png'}"
-                  alt="Item Image"
-                />
-              </a>
-            
-              <!-- Overlay -->
-              <div id="itemOverlay" class="overlay absolute bottom-0 left-0 w-full h-full bg-black bg-opacity-70 text-white text-sm p-2 hidden">
-                <div class="flex flex-col justify-start items-between">
-                  <div>
-                    <span class="font-semibold" th:text="${item?.title}"></span>
-                  </div>
-                  <div>
-                    <span class="text-xs font-thin " th:text="${item?.description}"></span>
-                  </div>
+    <div class="profileContainerScroll overflow-hidden bg-slate-200">
+      <div class="h-auto w-full bg-white">
+        <div class="collectionNavbar shadow-sm">
+          <div class="flex justify-between items-center w-full">
+            <ul class="flex justify-start items-center w-full">
+              <li class="pr-2">
+                <a
+                  th:href="@{/collection/{collectionId}(collectionId=${collection?.id})}"
+                >
+                  <img
+                    class="h-7 w-7 rounded-full bg-white"
+                    th:src="${collection?.imageUrl ?: '/item_image.png'}"
+                    alt="Profile Picture"
+                  />
+                </a>
+              </li>
+              <li>
+                <a
+                  th:href="@{/collection/{collectionId}(collectionId=${collection?.id})}"
+                >
+                  <span
+                    class="text-sm font-semibold"
+                    th:if="${collection?.title!= null}"
+                    th:text="${collection?.title}"
+                  ></span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <!-- ITEM CONTENT -->
+        <div class="flex flex-col justify-center items-center border-size-0">
+          <div class="image-container relative bg-white">
+            <!-- ITEM PICTURE -->
+            <a>
+              <img
+                class="aspect-square w-full bg-white"
+                id="previewImage"
+                th:src="${item != null && item.imageUrl != null ? item.imageUrl : '/images/item_image.png'}"
+                alt="Item Image"
+              />
+            </a>
+
+            <!-- Overlay -->
+            <div
+              id="itemOverlay"
+              class="overlay absolute bottom-0 left-0 w-full h-full bg-black bg-opacity-70 text-white text-sm p-2 hidden"
+            >
+              <div class="flex flex-col justify-start items-between">
+                <div>
+                  <span class="font-semibold" th:text="${item?.title}"></span>
                 </div>
                 <div>
-                  <button class="absolute bottom-2 left-2 bg-blue-500 hover:bg-blue-700 text-xs px-2 py-1 rounded"
+                  <span
+                    class="text-xs font-thin"
+                    th:text="${item?.description}"
+                  ></span>
+                </div>
+              </div>
+              <div>
+                <button
+                  class="absolute bottom-2 left-2 bg-blue-500 hover:bg-blue-700 text-xs px-2 py-1 rounded"
                   id="openLinkButton"
                   th:href="${item?.itemLink}"
                   target="_blank"
                   rel="noopener noreferrer"
-                  >Item Link</button>
-                </div>
+                >
+                  Item Link
+                </button>
               </div>
-            
-              <!-- Toggle Button -->
-              <button
-                id="toggleButtonShowInfo"
-                class="toggle-overlay absolute bottom-2 right-2 bg-white text-black text-xs px-2 py-1 rounded z-20"
-              >Show Info
-              </button>
-              <button
-                id="toggleButtonHideInfo"
-                class="toggle-overlay absolute bottom-2 right-2 bg-white text-black text-xs px-2 py-1 rounded z-20 hidden"
-              >Hide Info
-              </button>
             </div>
 
-          
-        <div class="w-full px-2">
-          <div class="flex flex-row w-full h-auto py-1 text-sm">
-            <ul class="flex flex-row justify-start items-center pr-2">
-              <li class="flex flex-row justify-start items-center pr-2">
-                <a>
-                  <span class="pr-2 font-medium">&#9825;</span>
+            <!-- Toggle Button -->
+            <button
+              id="toggleButtonShowInfo"
+              class="toggle-overlay absolute bottom-2 right-2 bg-white text-black text-xs px-2 py-1 rounded z-20"
+            >
+              Show Info
+            </button>
+            <button
+              id="toggleButtonHideInfo"
+              class="toggle-overlay absolute bottom-2 right-2 bg-white text-black text-xs px-2 py-1 rounded z-20 hidden"
+            >
+              Hide Info
+            </button>
+          </div>
+
+          <div class="w-full px-2 bg-white">
+            <div class="flex flex-row w-full h-auto py-1 text-sm">
+              <ul class="flex flex-row justify-start items-center pr-2">
+                <li class="flex flex-row justify-start items-center pr-2">
+                  <a>
+                    <span class="pr-2 font-medium">&#9825;</span>
+                  </a>
+                  <p class="font-thin">0</p>
+                </li>
+                <li class="flex flex-row justify-start items-center pr-2">
+                  <a id="commentToggle" class="pr-2 font-medium cursor-pointer">
+                    comment
+                  </a>
+                  <p class="font-thin">0</p>
+                </li>
+              </ul>
+            </div>
+
+
+            <div class="w-full h-auto flex justify-start items-center text-sm">
+              <!-- CAPTION -->
+              <p
+                id="toggle_truncate"
+                class="truncate-multiline leading-[1rem]"
+                onclick="toggleTruncate(this)">
+                <a href="/profile">
+                  <span
+                    class="font-semibold"
+                    th:if="${user?.username != null}"
+                    th:text="${user?.username}"
+                  ></span>
                 </a>
-                <p class="font-thin">
-                  0
-                </p>
-              </li>
-              <li class="flex flex-row justify-start items-center pr-2">
-                <a id="commentToggle" class="pr-2 font-medium cursor-pointer">comment</a>
-                <p class="font-thin">
-                  0
-                </p>
-              </li>
-            </ul>
-          </div>
-          <div class="w-full h-auto flex justify-start items-center text-sm">
-            <!-- CAPTION -->
-            <p id="toggle_truncate" class="truncate leading-[1rem]">
-              <a href="/profile">
-              <span
-                class="font-semibold"
-                th:if="${user?.username != null}"
-                th:text="${user?.username}">
-              </span>
-            </a>
-            <span
-                class="font-light"
-                onclick="toggleTruncate()"
-                th:if="${item?.caption != null}"
-                th:text="${item?.caption}">
-            </span>
-            </p>
-          </div>
-          <div class="w-full flex justify-between items-center py-1">
-            <!-- MONTH YEAR -->
-            <div class="w-full flex flex-col justify-center items-start pt-1">
-              <span
-                style="font-size: 9px;" class="font-extralight"
-                th:if="${item?.updatedAt != null}"
-                th:text="${#dates.format(item?.updatedAt, 'MMMM-YYYY')}">
-              </span>
+                <span
+                  th:if="${item?.caption != null}"
+                  th:text="${item?.caption}"
+                ></span>
+              </p>
+            </div>
+
+
+            <div class="w-full flex justify-between items-center py-1">
+              <!-- MONTH YEAR -->
+              <div class="w-full flex flex-col justify-center items-start pt-1">
+                <span
+                  style="font-size: 9px"
+                  class="font-extralight"
+                  th:if="${item?.updatedAt != null}"
+                  th:text="${#dates.format(item?.updatedAt, 'MMMM-YYYY')}"
+                ></span>
+              </div>
             </div>
           </div>
         </div>
+        <div class="relative scroll-none">
+          <!-- Items Grid -->
+          <div id="itemGrid" class="w-full min-h-fit overflow-hidden"></div>
+        </div>
       </div>
-    </div>
-    <div class="relative scroll-none">
-      <!-- Items Grid -->
-      <div id="itemGrid" class="w-full min-h-fit overflow-hidden">
-        <div class="grid">
-          <div th:each="row : ${partitionedItems}" class="grid grid-cols-3">
-            <div th:each="item : ${row}" class="flex flex-col items-center">
-              <a th:href="@{/item/{id}(id=${item.id})}">
+
+      <!-- Comment Box -->
+      <div
+        id="commentBox"
+        class="hidden w-full bg-slate-50 overflow-y-auto py-3"
+      >
+        <!-- Comment Template -->
+        <div class="px-3">
+          <div
+            class="w-full h-auto flex flex-row justify-start items-start text-sm"
+          >
+            <!-- Profile Picture -->
+            <div id="imageBoxComment" class="flex-shrink-0 w-10">
+              <a href="/profile">
                 <img
-                  th:src="${#strings.defaultString(item?.getImageUrl(), '/images/item_image.png')}"
-                  alt="Item Image"
-                  class="aspect-square w-full h-auto object-cover"
+                  class="h-7 w-7 rounded-full bg-white"
+                  th:src="${user?.profilePictureUrl ?: '/images/default-profile-photo.png'}"
+                  alt="Profile Picture"
                 />
               </a>
             </div>
+
+            <!-- Content Box -->
+            <div
+              id="contentBoxComment"
+              class="flex flex-col items-start w-full"
+            >
+              <div class="flex flex-row justify-start items-start w-full">
+                <!-- Profile Link -->
+                <div class="flex items-start">
+                  <a href="/profile" class="flex items-start">
+                    <span
+                      style="font-size: 10px; line-height: 1"
+                      class="font-semibold leading-[1]"
+                      th:if="${user?.username != null}"
+                      th:text="${user?.username}"
+                    ></span>
+                  </a>
+                </div>
+
+                <!-- Time Container -->
+                <div class="pl-2 flex items-end">
+                  <span
+                    style="font-size: 8px; line-height: 1"
+                    class="font-thin leading-[1]"
+                  >
+                    6h
+                  </span>
+                </div>
+              </div>
+
+
+              <div class="flex flex-row justify-start items-start">
+                <span
+                  class="font-light truncate-multiline"
+                  onclick="toggleTruncate(this)"
+                  th:text="'This is a placeholder text for the comment content. We are unsure exactly how long it needs to be to invoke the truncate feature.'"
+                ></span>
+              </div>
+
+
+              <div
+                style="font-size: 8px; line-height: 1"
+                class="w-full flex flex-col justify-center items-start pt-1 pr-2 text-slate-500 font-semibold"
+              >
+                <a id="replyButton" class="cursor-pointer">
+                  <span class="leading-[1.2]">Reply</span>
+                </a>
+              </div>
+
+              <!-- Reply Box -->
+              <div id="replyDiv" class="w-full">
+                <!-- Reply Template -->
+                <div id="replyTemplate" class="py-1 w-full">
+                  <div
+                    class="w-full h-auto flex flex-row justify-start items-start text-sm py-2"
+                  >
+                    <!-- Profile Picture -->
+                    <div id="imageBoxComment" class="flex-shrink-0 w-10">
+                      <a href="/profile">
+                        <img
+                          class="h-7 w-7 rounded-full bg-white"
+                          th:src="${user?.profilePictureUrl ?: '/images/default-profile-photo.png'}"
+                          alt="Profile Picture"
+                        />
+                      </a>
+                    </div>
+
+                    <!-- Content Box -->
+                    <div
+                      id="contentBoxComment"
+                      class="flex flex-col items-start w-full"
+                    >
+                      <div
+                        class="flex flex-row justify-start items-start w-full"
+                      >
+                        <!-- Profile Link -->
+                        <div class="flex items-start">
+                          <a href="/profile" class="flex items-start">
+                            <span
+                              style="font-size: 10px; line-height: 1"
+                              class="font-semibold leading-[1]"
+                              th:if="${user?.username != null}"
+                              th:text="${user?.username}"
+                            ></span>
+                          </a>
+                        </div>
+
+                        <!-- Time Container -->
+                        <div class="pl-2 flex items-end">
+                          <span
+                            style="font-size: 8px; line-height: 1"
+                            class="font-thin leading-[1]"
+                          >
+                            6h
+                          </span>
+                        </div>
+                      </div>
+
+
+                      <div class="flex flex-row justify-start items-start">
+                        <span
+                          class="font-light truncate-multiline"
+                          onclick="toggleTruncate(this)"
+                          th:text="'This is a placeholder text for the comment content. We are unsure exactly how long it needs to be to invoke the truncate feature.'"
+                        ></span>
+                      </div>
+
+
+                      <div
+                        style="font-size: 8px; line-height: 1"
+                        class="w-full flex flex-col justify-center items-start pt-1 pr-2 text-slate-500 font-semibold"
+                      >
+                        <span class="leading-[1.2]">Reply</span>
+                      </div>
+                    </div>
+
+                    <!-- Like Box -->
+                    <div
+                      id="likeBox"
+                      class="flex flex-col justify-start items-center pr-2"
+                    >
+                      <div class="flex flex-row justify-center items-center">
+                        <a>
+                          <span
+                            style="font-size: 10px; line-height: 1"
+                            class="font-medium text-xs"
+                          >
+                            &#9825;
+                          </span>
+                        </a>
+                      </div>
+                      <div class="flex flex-row justify-center items-center">
+                        <p
+                          style="font-size: 10px; line-height: 1"
+                          class="font-thin text-xs"
+                        >
+                          0
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Like Box -->
+            <div id="likeBox" class="flex flex-col justify-start items-center">
+              <div class="flex flex-row justify-center items-center">
+                <a>
+                  <span
+                    style="font-size: 10px; line-height: 1"
+                    class="font-medium text-xs"
+                  >
+                    &#9825;
+                  </span>
+                </a>
+              </div>
+              <div class="flex flex-row justify-center items-center">
+                <p
+                  style="font-size: 10px; line-height: 1"
+                  class="font-thin text-xs"
+                >
+                  0
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    </div>
-    <div id="commentBox" class="hidden w-full bg-red-500 overflow-y-auto">
-      <div class="p-4">
-        <p>Comment 1</p>
-        <p>Comment 2</p>
-        <p>Comment 3</p>
-        <p>Comment 4</p>
-        <p>Comment 5</p>
-        <p>Comment 6</p>
-        <p>Comment 1</p>
-        <p>Comment 2</p>
-        <p>Comment 3</p>
-        <p>Comment 4</p>
-        <p>Comment 5</p>
-        <p>Comment 6</p>
-        <p>Comment 1</p>
-        <p>Comment 2</p>
-        <p>Comment 3</p>
-        <p>Comment 4</p>
-        <p>Comment 5</p>
-        <p>Comment 6</p>
-        <p>Comment 1</p>
-        <p>Comment 2</p>
-        <p>Comment 3</p>
-        <p>Comment 4</p>
-        <p>Comment 5</p>
-        <p>Comment 6</p>
-      </div>
-    </div>
-  </div>
-  </div>
-
-
-
-
-  <footer class="">
-    <div class="h-12 w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto flex items-center">
-      <div class="footerNav">
-        <ul class="flex justify-between items-center w-full">
-          <li>
-            <div class="h-4 w-4 flex items-center justify-center">
-              <a class="text-2xl font-bold" href="/index">
-                &#8962;
+    <footer>
+      <div
+        class="h-12 w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto flex items-center"
+      >
+        <div id="footerNavContent" class="footerNav">
+          <ul class="flex justify-between items-center w-full">
+            <li>
+              <div class="h-4 w-4 flex items-center justify-center">
+                <a class="text-2xl font-bold" href="/index">&#8962;</a>
+              </div>
+            </li>
+            <li>
+              <div class="h-4 w-4 flex items-center justify-center">
+                <a
+                  class="text-2xl font-bold"
+                  th:href="@{/create-item/{collectionId}(collectionId=${collection.id})}"
+                >
+                  &#43;
+                </a>
+              </div>
+            </li>
+            <li>
+              <a href="/profile">
+                <img
+                  class="h-7 w-7 rounded-full bg-white"
+                  th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}"
+                  alt="Profile Picture"
+                />
               </a>
-            </div>
-          </li>
-          <li>
-            <div class="h-4 w-4 flex items-center justify-center">
-              <a
-                class="text-2xl font-bold"
-                th:href="@{/create-item/{collectionId}(collectionId=${collection.id})}"
-                >&#43;
+            </li>
+          </ul>
+        </div>
+
+        <div id="commentActivity" class="commentNav hidden">
+          <div id="commentInputContainer" class="w-full">
+            <form
+              class="flex flex-row w-full items-center justify-center px-2 bg-white"
+            >
+              <a href="/profile" class="w-10">
+                <img
+                  class="h-7 w-7 rounded-full bg-white"
+                  th:src="${user?.profilePictureUrl ?: '/images/default-profile-photo.png'}"
+                  alt="Profile Picture"
+                />
               </a>
-            </div>
-          </li>
-          <li>
-            <a href="/profile">
-              <img
-                class="h-7 w-7 rounded-full bg-white"
-                th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}"
-                alt="Profile Picture"
+              <input
+                type="text"
+                name="comment"
+                placeholder="Leave a comment..."
+                class="w-full border-none outline-none focus:ring-0 text-sm font-thin bg-slate-100 rounded-md px-2 py-1 mx-2"
               />
-            </a>
-          </li>
-        </ul>
+              <div
+                class="text-sm bg-blue-500 text-white font-semibold text-center h-full w-7"
+              >
+                <a href="#" id="triggerUpload">
+                  <span>C</span>
+                </a>
+              </div>
+              <button type="submit" hidden class="">Submit</button>
+            </form>
+          </div>
+        </div>
       </div>
-    </div>
     </footer>
   </body>
 </html>

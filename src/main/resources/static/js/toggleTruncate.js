@@ -1,11 +1,11 @@
 
-function toggleTruncate() {
-  const element = document.getElementById('toggle_truncate');
-  if (element.classList.contains('truncate')) {
-    element.classList.remove('truncate');
-    element.classList.add('text-wrap-tight');
+function toggleTruncate(element) {
+  // Check if the element has the "truncate-multiline" class
+  if (element.classList.contains("truncate-multiline")) {
+    // Remove the "truncate-multiline" class
+    element.classList.remove("truncate-multiline");
   } else {
-    element.classList.add('truncate');
-    element.classList.remove('text-wrap-tight');
+    // Add the "truncate-multiline" class
+    element.classList.add("truncate-multiline");
   }
 }

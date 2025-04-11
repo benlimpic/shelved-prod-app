@@ -16,7 +16,7 @@
   }
 
   footer {
-    @apply h-12 w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto bg-slate-500;
+    @apply h-12 w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto;
   }
  
   nav {
@@ -27,6 +27,24 @@
 
 @layer components {
 
+  .truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .truncate-multiline {
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Number of lines to show */
+    line-clamp: 2; /* Standard property for compatibility */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .scrollable-form {
+    max-height: 80vh; /* Adjust as needed */
+    overflow-y: auto;
+  }
   
   .containerSimple {
     @apply h-screen overscroll-none w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto pb-12 bg-slate-100;
@@ -66,6 +84,10 @@
 
   .footerNav {
     @apply flex flex-row p-3 justify-between items-center w-full bg-slate-300 text-white shadow-md;
+  }
+
+  .commentNav {
+    @apply flex flex-row p-3 justify-between items-center w-full bg-white shadow-md;
   }
 
   .profileNavbar {
@@ -138,6 +160,26 @@
   .emptyCard {
     @apply flex flex-col items-center
     overflow-y-auto overflow-x-hidden p-4 m-4;
+  }
+
+  .input-no-border {
+    width: 100%; /* Full width */
+    margin: 0 0.5rem; /* Horizontal margin */
+    background: transparent; /* Transparent background */
+    border: none; /* Remove border */
+    outline: none; /* Remove focus outline */
+    padding: 0.5rem; /* Add padding for spacing */
+    border-color: transparent;
+    outline-color: transparent;
+
+  }
+  
+  .input-no-border:hover {
+    border: none; /* Disable hover border */
+    outline: none; /* Disable hover outline */
+    border-color: transparent;
+    outline-color: transparent;
+
   }
 
   .card {

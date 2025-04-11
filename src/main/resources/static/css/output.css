@@ -800,8 +800,6 @@ footer {
   margin-right: auto;
   height: 3rem;
   width: 100%;
-  --tw-bg-opacity: 1;
-  background-color: rgb(100 116 139 / var(--tw-bg-opacity, 1));
 }
 
 @media (min-width: 640px) {
@@ -891,6 +889,28 @@ nav {
   .container {
     max-width: 1536px;
   }
+}
+
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.truncate-multiline {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  /* Number of lines to show */
+  line-clamp: 2;
+  /* Standard property for compatibility */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.scrollable-form {
+  max-height: 80vh;
+  /* Adjust as needed */
+  overflow-y: auto;
 }
 
 .containerSimple {
@@ -1203,6 +1223,22 @@ nav {
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
+.commentNav {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
+  padding: 0.75rem;
+  --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  background-color: white;
+  /* Set the background color */
+}
+
 .profileNavbar {
   display: flex;
   width: 100%;
@@ -1479,10 +1515,6 @@ nav {
   visibility: visible;
 }
 
-.static {
-  position: static;
-}
-
 .fixed {
   position: fixed;
 }
@@ -1537,6 +1569,11 @@ nav {
 
 .m-10 {
   margin: 2.5rem;
+}
+
+.mx-2 {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
 }
 
 .mx-auto {
@@ -1635,6 +1672,10 @@ nav {
   min-height: fit-content;
 }
 
+.w-10 {
+  width: 2.5rem;
+}
+
 .w-16 {
   width: 4rem;
 }
@@ -1667,6 +1708,10 @@ nav {
   width: 100vw;
 }
 
+.flex-shrink-0 {
+  flex-shrink: 0;
+}
+
 .cursor-pointer {
   cursor: pointer;
 }
@@ -1693,6 +1738,10 @@ nav {
 
 .items-start {
   align-items: flex-start;
+}
+
+.items-end {
+  align-items: flex-end;
 }
 
 .items-center {
@@ -1782,6 +1831,10 @@ nav {
   border-right-width: 1px;
 }
 
+.border-none {
+  border-style: none;
+}
+
 .border-gray-200 {
   --tw-border-opacity: 1;
   border-color: rgb(229 231 235 / var(--tw-border-opacity, 1));
@@ -1847,6 +1900,11 @@ nav {
   background-color: rgb(148 163 184 / var(--tw-bg-opacity, 1));
 }
 
+.bg-slate-50 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(248 250 252 / var(--tw-bg-opacity, 1));
+}
+
 .bg-slate-600 {
   --tw-bg-opacity: 1;
   background-color: rgb(71 85 105 / var(--tw-bg-opacity, 1));
@@ -1892,6 +1950,11 @@ nav {
   padding-right: 0.5rem;
 }
 
+.px-3 {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
 .px-4 {
   padding-left: 1rem;
   padding-right: 1rem;
@@ -1922,6 +1985,16 @@ nav {
   padding-bottom: 3rem;
 }
 
+.py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.py-3 {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
 .pb-12 {
   padding-bottom: 3rem;
 }
@@ -1932,6 +2005,10 @@ nav {
 
 .pb-4 {
   padding-bottom: 1rem;
+}
+
+.pl-2 {
+  padding-left: 0.5rem;
 }
 
 .pr-2 {
@@ -2006,6 +2083,14 @@ nav {
   font-weight: 100;
 }
 
+.leading-\[1\.2\] {
+  line-height: 1.2;
+}
+
+.leading-\[1\] {
+  line-height: 1;
+}
+
 .leading-\[1rem\] {
   line-height: 1rem;
 }
@@ -2045,6 +2130,11 @@ nav {
   color: rgb(148 163 184 / var(--tw-text-opacity, 1));
 }
 
+.text-slate-500 {
+  --tw-text-opacity: 1;
+  color: rgb(100 116 139 / var(--tw-text-opacity, 1));
+}
+
 .text-slate-600 {
   --tw-text-opacity: 1;
   color: rgb(71 85 105 / var(--tw-text-opacity, 1));
@@ -2069,6 +2159,15 @@ nav {
   --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.outline-none {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.outline {
+  outline-style: solid;
 }
 
 .ring-red-500 {
@@ -2105,6 +2204,32 @@ nav {
   overflow-y: auto;
   overflow-x: hidden;
   padding: 1rem;
+}
+
+.input-no-border {
+  width: 100%;
+  /* Full width */
+  margin: 0 0.5rem;
+  /* Horizontal margin */
+  background: transparent;
+  /* Transparent background */
+  border: none;
+  /* Remove border */
+  outline: none;
+  /* Remove focus outline */
+  padding: 0.5rem;
+  /* Add padding for spacing */
+  border-color: transparent;
+  outline-color: transparent;
+}
+
+.input-no-border:hover {
+  border: none;
+  /* Disable hover border */
+  outline: none;
+  /* Disable hover outline */
+  border-color: transparent;
+  outline-color: transparent;
 }
 
 .card {
@@ -2327,6 +2452,12 @@ nav {
 .focus\:outline-none:focus {
   outline: 2px solid transparent;
   outline-offset: 2px;
+}
+
+.focus\:ring-0:focus {
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(0px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
 }
 
 .focus\:ring-2:focus {

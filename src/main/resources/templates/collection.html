@@ -89,24 +89,27 @@
               </li>
             </ul>
           </div>
+
           <div class="w-full h-auto flex justify-start items-center text-sm">
             <!-- CAPTION -->
-            <p id="toggle_truncate" class="truncate leading-[1rem]">
+            <p
+              id="toggle_truncate"
+              class="truncate-multiline leading-[1rem]"
+              onclick="toggleTruncate(this)">
               <a href="/profile">
+                <span
+                  class="font-semibold"
+                  th:if="${user?.username != null}"
+                  th:text="${user?.username}"
+                ></span>
+              </a>
               <span
-                class="font-semibold"
-                th:if="${user?.username != null}"
-                th:text="${user?.username}">
-              </span>
-            </a>
-            <span
-                class="font-light"
-                onclick="toggleTruncate()"
                 th:if="${collection?.caption != null}"
-                th:text="${collection?.caption}">
-            </span>
+                th:text="${collection?.caption}"
+              ></span>
             </p>
           </div>
+          
           <div class="w-full flex justify-between items-center py-1">
             <!-- MONTH YEAR -->
             <div class="w-full flex flex-col justify-center items-start pt-1">

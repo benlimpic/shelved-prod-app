@@ -2,10 +2,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const commentToggle = document.getElementById('commentToggle');
   const commentBox = document.getElementById('commentBox');
   const itemGrid = document.getElementById('itemGrid');
-  const footer = document.getElementById('footer');
+  const footerContent = document.getElementById('footerNavContent');
+  const footerComment = document.getElementById('commentActivity');
 
   if (commentToggle && commentBox && itemGrid) {
     commentToggle.addEventListener('click', () => {
+
       if (commentBox.classList.contains('hidden')) {
         // Show the comment box
         commentBox.classList.remove('hidden');
@@ -14,10 +16,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Hide the item grid
         itemGrid.classList.add('hidden');
-        footer.classList.add('hidden');
+        footerContent.classList.add('hidden');
+        footerComment.classList.remove('hidden');
 
         // Disable body scrolling
         document.body.style.overflow = 'hidden';
+
+
       } else {
         // Hide the comment box
         commentBox.classList.add('hidden');
@@ -25,7 +30,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Show the item grid
         itemGrid.classList.remove('hidden');
-        footer.classList.remove('hidden');
+        footerContent.classList.remove('hidden');
+        footerComment.classList.add('hidden');
 
         // Re-enable body scrolling
         document.body.style.overflow = 'auto';
