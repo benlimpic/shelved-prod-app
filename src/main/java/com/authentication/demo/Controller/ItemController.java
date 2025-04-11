@@ -1,6 +1,8 @@
 
 package com.authentication.demo.Controller;
 
+import java.util.Map;
+
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,13 +26,10 @@ public class ItemController {
     @PostMapping("/create_item/{collectionId}")
     public String createItem(
             @PathVariable Long collectionId,
-            @RequestParam("title") String title,
-            @RequestParam("description") String description,
-            @RequestParam("itemLink") String itemLink,
-            @RequestParam("caption") String caption,
+            @RequestParam Map<String, String> params,
             @RequestParam("itemImage") MultipartFile itemImage,
             RedirectAttributes redirectAttributes) {
-        itemService.createItem(collectionId, title, description, itemLink, caption, itemImage);
+        itemService.createItem(params, itemImage);
         redirectAttributes.addFlashAttribute("message", "Item created successfully");
         return "redirect:/collection/" + collectionId;
     }

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -34,9 +35,10 @@ public class ItemService {
   }
 
   // CREATE ITEM
-  public void createItem(Long collectionId, String title, String description, String itemLink, String caption, MultipartFile itemImage) {
+  public Map<String, String> createItem(Map<String, String> params, MultipartFile collectionImage) {
     // VALIDATE INPUT PARAMETERS
-    if (itemImage == null || itemImage.isEmpty()) {
+
+    if (collectionImage == null || collectionImage.isEmpty()) {
       throw new ItemCreationException("Item image is required");
     }
 
@@ -44,17 +46,30 @@ public class ItemService {
     Long userId = userService.getCurrentUserId();
 
     // SAVE ITEM IMAGE
-    String imageUrl = saveItemImage(itemImage);
+    String imageUrl = saveItemImage(collectionImage);
 
+
+    // COLLECTION ID
+  final Long collectionId;
+  if (params.get("collectionId") != null && !params.get("collectionId").isEmpty()) {
+    try {
+        collectionId = Long.valueOf(params.get("collectionId"));
+    } catch (NumberFormatException e) {
+        throw new ItemCreationException("Invalid collectionId format", e);
+    }
+  } else {
+    throw new ItemCreationException("collectionId is required");
+  }
+    
     // CREATE ITEM
     ItemModel item = new ItemModel(
         null,
         userId,
         collectionId,
-        title,
-        description,
-        itemLink,
-        caption,
+        params.get("title"),
+        params.get("description"),
+        params.get("itemLink"),
+        params.get("caption"),
         imageUrl,
         new Timestamp(System.currentTimeMillis()),
         new Timestamp(System.currentTimeMillis())
@@ -62,6 +77,9 @@ public class ItemService {
 
     // SAVE ITEM TO DATABASE
     itemRepository.save(item);
+
+    // RETURN SUCCESS RESPONSE
+    return Map.of("message", "Item created successfully", "itemId", item.getId().toString());
 }
 
   // SAVE PROFILE PICTURE
