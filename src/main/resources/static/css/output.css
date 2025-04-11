@@ -1667,6 +1667,10 @@ nav {
   height: 100vh;
 }
 
+.max-h-\[400px\] {
+  max-height: 400px;
+}
+
 .min-h-fit {
   min-height: -moz-fit-content;
   min-height: fit-content;
