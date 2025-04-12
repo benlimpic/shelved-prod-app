@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Lazy;
@@ -358,4 +359,10 @@ public class UserService implements UserDetailsService {
       return "User not found";
     }
   }
+
+  // GET USERS BY ID
+  public Map<Long, UserModel> getUsersByIds(List<Long> userIds) {
+    return repository.findAllById(userIds).stream()
+        .collect(Collectors.toMap(UserModel::getId, Function.identity()));
+}
 }

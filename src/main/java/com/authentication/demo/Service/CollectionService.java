@@ -103,4 +103,14 @@ public class CollectionService {
     return repository.findAllByUserIdOrderByCreatedAtDesc(userId);
   }
 
+
+  // GET ALL COLLECTIONS ORDERED BY CREATED AT DESC
+  public List<CollectionModel> getAllCollectionsByDesc() {
+    List<CollectionModel> collections = repository.findAllByOrderByCreatedAtDesc();
+    if (collections == null || collections.isEmpty()) {
+        throw new CollectionCreationException("No collections found");
+    }
+    return collections;
+}
+
 }

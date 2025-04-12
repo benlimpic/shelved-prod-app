@@ -11,6 +11,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.authentication.demo.Service.CollectionService;
 
+
 @Controller
 public class CollectionController {
 
@@ -29,5 +30,7 @@ public class CollectionController {
         return "redirect:/profile";
     }
 
+
+    
 
 }

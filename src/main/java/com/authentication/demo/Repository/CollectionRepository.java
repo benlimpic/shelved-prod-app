@@ -12,4 +12,5 @@ public interface CollectionRepository extends JpaRepository<CollectionModel, Lon
 
     List<CollectionModel> findAllByUserId(Long userId);
     List<CollectionModel> findAllByUserIdOrderByCreatedAtDesc(Long userId);
+    List<CollectionModel> findAllByOrderByCreatedAtDesc();
 }

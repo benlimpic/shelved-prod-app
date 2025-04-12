@@ -753,79 +753,6 @@ a {
   cursor: default;
 }
 
-body {
-  display: flex;
-  height: 100vh;
-  width: 100vw;
-  flex-direction: column;
-  align-items: center;
-  overflow: hidden;
-  overscroll-behavior: none;
-  --tw-bg-opacity: 1;
-  background-color: rgb(203 213 225 / var(--tw-bg-opacity, 1));
-}
-
-header {
-  margin-left: auto;
-  margin-right: auto;
-  width: 100%;
-}
-
-@media (min-width: 640px) {
-  header {
-    width: 75%;
-  }
-}
-
-@media (min-width: 768px) {
-  header {
-    width: 50%;
-  }
-}
-
-@media (min-width: 1024px) {
-  header {
-    width: 50%;
-  }
-}
-
-@media (min-width: 1280px) {
-  header {
-    width: 50%;
-  }
-}
-
-footer {
-  margin-left: auto;
-  margin-right: auto;
-  height: 3rem;
-  width: 100%;
-}
-
-@media (min-width: 640px) {
-  footer {
-    width: 75%;
-  }
-}
-
-@media (min-width: 768px) {
-  footer {
-    width: 50%;
-  }
-}
-
-@media (min-width: 1024px) {
-  footer {
-    width: 50%;
-  }
-}
-
-@media (min-width: 1280px) {
-  footer {
-    width: 50%;
-  }
-}
-
 nav {
   margin-left: auto;
   margin-right: auto;
@@ -855,6 +782,45 @@ nav {
   nav {
     width: 50%;
   }
+}
+
+header {
+  position: fixed;
+  /* Fix the header to the top of the viewport */
+  top: 0;
+  /* Align it to the top */
+  left: 0;
+  width: 100%;
+  /* Full width of the viewport */
+  z-index: 1000;
+  /* Ensure it stays above other elements */
+  background-color: white;
+  /* Optional: Set a background color */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* Optional: Add a shadow for better visibility */
+}
+
+footer {
+  position: fixed;
+  /* Fix the footer to the bottom of the viewport */
+  bottom: 0;
+  /* Align it to the bottom */
+  left: 0;
+  width: 100%;
+  /* Full width of the viewport */
+  z-index: 1000;
+  /* Ensure it stays above other elements */
+  background-color: white;
+  /* Optional: Set a background color */
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+  /* Optional: Add a shadow for better visibility */
+}
+
+body {
+  padding-top: 60px;
+  /* Add padding equal to the header height to prevent content overlap */
+  padding-bottom: 60px;
+  /* Add padding equal to the footer height to prevent content overlap */
 }
 
 .container {
@@ -889,6 +855,88 @@ nav {
   .container {
     max-width: 1536px;
   }
+}
+
+.collectionContainer {
+  position: relative;
+  /* Ensure the commentBox is positioned relative to the container */
+  transition: height 0.3s ease;
+  /* Smooth transition for height changes */
+}
+
+.\!commentBox {
+  position: relative !important;
+  /* Position the commentBox relative to the collectionContainer */
+  top: 0 !important;
+  /* Align the commentBox to the top of the container */
+  left: 0 !important;
+  width: 100% !important;
+  /* Full width of the container */
+  height: calc(100vh - 100px) !important;
+  /* Expand to the bottom of the screen, leaving space for padding or navbar */
+  overflow-y: auto !important;
+  /* Allow scrolling within the commentBox */
+  background-color: white !important;
+  /* Optional: Set a background color for the commentBox */
+  display: none !important;
+  /* Initially hidden */
+  z-index: 10 !important;
+  /* Ensure the commentBox appears above other elements */
+}
+
+.commentBox {
+  position: relative;
+  /* Position the commentBox relative to the collectionContainer */
+  top: 0;
+  /* Align the commentBox to the top of the container */
+  left: 0;
+  width: 100%;
+  /* Full width of the container */
+  height: calc(100vh - 100px);
+  /* Expand to the bottom of the screen, leaving space for padding or navbar */
+  overflow-y: auto;
+  /* Allow scrolling within the commentBox */
+  background-color: white;
+  /* Optional: Set a background color for the commentBox */
+  display: none;
+  /* Initially hidden */
+  z-index: 10;
+  /* Ensure the commentBox appears above other elements */
+}
+
+.\!commentBox.visible {
+  display: block !important;
+  /* Show the commentBox when toggled */
+}
+
+.commentBox.visible {
+  display: block;
+  /* Show the commentBox when toggled */
+}
+
+.\!commentBox > * {
+  margin: 0 !important;
+  /* Remove default margins for child elements */
+  padding: 10px !important;
+  /* Add padding for the content inside the commentBox */
+  box-sizing: border-box !important;
+  /* Ensure padding doesn't affect width/height */
+}
+
+.commentBox > * {
+  margin: 0;
+  /* Remove default margins for child elements */
+  padding: 10px;
+  /* Add padding for the content inside the commentBox */
+  box-sizing: border-box;
+  /* Ensure padding doesn't affect width/height */
+}
+
+.no-scroll {
+  overflow: hidden;
+  /* Disable scrolling */
+  height: 100%;
+  /* Prevent scrolling on the body */
 }
 
 .truncate {
@@ -1611,6 +1659,10 @@ nav {
   margin-top: 2rem;
 }
 
+.block {
+  display: block;
+}
+
 .flex {
   display: flex;
 }
@@ -1667,10 +1719,6 @@ nav {
   height: 100vh;
 }
 
-.max-h-\[400px\] {
-  max-height: 400px;
-}
-
 .min-h-fit {
   min-height: -moz-fit-content;
   min-height: fit-content;
@@ -1706,10 +1754,6 @@ nav {
 
 .w-full {
   width: 100%;
-}
-
-.w-screen {
-  width: 100vw;
 }
 
 .flex-shrink-0 {
@@ -1770,6 +1814,10 @@ nav {
 
 .gap-4 {
   gap: 1rem;
+}
+
+.overflow-auto {
+  overflow: auto;
 }
 
 .overflow-hidden {
@@ -2157,6 +2205,12 @@ nav {
 .placeholder-gray-400::placeholder {
   --tw-placeholder-opacity: 1;
   color: rgb(156 163 175 / var(--tw-placeholder-opacity, 1));
+}
+
+.shadow {
+  --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
 .shadow-sm {

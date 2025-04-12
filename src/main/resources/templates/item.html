@@ -8,7 +8,7 @@
     <script src="/js/toggleTruncate.js" defer></script>
     <script src="/js/toggleOverlay.js" defer></script>
     <script src="/js/windowOpen.js" defer></script>
-    <script src="/js/toggleCommentBox.js" defer></script>
+    <script src="/js/toggleCommentBoxIndex.js" defer></script>
     <script src="/js/toggleReply.js" defer></script>
   </head>
 
@@ -142,13 +142,13 @@
               </ul>
             </div>
 
-
             <div class="w-full h-auto flex justify-start items-center text-sm">
               <!-- CAPTION -->
               <p
                 id="toggle_truncate"
                 class="truncate-multiline leading-[1rem]"
-                onclick="toggleTruncate(this)">
+                onclick="toggleTruncate(this)"
+              >
                 <a href="/profile">
                   <span
                     class="font-semibold"
@@ -162,7 +162,6 @@
                 ></span>
               </p>
             </div>
-
 
             <div class="w-full flex justify-between items-center py-1">
               <!-- MONTH YEAR -->
@@ -233,7 +232,6 @@
                 </div>
               </div>
 
-
               <div class="flex flex-row justify-start items-start">
                 <span
                   class="font-light truncate-multiline"
@@ -241,7 +239,6 @@
                   th:text="'This is a placeholder text for the comment content. We are unsure exactly how long it needs to be to invoke the truncate feature.'"
                 ></span>
               </div>
-
 
               <div
                 style="font-size: 8px; line-height: 1"
@@ -301,7 +298,6 @@
                         </div>
                       </div>
 
-
                       <div class="flex flex-row justify-start items-start">
                         <span
                           class="font-light truncate-multiline"
@@ -309,7 +305,6 @@
                           th:text="'This is a placeholder text for the comment content. We are unsure exactly how long it needs to be to invoke the truncate feature.'"
                         ></span>
                       </div>
-
 
                       <div
                         style="font-size: 8px; line-height: 1"

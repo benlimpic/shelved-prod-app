@@ -1,7 +1,9 @@
 package com.authentication.demo.Controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.ListUtils;
 import org.springframework.security.core.Authentication;
@@ -17,16 +19,20 @@ import com.authentication.demo.Model.UserModel;
 import com.authentication.demo.Repository.UserRepository;
 import com.authentication.demo.Service.CollectionService;
 import com.authentication.demo.Service.ItemService;
+import com.authentication.demo.Service.UserService;
 
 @Controller
 public class ContentController {
 
     private final UserRepository repository;
+    private final UserService userService;
     private final CollectionService collectionService;
     private final ItemService itemService;
 
-    public ContentController(UserRepository repository, CollectionService collectionService, ItemService itemService) {
+    public ContentController(UserRepository repository, UserService userService, CollectionService collectionService,
+            ItemService itemService) {
         this.repository = repository;
+        this.userService = userService;
         this.collectionService = collectionService;
         this.itemService = itemService;
     }
@@ -43,7 +49,17 @@ public class ContentController {
 
     @GetMapping("/index")
     public String index(Model model) {
+        List<CollectionModel> collections = collectionService.getAllCollectionsByDesc();
+        model.addAttribute("collections", collections);
+    
+        // Fetch user details for all collections
+        Map<Long, UserModel> users = userService.getUsersByIds(
+            collections.stream().map(CollectionModel::getUserId).collect(Collectors.toList())
+        );
+        model.addAttribute("users", users);
+
         return handleAuthentication(model, "index");
+        
     }
 
     @GetMapping("/profile")
@@ -109,7 +125,7 @@ public class ContentController {
         if (item == null) {
             return "redirect:/profile"; // Redirect if the item is not found
         }
-    
+
         // Fetch the collection associated with the item
         CollectionModel collection = collectionService.getCollectionById(item.getCollectionId());
         if (collection == null) {

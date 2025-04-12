@@ -2,8 +2,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const commentToggle = document.getElementById('commentToggle');
   const commentBox = document.getElementById('commentBox');
   const itemGrid = document.getElementById('itemGrid');
+
+
   const footerContent = document.getElementById('footerNavContent');
   const footerComment = document.getElementById('commentActivity');
+
 
   if (commentToggle && commentBox && itemGrid) {
     commentToggle.addEventListener('click', () => {
