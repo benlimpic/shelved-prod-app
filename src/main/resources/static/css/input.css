@@ -31,9 +31,12 @@
     box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow for better visibility */
   }
   
+  body#indexPage{
+    @apply py-12 overflow-auto;
+  }
+
   body {
-    padding-top: 60px; /* Add padding equal to the header height to prevent content overlap */
-    padding-bottom: 60px; /* Add padding equal to the footer height to prevent content overlap */
+  @apply py-12 overflow-hidden;
   }
 
 }

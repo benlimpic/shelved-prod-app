@@ -816,11 +816,16 @@ footer {
   /* Optional: Add a shadow for better visibility */
 }
 
+body#indexPage {
+  overflow: auto;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
 body {
-  padding-top: 60px;
-  /* Add padding equal to the header height to prevent content overlap */
-  padding-bottom: 60px;
-  /* Add padding equal to the footer height to prevent content overlap */
+  overflow: hidden;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
 }
 
 .container {
