@@ -862,86 +862,16 @@ body {
   }
 }
 
-.collectionContainer {
-  position: relative;
-  /* Ensure the commentBox is positioned relative to the container */
-  transition: height 0.3s ease;
-  /* Smooth transition for height changes */
-}
-
-.\!commentBox {
-  position: relative !important;
-  /* Position the commentBox relative to the collectionContainer */
-  top: 0 !important;
-  /* Align the commentBox to the top of the container */
-  left: 0 !important;
-  width: 100% !important;
-  /* Full width of the container */
-  height: calc(100vh - 100px) !important;
-  /* Expand to the bottom of the screen, leaving space for padding or navbar */
-  overflow-y: auto !important;
-  /* Allow scrolling within the commentBox */
-  background-color: white !important;
-  /* Optional: Set a background color for the commentBox */
-  display: none !important;
-  /* Initially hidden */
-  z-index: 10 !important;
-  /* Ensure the commentBox appears above other elements */
-}
-
-.commentBox {
-  position: relative;
-  /* Position the commentBox relative to the collectionContainer */
+.fullscreen {
+  position: fixed;
+  margin-top: 48px;
   top: 0;
-  /* Align the commentBox to the top of the container */
   left: 0;
   width: 100%;
-  /* Full width of the container */
-  height: calc(100vh - 100px);
-  /* Expand to the bottom of the screen, leaving space for padding or navbar */
-  overflow-y: auto;
-  /* Allow scrolling within the commentBox */
-  background-color: white;
-  /* Optional: Set a background color for the commentBox */
-  display: none;
-  /* Initially hidden */
-  z-index: 10;
-  /* Ensure the commentBox appears above other elements */
-}
-
-.\!commentBox.visible {
-  display: block !important;
-  /* Show the commentBox when toggled */
-}
-
-.commentBox.visible {
-  display: block;
-  /* Show the commentBox when toggled */
-}
-
-.\!commentBox > * {
-  margin: 0 !important;
-  /* Remove default margins for child elements */
-  padding: 10px !important;
-  /* Add padding for the content inside the commentBox */
-  box-sizing: border-box !important;
-  /* Ensure padding doesn't affect width/height */
-}
-
-.commentBox > * {
-  margin: 0;
-  /* Remove default margins for child elements */
-  padding: 10px;
-  /* Add padding for the content inside the commentBox */
-  box-sizing: border-box;
-  /* Ensure padding doesn't affect width/height */
-}
-
-.no-scroll {
-  overflow: hidden;
-  /* Disable scrolling */
   height: 100%;
-  /* Prevent scrolling on the body */
+  background-color: white;
+  /* Adjust as needed */
+  overflow: hidden;
 }
 
 .truncate {
@@ -964,6 +894,10 @@ body {
   max-height: 80vh;
   /* Adjust as needed */
   overflow-y: auto;
+}
+
+.hidden {
+  display: none;
 }
 
 .containerSimple {
