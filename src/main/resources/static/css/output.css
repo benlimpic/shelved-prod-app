@@ -822,6 +822,12 @@ body#indexPage {
   padding-bottom: 3rem;
 }
 
+body#createItemPage {
+  overflow: auto;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
 body {
   overflow: hidden;
   padding-top: 3rem;
@@ -1586,10 +1592,6 @@ body {
   margin-bottom: 0.75rem;
 }
 
-.ml-2 {
-  margin-left: 0.5rem;
-}
-
 .mt-2 {
   margin-top: 0.5rem;
 }
@@ -2099,11 +2101,6 @@ body {
 .text-blue-600 {
   --tw-text-opacity: 1;
   color: rgb(37 99 235 / var(--tw-text-opacity, 1));
-}
-
-.text-gray-500 {
-  --tw-text-opacity: 1;
-  color: rgb(107 114 128 / var(--tw-text-opacity, 1));
 }
 
 .text-green-500 {

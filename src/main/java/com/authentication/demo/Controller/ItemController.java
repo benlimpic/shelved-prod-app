@@ -34,4 +34,27 @@ public class ItemController {
         return "redirect:/collection/" + collectionId;
     }
 
+    // DELETE ITEM
+    @PostMapping("/delete_item/{id}")
+    public String deleteItem(
+            @PathVariable Long id,
+            @RequestParam Map<String, String> params,
+            RedirectAttributes redirectAttributes) {
+        itemService.deleteItem(id);
+        redirectAttributes.addFlashAttribute("message", "Item deleted successfully");
+        return "redirect:/profile";
+    }
+
+    // UPDATE ITEM
+    @PostMapping("/update_item/{id}")
+    public String updateItem(
+            @PathVariable Long id,
+            @RequestParam Map<String, String> params,
+            @RequestParam("itemImage") MultipartFile itemImage,
+            RedirectAttributes redirectAttributes) {
+        itemService.updateItem(params, itemImage);
+        redirectAttributes.addFlashAttribute("message", "Item updated successfully");
+        return "redirect:/profile";
+    }
+
 }

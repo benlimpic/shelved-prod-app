@@ -113,4 +113,46 @@ public class CollectionService {
     return collections;
 }
 
+  // DELETE COLLECTION
+  public Map<String, String> deleteCollection(Map<String, String> params) {
+    try {
+      Long collectionId = Long.valueOf(params.get("id"));
+      CollectionModel collection = getCollectionById(collectionId);
+      if (collection == null) {
+        throw new CollectionCreationException("Collection not found");
+      }
+      repository.delete(collection);
+      return Map.of("message", "Collection deleted successfully");
+    } catch (NumberFormatException e) {
+      throw new CollectionCreationException("Invalid collection ID", e);
+    } catch (RuntimeException e) {
+      throw new CollectionCreationException("Unexpected error occurred while deleting collection", e);
+    }
+  }
+
+  // UPDATE COLLECTION
+  public Map<String, String> updateCollection(Map<String, String> params, MultipartFile collectionImage) {
+    try {
+      Long collectionId = Long.valueOf(params.get("id"));
+      String imageUrl = saveCollectionImage(collectionImage);
+      CollectionModel collection = getCollectionById(collectionId);
+      if (collection == null) {
+        throw new CollectionCreationException("Collection not found");
+      }
+
+      // Update collection properties
+      collection.setTitle(params.get("title"));
+      collection.setCaption(params.get("caption"));
+      collection.setDescription(params.get("description"));
+      collection.setImageUrl(imageUrl);
+      collection.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+      repository.save(collection);
+      return Map.of("message", "Collection updated successfully");
+    } catch (NumberFormatException e) {
+      throw new CollectionCreationException("Invalid collection ID", e);
+    } catch (RuntimeException e) {
+      throw new CollectionCreationException("Unexpected error occurred while updating collection", e);
+    }
+  }
+
 }

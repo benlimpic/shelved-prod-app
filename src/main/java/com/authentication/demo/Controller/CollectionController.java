@@ -30,6 +30,23 @@ public class CollectionController {
         return "redirect:/profile";
     }
 
+    // DELETE COLLECTION
+    @PostMapping("/delete_collection/{id}")
+    public String deleteCollection(@RequestParam Map<String, String> collectionDetails, @RequestParam MultipartFile collectionImage,
+        RedirectAttributes redirectAttributes) {
+        collectionService.deleteCollection(collectionDetails);
+        redirectAttributes.addFlashAttribute("message", "Collection deleted successfully");
+        return "redirect:/profile";
+    }
+
+    // UPDATE COLLECTION
+    @PostMapping("/update_collection/{id}")
+    public String updateCollection(@RequestParam Map<String, String> collectionDetails, @RequestParam MultipartFile collectionImage,
+        RedirectAttributes redirectAttributes) {
+        collectionService.updateCollection(collectionDetails, collectionImage);
+        redirectAttributes.addFlashAttribute("message", "Collection updated successfully");
+        return "redirect:/profile";
+    }
 
     
 

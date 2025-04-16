@@ -3,14 +3,13 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Login</title>
     <script th:src="@{/js/previewFile.js}" defer></script>
 
     <link rel="stylesheet" href="/css/output.css" />
   </head>
-  <body>
+  <body id="createItemPage">
     <header>
       <nav class="navbar">
         <ul class="flex justify-between items-center w-full">
@@ -35,7 +34,7 @@
     </header>
     <div class="bg-white pb-4 h-full overflow-y-auto">
       <div class="collectionHeader bg-slate-100">
-        <span class="text-sm font-semibold text-slate-600">Create Collection</span>
+        <span class="text-sm font-semibold text-slate-600">Create Item</span>
       </div>
       <div class="flex flex-col w-full items-center justify-center">
         <img
@@ -67,9 +66,10 @@
           style="color: red"
         ></div>
       </div>
-    
-      <form
-        class="flex flex-col w-full items-center justify-center px-2 bg-white"
+      
+      <div class="scrollable-container h-100vh">
+        <form
+        class="flex flex-col w-full items-center justify-center"
         th:action="@{/create_item/{collectionId}(collectionId=${collectionId})}"
         method="post"
         enctype="multipart/form-data"
@@ -155,6 +155,7 @@
           </button>
         </div>
       </form>
+
     </div>
     </div>
   </body>
