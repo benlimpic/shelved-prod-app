@@ -1,12 +1,16 @@
 package com.authentication.demo.Model;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -16,8 +20,9 @@ public class CollectionModel {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "user_id")
-  private Long userId;
+  @ManyToOne
+  @JoinColumn(name = "user_id", nullable = false)
+  private UserModel user;
 
   @Column(name = "title", nullable = false)
   private String title;
@@ -37,36 +42,46 @@ public class CollectionModel {
   @Column(name = "updated_at", nullable = false)
   private Timestamp updatedAt;
 
+  @OneToMany(mappedBy = "collection", cascade = {jakarta.persistence.CascadeType.ALL}, orphanRemoval = true)
+  private List<ItemModel> items;
+
+
   public CollectionModel() {
 
   }
 
   public CollectionModel(
       Long id,
-      Long userId,
+      UserModel user, // Change from Long userId to UserModel user
       String title,
       String caption,
       String description,
       String imageUrl,
       Timestamp createdAt,
-      Timestamp updatedAt) {
+      Timestamp updatedAt,
+      List<ItemModel> items) {
 
     this.id = id;
-    this.userId = userId;
+    this.user = user; // Update to use the user object
     this.title = title;
     this.caption = caption;
     this.description = description;
     this.imageUrl = imageUrl;
     this.createdAt = (createdAt == null) ? new Timestamp(System.currentTimeMillis()) : createdAt;
     this.updatedAt = new Timestamp(System.currentTimeMillis());
+    this.items = items;
   }
 
   public Long getId() {
     return id;
   }
 
-  public Long getUserId() {
-    return userId;
+  public UserModel getUser() { // Change from getUserId to getUser
+    return user;
+  }
+
+  public void setUser(UserModel user) { // Change from setUserId to setUser
+    this.user = user;
   }
 
   public String getTitle() {
@@ -115,5 +130,13 @@ public class CollectionModel {
 
   public void setUpdatedAt(Timestamp updatedAt) {
     this.updatedAt = new Timestamp(System.currentTimeMillis());
+  }
+
+  public List<ItemModel> getItems() {
+    return items;
+  }
+
+  public void setItems(List<ItemModel> items) {
+    this.items = items;
   }
 }

@@ -816,13 +816,7 @@ footer {
   /* Optional: Add a shadow for better visibility */
 }
 
-body#indexPage {
-  overflow: auto;
-  padding-top: 3rem;
-  padding-bottom: 3rem;
-}
-
-body#createItemPage {
+body#scrollablePage {
   overflow: auto;
   padding-top: 3rem;
   padding-bottom: 3rem;
@@ -2018,6 +2012,10 @@ body {
 
 .pt-3 {
   padding-top: 0.75rem;
+}
+
+.pb-24 {
+  padding-bottom: 6rem;
 }
 
 .text-left {

@@ -1,9 +1,9 @@
 package com.authentication.demo.Controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.ListUtils;
 import org.springframework.security.core.Authentication;
@@ -49,17 +49,28 @@ public class ContentController {
 
     @GetMapping("/index")
     public String index(Model model) {
-        List<CollectionModel> collections = collectionService.getAllCollectionsByDesc();
+
+        // Fetch Users
+        Map<Long, UserModel> users = userService.getUsersMappedById();
+        model.addAttribute("users", users);
+
+        // Fetch all collections
+        List<CollectionModel> collections = collectionService.getAllCollections();
+
+        // Partition items for each collection
+        Map<Long, List<List<ItemModel>>> partitionedItemsByCollection = new HashMap<>();
+        for (CollectionModel collection : collections) {
+            List<ItemModel> items = itemService.getAllItemsByCollectionId(collection.getId());
+            List<List<ItemModel>> partitionedItems = items != null ? ListUtils.partition(items, 3) : List.of();
+            partitionedItemsByCollection.put(collection.getId(), partitionedItems);
+        }
+
+        // Add data to the model
         model.addAttribute("collections", collections);
-    
-        // Fetch user details for all collections
-        Map<Long, UserModel> users = userService.getUsersByIds(
-            collections.stream().map(CollectionModel::getUserId).collect(Collectors.toList())
-        );
+        model.addAttribute("partitionedItemsByCollection", partitionedItemsByCollection);
         model.addAttribute("users", users);
 
         return handleAuthentication(model, "index");
-        
     }
 
     @GetMapping("/profile")
@@ -127,7 +138,7 @@ public class ContentController {
         }
 
         // Fetch the collection associated with the item
-        CollectionModel collection = collectionService.getCollectionById(item.getCollectionId());
+        CollectionModel collection = item.getCollection();
         if (collection == null) {
             return "redirect:/profile"; // Redirect if the collection is not found
         }

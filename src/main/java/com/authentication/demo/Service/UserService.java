@@ -78,6 +78,12 @@ public class UserService implements UserDetailsService {
         .orElseThrow(() -> new RuntimeException("User not found for username: " + username));
   }
 
+  //Get User By ID
+  public UserModel getUserById(Long id) {
+    return repository.findById(id)
+        .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+  }
+
   // GET CURRENT USER
   private Optional<UserModel> getCurrentUser() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -365,4 +371,25 @@ public class UserService implements UserDetailsService {
     return repository.findAllById(userIds).stream()
         .collect(Collectors.toMap(UserModel::getId, Function.identity()));
 }
+
+  // GET ALL USERS
+  public List<UserModel> getAllUsers() {
+    return repository.findAll();
+  }
+
+  // GET USER BY USERNAME
+  public Optional<UserModel> getUserByUsername(String username) {
+    return repository.findByUsername(username);
+  }
+
+  // GET USER BY EMAIL
+  public Optional<UserModel> getUserByEmail(String email) {
+    return repository.findByEmail(email);
+  }
+
+  public Map<Long, UserModel> getUsersMappedById() {
+    List<UserModel> users = repository.findAll();
+    return users.stream().collect(Collectors.toMap(UserModel::getId, Function.identity()));
+}
+
 }

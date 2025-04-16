@@ -16,26 +16,28 @@
     ></script>
     <script src="/js/toggleTruncate.js" defer></script>
     <script src="/js/toggleCommentIndex.js" defer></script>
+    <script src="/js/toggleItemsIndex.js" defer></script>
 
     <link rel="stylesheet" href="/css/output.css" />
   </head>
-  <body id="indexPage">
+  <body id="scrollablePage">
     <header>
       <nav class="navbar">
         <ul class="flex justify-between items-center w-full">
           <li>
-            <img
-              class="h-5"
-              href="/index"
-              src="/images/Shelved_Logo_White.png"
-              alt="Shelved Logo"
-            />
+            <a href="/index">
+              <img
+                class="h-5"
+                src="/images/Shelved_Logo_White.png"
+                alt="Shelved Logo"
+              />
+            </a>
           </li>
           <li>
             <a href="/profile">
               <img
                 class="h-7 w-7 rounded-full bg-white"
-                th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}"
+                th:src="${#strings.defaultString(user?.profilePictureUrl, '/images/default-profile-photo.png')}"
                 alt="Profile Picture"
               />
             </a>
@@ -61,8 +63,8 @@
                       <a href="/profile">
                         <img
                           class="h-7 w-7 rounded-full bg-white"
-                          th:src="${users[collection.userId].profilePictureUrl != null ? users[collection.userId].profilePictureUrl : '/images/default-profile-photo.png'}"
-                          th:alt="${users[collection.userId].username}"
+                          th:src="${users[collection.user.id]?.profilePictureUrl != null ? users[collection.user.id].profilePictureUrl : '/images/default-profile-photo.png'}"
+                          th:alt="${users[collection.user.id]?.username}"
                         />
                       </a>
                     </li>
@@ -70,8 +72,8 @@
                       <a href="/profile">
                         <span
                           class="text-sm font-semibold"
-                          th:if="${users[collection.userId].username != null}"
-                          th:text="${users[collection.userId].username}"
+                          th:if="${users[collection.user.id].username != null}"
+                          th:text="${users[collection.user.id].username}"
                         ></span>
                       </a>
                     </li>
@@ -86,17 +88,54 @@
               </div>
             </div>
 
-            <!-- COLLECTION IMAGE -->
-            <a
-              class="collectionImage"
-              th:href="@{/collection/{id}(id=${collection.id})}"
-            >
-              <img
-                th:src="${collection.imageUrl}"
-                alt="Collection Cover"
-                class="w-full object-cover aspect-square"
-              />
-            </a>
+            <div class="image-container relative bg-white">
+              <!-- COLLECTION IMAGE -->
+              <a
+                class="collectionImage"
+                th:href="@{/collection/{id}(id=${collection.id})}"
+              >
+                <img
+                  th:src="${collection.imageUrl}"
+                  alt="Collection Cover"
+                  class="w-full object-cover aspect-square"
+                />
+              </a>
+
+              <!-- Overlay -->
+              <div class="collectionOverlay overlay absolute bottom-0 left-0 w-full h-full bg-black bg-opacity-70 text-white text-sm p-2 overflow-y-scroll hidden">
+                <div class="itemGrid">
+                  <div th:if="${partitionedItemsByCollection != null && collection?.id != null}"
+                  th:each="row : ${partitionedItemsByCollection[collection.id]}"
+                  class="grid grid-cols-3"
+                  >
+                    <div
+                      th:each="item : ${row}"
+                      class="flex flex-col items-center"
+                    >
+                      <a th:href="@{/item/{id}(id=${item.id})}">
+                        <img
+                          th:src="${#strings.defaultString(item?.imageUrl, '/images/item_image.png')}"
+                          alt="Item Image"
+                          class="aspect-square w-full h-auto object-cover"
+                        />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Toggle Buttons -->
+              <button
+                class="toggleButtonShowItems toggle-overlay absolute bottom-2 right-2 bg-white text-black text-xs px-2 py-1 rounded z-20"
+              >
+                Show Items
+              </button>
+              <button
+                class="toggleButtonHideItems toggle-overlay absolute bottom-2 right-2 bg-white text-black text-xs px-2 py-1 rounded z-20 hidden"
+              >
+                Hide Items
+              </button>
+            </div>
 
             <!-- COLLECTION CAPTION -->
             <div class="collectionCaption w-full px-2">

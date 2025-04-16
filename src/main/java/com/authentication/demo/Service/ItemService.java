@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.authentication.demo.Exceptions.ItemCreationException;
+import com.authentication.demo.Model.CollectionModel;
 import com.authentication.demo.Model.ItemModel;
+import com.authentication.demo.Repository.CollectionRepository;
 import com.authentication.demo.Repository.ItemRepository;
 
 @Service
@@ -19,10 +21,13 @@ public class ItemService {
 
   private final ItemRepository itemRepository;
   private final UserService userService;
+  private final CollectionRepository collectionRepository;
 
-  public ItemService(ItemRepository itemRepository, UserService userService) {
+  public ItemService(ItemRepository itemRepository, UserService userService,
+      CollectionRepository collectionRepository) {
     this.itemRepository = itemRepository;
     this.userService = userService;
+    this.collectionRepository = collectionRepository;
   }
 
   // GET ITEM BY ITEM ID
@@ -48,39 +53,33 @@ public class ItemService {
     // SAVE ITEM IMAGE
     String imageUrl = saveItemImage(collectionImage);
 
-
-    // COLLECTION ID
-  final Long collectionId;
-  if (params.get("collectionId") != null && !params.get("collectionId").isEmpty()) {
-    try {
-        collectionId = Long.valueOf(params.get("collectionId"));
-    } catch (NumberFormatException e) {
-        throw new ItemCreationException("Invalid collectionId format", e);
+    // GET COLLECTION
+    Long collectionId = Long.valueOf(params.get("collectionId"));
+    CollectionModel collection = collectionRepository.findById(collectionId)
+        .orElseThrow(() -> new ItemCreationException("Collection not found"));
+    if (collection == null) {
+      throw new ItemCreationException("Collection not found");
     }
-  } else {
-    throw new ItemCreationException("collectionId is required");
-  }
-    
+
     // CREATE ITEM
     ItemModel item = new ItemModel(
         null,
         userId,
-        collectionId,
+        collection,
         params.get("title"),
         params.get("description"),
         params.get("itemLink"),
         params.get("caption"),
         imageUrl,
         new Timestamp(System.currentTimeMillis()),
-        new Timestamp(System.currentTimeMillis())
-    );
+        new Timestamp(System.currentTimeMillis()));
 
     // SAVE ITEM TO DATABASE
     itemRepository.save(item);
 
     // RETURN SUCCESS RESPONSE
     return Map.of("message", "Item created successfully", "itemId", item.getId().toString());
-}
+  }
 
   // SAVE PROFILE PICTURE
   public String saveItemImage(MultipartFile itemImage) {

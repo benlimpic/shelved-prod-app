@@ -7,6 +7,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -17,8 +19,9 @@ public class ItemModel {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "collection_id", nullable = false)
-  private Long collectionId;
+  @ManyToOne
+  @JoinColumn(name = "collection_id", nullable = false)
+  private CollectionModel collection;
 
   @Column(name = "user_id", nullable = false)
   private Long userId;
@@ -48,11 +51,12 @@ public class ItemModel {
 
   }
 
-  public ItemModel(Long id, Long userId, Long collectionId, String title, String description, String itemLink, String caption, String imageUrl, Timestamp createdAt,
+  public ItemModel(Long id, Long userId, CollectionModel collection, String title, String description, String itemLink,
+      String caption, String imageUrl, Timestamp createdAt,
       Timestamp updatedAt) {
     this.id = id;
     this.userId = userId;
-    this.collectionId = collectionId;
+    this.collection = collection;
     this.title = title;
     this.description = description;
     this.itemLink = itemLink;
@@ -66,8 +70,12 @@ public class ItemModel {
     return id;
   }
 
-  public Long getCollectionId() {
-    return collectionId;
+  public CollectionModel getCollection() {
+    return collection;
+  }
+
+  public void setCollection(CollectionModel collection) {
+    this.collection = collection;
   }
 
   public Long getUserId() {

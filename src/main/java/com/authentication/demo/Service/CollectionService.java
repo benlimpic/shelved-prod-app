@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.authentication.demo.Exceptions.CollectionCreationException;
 import com.authentication.demo.Model.CollectionModel;
+import com.authentication.demo.Model.ItemModel;
 import com.authentication.demo.Repository.CollectionRepository;
 
 @Service
@@ -19,11 +20,13 @@ public class CollectionService {
 
   private final CollectionRepository repository;
   private final UserService userService;
-
-  public CollectionService(CollectionRepository repository, UserService userService) {
+  private final ItemService itemService;
+  public CollectionService(CollectionRepository repository, UserService userService, ItemService itemService) {
     this.userService = userService;
     this.repository = repository;
+    this.itemService = itemService;
   }
+  
 
   // GET COLLECTION BY COLLECTION ID
   public CollectionModel getCollectionById(Long id) throws CollectionCreationException {
@@ -52,9 +55,13 @@ public class CollectionService {
       Timestamp createdAt = new Timestamp(System.currentTimeMillis());
       Timestamp updatedAt = new Timestamp(System.currentTimeMillis());
       
-      CollectionModel newCollection = new CollectionModel(
-          null, userId, params.get("title"), params.get("caption"), params.get("description"), imageUrl, createdAt, updatedAt
-      );
+      CollectionModel newCollection = new CollectionModel();
+      newCollection.setUser(userService.getUserById(userId));
+      newCollection.setTitle(params.get("title"));
+      newCollection.setCaption(params.get("caption"));
+      newCollection.setImageUrl(imageUrl);
+      newCollection.setCreatedAt(createdAt);
+      newCollection.setUpdatedAt(updatedAt);
 
       repository.save(newCollection);
       return Map.of("message", "Collection created successfully");
@@ -153,6 +160,28 @@ public class CollectionService {
     } catch (RuntimeException e) {
       throw new CollectionCreationException("Unexpected error occurred while updating collection", e);
     }
+  }
+
+    public List<CollectionModel> getCollectionsWithPartitionedItems() {
+      List<CollectionModel> collections = repository.findAllByOrderByCreatedAtDesc();
+
+      for (CollectionModel collection : collections) {
+          // Fetch items for each collection
+          List<ItemModel> items = itemService.getAllItemsByCollectionId(collection.getId());
+          // Set the items in the collection
+          collection.setItems(items);
+      }
+
+      return collections;
+  }
+
+  // GET ALL COLLECTIONS
+  public List<CollectionModel> getAllCollections() {
+    List<CollectionModel> collections = repository.findAllByOrderByCreatedAtDesc();
+    if (collections == null || collections.isEmpty()) {
+        throw new CollectionCreationException("No collections found");
+    }
+    return collections;
   }
 
 }
