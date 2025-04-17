@@ -120,24 +120,30 @@ public class CollectionService {
   }
 
   // DELETE COLLECTION
-  public Map<String, String> deleteCollection(Map<String, String> params) {
+  public void deleteCollection(Long collectionId) {
     try {
-      if (params.get("id") == null || params.get("id").isEmpty()) {
-        throw new CollectionCreationException("Collection ID is required");
-      }
-      Long collectionId = Long.valueOf(params.get("id"));
-      CollectionModel collection = getCollectionById(collectionId);
-      if (collection == null) {
-        throw new CollectionCreationException("Collection not found");
-      }
-      repository.delete(collection);
-      return Map.of("message", "Collection deleted successfully");
+        // Validate and fetch the collection
+        CollectionModel collection = getCollectionById(collectionId);
+        if (collection == null) {
+            throw new CollectionCreationException("Collection not found");
+        }
+
+        // Fetch and delete items in the collection
+        List<ItemModel> items = itemService.getAllItemsByCollectionId(collectionId);
+        if (items != null && !items.isEmpty()) {
+            for (ItemModel item : items) {
+                itemService.deleteItem(item.getId());
+            }
+        }
+
+        // Delete the collection itself
+        repository.delete(collection);
     } catch (NumberFormatException e) {
-      throw new CollectionCreationException("Invalid collection ID", e);
+        throw new CollectionCreationException("Invalid collection ID", e);
     } catch (RuntimeException e) {
-      throw new CollectionCreationException("Unexpected error occurred while deleting collection", e);
+        throw new CollectionCreationException("Unexpected error occurred while deleting collection", e);
     }
-  }
+}
 
   // UPDATE COLLECTION
   public Map<String, String> updateCollection(Map<String, String> params, MultipartFile collectionImage) {
@@ -175,6 +181,8 @@ public class CollectionService {
       throw new CollectionCreationException("Unexpected error occurred while updating collection", e);
     }
   }
+
+
 
   // GET ALL COLLECTIONS WITH PARTITIONED ITEMS
   public List<CollectionModel> getCollectionsWithPartitionedItems() {

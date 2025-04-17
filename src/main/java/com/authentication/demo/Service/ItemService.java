@@ -117,51 +117,53 @@ public class ItemService {
   }
 
   // DELETE ITEM
-  public Map<String, String> deleteItem(Long itemId) {
+  public void deleteItem(Long itemId) {
     // VALIDATE INPUT PARAMETERS
     if (itemId == null) {
       throw new ItemCreationException("Item ID is required");
     }
 
+    // CHECK IF ITEM EXISTS
+    if (!itemRepository.existsById(itemId)) {
+      throw new ItemCreationException("Item not found");
+    }
+
     // DELETE ITEM
     itemRepository.deleteById(itemId);
-
-    // RETURN SUCCESS RESPONSE
-    return Map.of("message", "Item deleted successfully");
   }
 
   // UPDATE ITEM
   public Map<String, String> updateItem(Map<String, String> params, MultipartFile itemImage) {
     // Validate input parameters
     if (params.get("itemId") == null || params.get("itemId").isEmpty()) {
-        throw new ItemCreationException("Item ID is required");
+      throw new ItemCreationException("Item ID is required");
     }
 
     // Get item by ID
     Long itemId;
     try {
-        itemId = Long.valueOf(params.get("itemId"));
+      itemId = Long.valueOf(params.get("itemId"));
     } catch (NumberFormatException e) {
-        throw new ItemCreationException("Invalid Item ID format");
+      throw new ItemCreationException("Invalid Item ID format");
     }
     ItemModel item = getItemById(itemId);
 
     // Update item fields
     if (params.get("title") != null && !params.get("title").isEmpty()) {
-        item.setTitle(params.get("title"));
+      item.setTitle(params.get("title"));
     }
     if (params.get("description") != null && !params.get("description").isEmpty()) {
-        item.setDescription(params.get("description"));
+      item.setDescription(params.get("description"));
     }
     if (params.get("itemLink") != null && !params.get("itemLink").isEmpty()) {
-        item.setItemLink(params.get("itemLink"));
+      item.setItemLink(params.get("itemLink"));
     }
     if (params.get("caption") != null && !params.get("caption").isEmpty()) {
-        item.setCaption(params.get("caption"));
+      item.setCaption(params.get("caption"));
     }
     if (itemImage != null && !itemImage.isEmpty()) {
-        String imageUrl = saveItemImage(itemImage);
-        item.setImageUrl(imageUrl);
+      String imageUrl = saveItemImage(itemImage);
+      item.setImageUrl(imageUrl);
     }
 
     // Save the updated item
@@ -169,6 +171,14 @@ public class ItemService {
 
     // Return success response
     return Map.of("message", "Item updated successfully");
-}
+  }
+
+  public Long getCollectionIdByItemId(Long itemId) {
+    ItemModel item = itemRepository.findById(itemId).orElse(null);
+    if (item == null) {
+      throw new ItemCreationException("Item not found");
+    }
+    return item.getCollection().getId();
+  }
 
 }

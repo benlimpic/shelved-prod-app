@@ -32,13 +32,15 @@ public class CollectionController {
         return "redirect:/profile";
     }
 
-    // DELETE COLLECTION
-    @PostMapping("/delete_collection/{id}")
-    public String deleteCollection(@RequestParam Map<String, String> collectionDetails,
-            @RequestParam MultipartFile collectionImage,
-            RedirectAttributes redirectAttributes) {
-        collectionService.deleteCollection(collectionDetails);
-        redirectAttributes.addFlashAttribute("message", "Collection deleted successfully");
+    @PostMapping("/delete-collection/{id}")
+    public String deleteCollection(@PathVariable("id") Long collectionId, RedirectAttributes redirectAttributes) {
+        try {
+            collectionService.deleteCollection(collectionId);
+            redirectAttributes.addFlashAttribute("message", "Collection deleted successfully.");
+        } catch (CollectionCreationException e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to delete collection: " + e.getMessage());
+            return "redirect:/update-collection/" + collectionId;
+        }
         return "redirect:/profile";
     }
 

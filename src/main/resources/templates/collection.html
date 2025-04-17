@@ -681,10 +681,10 @@
         </div>
       </div>
 
-      <div id="itemGrid" class="w-full min-h-fit">
-        <div class="grid">
-          <div th:each="row : ${partitionedItems}" class="grid grid-cols-3">
-            <div th:each="item : ${row}" class="flex flex-col items-center">
+      <div id="itemGrid" class="w-full min-h-fit bg-white">
+        <div class="grid bg-white">
+          <div th:each="row : ${partitionedItems}" class="grid grid-cols-3 bg-white">
+            <div th:each="item : ${row}" class="flex flex-col items-center bg-white">
               <a th:href="@{/item/{id}(id=${item.id})}">
                 <img
                   th:src="${#strings.defaultString(item?.getImageUrl(), '/images/item_image.png')}"

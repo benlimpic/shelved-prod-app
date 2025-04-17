@@ -35,15 +35,24 @@ public class ItemController {
         return "redirect:/collection/" + collectionId;
     }
 
-    // DELETE ITEM
-    @PostMapping("/delete_item/{id}")
-    public String deleteItem(
-            @PathVariable Long id,
-            @RequestParam Map<String, String> params,
-            RedirectAttributes redirectAttributes) {
-        itemService.deleteItem(id);
-        redirectAttributes.addFlashAttribute("message", "Item deleted successfully");
-        return "redirect:/profile";
+    @PostMapping("/delete-item/{id}")
+    public String deleteItem(@PathVariable("id") Long itemId, RedirectAttributes redirectAttributes) {
+        try {
+            // Fetch the item to get its collectionId
+            Long collectionId = itemService.getCollectionIdByItemId(itemId);
+
+            // Delete the item
+            itemService.deleteItem(itemId);
+
+            // Add success message
+            redirectAttributes.addFlashAttribute("message", "Item deleted successfully.");
+
+            // Redirect to the collection page
+            return "redirect:/collection/" + collectionId;
+        } catch (ItemCreationException e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to delete item: " + e.getMessage());
+            return "redirect:/update-item/" + itemId;
+        }
     }
 
     // UPDATE ITEM
@@ -56,7 +65,7 @@ public class ItemController {
         try {
             // Add the item ID to the params map
             params.put("itemId", String.valueOf(itemId));
-    
+
             // Call the service to update the item
             itemService.updateItem(params, itemImage);
             redirectAttributes.addFlashAttribute("message", "Item updated successfully");
