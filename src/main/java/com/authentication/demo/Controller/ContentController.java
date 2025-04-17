@@ -81,9 +81,40 @@ public class ContentController {
         // BREAK COLLECTIONS INTO GROUPS OF 3
         List<List<CollectionModel>> partitionedCollections = ListUtils.partition(collections, 3);
 
+        // COUNT COLLECTIONS
+        int collectionCount = collections.size();
+
         // ADD TO MODEL
+        model.addAttribute("collectionCount", collectionCount);
         model.addAttribute("partitionedCollections", partitionedCollections);
         return handleAuthentication(model, "profile");
+    }
+
+    @GetMapping("/profile/{id}")
+    public String userProfile(@PathVariable("id") Long userId, Model model) {
+        // Fetch the user profile
+        UserModel userProfile = userService.getUserById(userId);
+        if (userProfile == null) {
+            return "redirect:/index"; // Handle missing user profile
+        }
+        else if (userProfile.getId().equals(userService.getCurrentUserId())) {
+            return "redirect:/profile"; // Redirect to own profile
+        }
+
+
+    
+        // Fetch collections for the user
+        List<CollectionModel> collections = collectionService.getCollectionsByUserId(userId);
+        // Partition collections into rows of 3 for display
+        List<List<CollectionModel>> partitionedCollections = ListUtils.partition(collections, 3);
+        // Count Collections
+        int collectionCount = collections.size();
+        // Add the attributes to model
+        model.addAttribute("collectionCount", collectionCount);
+        model.addAttribute("partitionedCollections", partitionedCollections);
+        model.addAttribute("userProfile", userProfile);
+    
+        return handleAuthentication(model, "userProfile");
     }
 
     @GetMapping("/update-profile")

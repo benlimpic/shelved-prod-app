@@ -207,4 +207,13 @@ public class CollectionService {
     return collections;
   }
 
+  // GET COLLECTIONS BY USER ID
+  public List<CollectionModel> getCollectionsByUserId(Long userId) {
+    List<CollectionModel> collections = repository.findAllByUserIdOrderByCreatedAtDesc(userId);
+    if (collections == null || collections.isEmpty()) {
+      throw new CollectionCreationException("No collections found for user ID: " + userId);
+    }
+    return collections;
+}
+
 }

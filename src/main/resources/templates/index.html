@@ -60,20 +60,20 @@
                 <div>
                   <ul class="flex justify-start items-center w-full">
                     <li class="pr-2">
-                      <a href="/profile">
+                      <a th:if="${collection.user.id != null}" th:href="@{/profile/{id}(id=${collection.user.id})}">
                         <img
                           class="h-7 w-7 rounded-full bg-white"
-                          th:src="${users[collection.user.id]?.profilePictureUrl != null ? users[collection.user.id].profilePictureUrl : '/images/default-profile-photo.png'}"
-                          th:alt="${users[collection.user.id]?.username}"
+                          th:src="${users != null && collection.user.id != null && users[collection.user.id]?.profilePictureUrl != null ? users[collection.user.id].profilePictureUrl : '/images/default-profile-photo.png'}"
+                          th:alt="${users != null && collection.user.id != null ? users[collection.user.id]?.username : 'Default Username'}"
                         />
                       </a>
                     </li>
                     <li>
-                      <a href="/profile">
+                      <a th:href="@{/profile/{id}(id=${collection.user.id})}">
                         <span
                           class="text-sm font-semibold"
-                          th:if="${users[collection.user.id].username != null}"
-                          th:text="${users[collection.user.id].username}"
+                          th:if="${collection.user.id != null && users[collection.user.id]?.username != null}"
+                          th:text="${users[collection.user.id]?.username}"
                         ></span>
                       </a>
                     </li>

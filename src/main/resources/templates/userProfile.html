@@ -17,12 +17,11 @@
             </a>
           </li>
           <li class="flex items-center">
-            <a
-              class="bg-blue-500 hover:bg-blue-700 text-white text-xs px-1 py-0.5 rounded"
-              id="redirectUpdateUserDetails"
-              href="./update-user-details"
-              ><span class="text-lg">&#9776;</span></a
-            >
+            <h2
+            th:text="${userProfile?.username != null ? userProfile.username : 'User Profile'}"
+            ></h2>
+          </li>
+          <li class="flex items-center">
           </li>
         </ul>
       </nav>
@@ -39,7 +38,7 @@
             <div class="flex justify-center items-center">
               <img
                 class="w-16 h-16 rounded-full bg-white"
-                th:src="${user?.profilePictureUrl ?: '/images/default-profile-photo.png'}"
+                th:src="${userProfile?.profilePictureUrl ?: '/images/default-profile-photo.png'}"
                 alt="Profile Picture"
               />
             </div>
@@ -66,8 +65,8 @@
           <div>
             <p
               class="text-xs font-medium"
-              th:if="${user?.username != null}"
-              th:text="${user?.username}"
+              th:if="${userProfile?.username != null}"
+              th:text="${userProfile?.username}"
             ></p>
           </div>
 
@@ -76,18 +75,9 @@
             <!-- Display Location if it exists -->
             <p
               class="text-xs font-extralight"
-              th:if="${user?.location != null}"
-              th:text="${user?.location}"
+              th:if="${userProfile?.location != null}"
+              th:text="${userProfile?.location}"
             ></p>
-
-            <!-- Display link to update Location if it is null -->
-            <a
-              th:if="${user?.location == null || user?.location == ''}"
-              href="/update-profile"
-              class="text-xs font-medium text-blue-600"
-            >
-              Add Location
-            </a>
           </div>
 
           <!-- Website -->
@@ -95,18 +85,9 @@
             <!-- Display Website if it exists -->
             <p
               class="text-xs font-thin"
-              th:if="${user?.website != null}"
-              th:text="${user?.website}"
+              th:if="${userProfile?.website != null}"
+              th:text="${userProfile?.website}"
             ></p>
-
-            <!-- Display link to update Website if it is null -->
-            <a
-              th:if="${user?.website == null || user?.website == ''}"
-              href="/update-profile"
-              class="text-xs font-medium text-blue-600"
-            >
-              Add Website
-            </a>
           </div>
 
           <!-- Biography -->
@@ -114,33 +95,25 @@
             <!-- Display Biography if it exists -->
             <p
               class="text-xs font-normal"
-              th:if="${user?.biography != null}"
-              th:text="${user?.biography}"
+              th:if="${userProfile?.biography != null}"
+              th:text="${userProfile?.biography}"
             ></p>
-
-            <!-- Display link to update Biography if it is null -->
-            <a
-              th:if="${user?.biography == null || user?.biography == ''}"
-              href="/update-profile"
-              class="text-xs font-medium text-blue-600"
-            >
-              Add Biography
-            </a>
           </div>
         </div>
         <!-- LOWER PROFILE BUTTONS -->
         <div class="grid grid-cols-4 w-full">
           <a
             class="deleteButton bg-slate-400 hover:bg-slate-400 flex item-center justify-center col-span-2"
-            id="redirectUpdateUserDetails"
-            href="/update-profile"
-            >Edit Profile</a
-          >
+            id="followButton"
+            href="#"
+            >
+            Follow
+          </a>
           <a
             class="deleteButton bg-slate-400 hover:bg-slate-400 flex item-center justify-center col-span-2"
-            id="redirectShareProfile"
+            id="messageButton"
             href="#"
-            >Share Profile</a
+            >Message</a
           >
         </div>
       </div>
@@ -172,11 +145,7 @@
               </div>
             </li>
             <li>
-              <div class="h-4 w-4 flex items-center justify-center">
-                <a class="text-2xl font-bold" href="/create-collection">
-                  &#43;
-                </a>
-              </div>
+
             </li>
             <li>
               <a href="/profile">
