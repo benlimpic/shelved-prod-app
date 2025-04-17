@@ -33,7 +33,7 @@
     </header>
     <div class="bg-white pb-4 h-full overflow-y-auto">
       <div class="collectionHeader bg-slate-100">
-        <span class="text-sm font-semibold text-slate-600">Create Collection</span>
+        <span class="text-sm font-semibold text-slate-600">Update Collection</span>
       </div>
 
       <div class="bg-white pb-4">
@@ -41,8 +41,9 @@
           <img
             class="aspect-square w-full bg-white"
             id="previewImage"
-            th:src="${'/images/collection_image.png'}"
-            alt="Default Collection Image"
+            th:src="${collection?.imageUrl != null ? collection.imageUrl : '/images/collection_image.png'}"
+
+            alt="Collection Image"
           />
           <a href="#" id="triggerUpload" class="mt-2">
             <span class="text-sm font-semibold text-blue-500"
@@ -68,13 +69,12 @@
           ></div>
         </div>
 
-        <form
-          class="flex flex-col w-full items-center justify-center px-2 bg-white"
-          action="/create_collection"
-          method="POST"
-          enctype="multipart/form-data"
-        >
-        <input type="hidden" name="_csrf" th:value="${_csrf?.token}" />
+        <form 
+        class="flex flex-col w-full items-center justify-center px-2 bg-white"
+        th:action="@{/update-collection/{id}(id=${collection.id})}" 
+        method="post" 
+        enctype="multipart/form-data">
+          <input type="hidden" name="_csrf" th:value="${_csrf?.token}" />
           <!-- File Upload Field -->
 
           <input
@@ -94,6 +94,7 @@
                 type="text"
                 id="collectionTitle"
                 name="title"
+                th:value="${collection?.title}"
                 placeholder="Title"
               />
             </div>
@@ -107,6 +108,7 @@
                 type="text"
                 id="caption"
                 name="caption"
+                th:value="${collection?.caption}"
                 placeholder="Caption"
               />
             </div>
@@ -117,7 +119,7 @@
                 class="deleteButton bg-blue-600 hover:bg-blue-800"
                 type="submit"
               >
-                Create Collection
+                Update Collection
               </button>
             </div>
           </div>

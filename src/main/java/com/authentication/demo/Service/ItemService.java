@@ -132,38 +132,43 @@ public class ItemService {
 
   // UPDATE ITEM
   public Map<String, String> updateItem(Map<String, String> params, MultipartFile itemImage) {
-    // VALIDATE INPUT PARAMETERS
+    // Validate input parameters
     if (params.get("itemId") == null || params.get("itemId").isEmpty()) {
-      throw new ItemCreationException("Item ID is required");
+        throw new ItemCreationException("Item ID is required");
     }
 
-    // GET ITEM BY ID
-    Long itemId = Long.valueOf(params.get("itemId"));
+    // Get item by ID
+    Long itemId;
+    try {
+        itemId = Long.valueOf(params.get("itemId"));
+    } catch (NumberFormatException e) {
+        throw new ItemCreationException("Invalid Item ID format");
+    }
     ItemModel item = getItemById(itemId);
 
-    // UPDATE ITEM FIELDS
+    // Update item fields
     if (params.get("title") != null && !params.get("title").isEmpty()) {
-      item.setTitle(params.get("title"));
+        item.setTitle(params.get("title"));
     }
     if (params.get("description") != null && !params.get("description").isEmpty()) {
-      item.setDescription(params.get("description"));
+        item.setDescription(params.get("description"));
     }
     if (params.get("itemLink") != null && !params.get("itemLink").isEmpty()) {
-      item.setItemLink(params.get("itemLink"));
+        item.setItemLink(params.get("itemLink"));
     }
     if (params.get("caption") != null && !params.get("caption").isEmpty()) {
-      item.setCaption(params.get("caption"));
+        item.setCaption(params.get("caption"));
     }
     if (itemImage != null && !itemImage.isEmpty()) {
-      String imageUrl = saveItemImage(itemImage);
-      item.setImageUrl(imageUrl);
+        String imageUrl = saveItemImage(itemImage);
+        item.setImageUrl(imageUrl);
     }
 
-    // UPDATE ITEM IN DATABASE
+    // Save the updated item
     itemRepository.save(item);
 
-    // RETURN SUCCESS RESPONSE
+    // Return success response
     return Map.of("message", "Item updated successfully");
-  }
+}
 
 }

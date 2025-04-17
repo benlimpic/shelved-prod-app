@@ -28,7 +28,7 @@
             <a
               class="bg-blue-500 hover:bg-blue-700 text-white text-xs px-1 py-0.5 rounded"
               id="redirectUpdateItemDetails"
-              href="./update-item-details"
+              th:href="@{/update-item/{itemId}(itemId=${item?.id})}"
             >
               <span class="text-lg">&#9776;</span>
             </a>

@@ -150,6 +150,30 @@ public class ContentController {
         return handleAuthentication(model, "item");
     }
 
+    @GetMapping("/update-item/{id}")
+    public String updateItem(@PathVariable("id") Long itemId, Model model) {
+        ItemModel item = itemService.getItemById(itemId);
+        if (item == null) {
+            return "redirect:/profile"; // Handle missing item
+        }
+        model.addAttribute("item", item);
+        return handleAuthentication(model, "updateItem");
+    }
+
+    @GetMapping("/update-collection/{id}")
+    public String updateCollection(@PathVariable("id") Long collectionId, Model model) {
+        // Fetch the collection by ID
+        CollectionModel collection = collectionService.getCollectionById(collectionId);
+        if (collection == null) {
+            return "redirect:/profile"; // Redirect if the collection is not found
+        }
+
+        // Add the collection to the model
+        model.addAttribute("collection", collection);
+
+        return handleAuthentication(model, "updateCollection");
+    }
+
     private String handleAuthentication(Model model, String viewName) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getName() != null) {

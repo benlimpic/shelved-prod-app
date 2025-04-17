@@ -20,8 +20,8 @@
           <li class="flex items-center">
             <a
               class="bg-blue-500 hover:bg-blue-700 text-white text-xs px-1 py-0.5 rounded"
-              id="redirectUpdateUserDetails"
-              href="./update-user-details"
+              id="redirectUpdateCollection"
+              th:href="@{/update-collection/{id}(id=${collection.id})}"
             >
               <span class="text-lg">&#9776;</span>
             </a>

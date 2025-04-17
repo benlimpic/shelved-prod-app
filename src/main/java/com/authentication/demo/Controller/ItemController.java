@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.authentication.demo.Exceptions.ItemCreationException;
 import com.authentication.demo.Service.ItemService;
 
 @Controller
@@ -46,15 +47,24 @@ public class ItemController {
     }
 
     // UPDATE ITEM
-    @PostMapping("/update_item/{id}")
+    @PostMapping("/update-item/{id}")
     public String updateItem(
-            @PathVariable Long id,
+            @PathVariable("id") Long itemId,
             @RequestParam Map<String, String> params,
-            @RequestParam("itemImage") MultipartFile itemImage,
+            @RequestParam(required = false) MultipartFile itemImage,
             RedirectAttributes redirectAttributes) {
-        itemService.updateItem(params, itemImage);
-        redirectAttributes.addFlashAttribute("message", "Item updated successfully");
-        return "redirect:/profile";
+        try {
+            // Add the item ID to the params map
+            params.put("itemId", String.valueOf(itemId));
+    
+            // Call the service to update the item
+            itemService.updateItem(params, itemImage);
+            redirectAttributes.addFlashAttribute("message", "Item updated successfully");
+        } catch (ItemCreationException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/update-item/" + itemId;
+        }
+        return "redirect:/item/" + itemId;
     }
 
 }

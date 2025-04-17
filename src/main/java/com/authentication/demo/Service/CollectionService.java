@@ -21,12 +21,12 @@ public class CollectionService {
   private final CollectionRepository repository;
   private final UserService userService;
   private final ItemService itemService;
+
   public CollectionService(CollectionRepository repository, UserService userService, ItemService itemService) {
     this.userService = userService;
     this.repository = repository;
     this.itemService = itemService;
   }
-  
 
   // GET COLLECTION BY COLLECTION ID
   public CollectionModel getCollectionById(Long id) throws CollectionCreationException {
@@ -54,7 +54,7 @@ public class CollectionService {
       Long userId = userService.getCurrentUserId();
       Timestamp createdAt = new Timestamp(System.currentTimeMillis());
       Timestamp updatedAt = new Timestamp(System.currentTimeMillis());
-      
+
       CollectionModel newCollection = new CollectionModel();
       newCollection.setUser(userService.getUserById(userId));
       newCollection.setTitle(params.get("title"));
@@ -110,19 +110,21 @@ public class CollectionService {
     return repository.findAllByUserIdOrderByCreatedAtDesc(userId);
   }
 
-
   // GET ALL COLLECTIONS ORDERED BY CREATED AT DESC
   public List<CollectionModel> getAllCollectionsByDesc() {
     List<CollectionModel> collections = repository.findAllByOrderByCreatedAtDesc();
     if (collections == null || collections.isEmpty()) {
-        throw new CollectionCreationException("No collections found");
+      throw new CollectionCreationException("No collections found");
     }
     return collections;
-}
+  }
 
   // DELETE COLLECTION
   public Map<String, String> deleteCollection(Map<String, String> params) {
     try {
+      if (params.get("id") == null || params.get("id").isEmpty()) {
+        throw new CollectionCreationException("Collection ID is required");
+      }
       Long collectionId = Long.valueOf(params.get("id"));
       CollectionModel collection = getCollectionById(collectionId);
       if (collection == null) {
@@ -140,19 +142,31 @@ public class CollectionService {
   // UPDATE COLLECTION
   public Map<String, String> updateCollection(Map<String, String> params, MultipartFile collectionImage) {
     try {
+      // Validate input parameters
+      if (params.get("id") == null || params.get("id").isEmpty()) {
+        throw new CollectionCreationException("Collection ID is required");
+      }
+
       Long collectionId = Long.valueOf(params.get("id"));
-      String imageUrl = saveCollectionImage(collectionImage);
       CollectionModel collection = getCollectionById(collectionId);
       if (collection == null) {
         throw new CollectionCreationException("Collection not found");
       }
 
       // Update collection properties
-      collection.setTitle(params.get("title"));
-      collection.setCaption(params.get("caption"));
-      collection.setDescription(params.get("description"));
-      collection.setImageUrl(imageUrl);
+      if (params.get("title") != null && !params.get("title").isEmpty()) {
+        collection.setTitle(params.get("title"));
+      }
+      if (params.get("caption") != null && !params.get("caption").isEmpty()) {
+        collection.setCaption(params.get("caption"));
+      }
+      if (collectionImage != null && !collectionImage.isEmpty()) {
+        String imageUrl = saveCollectionImage(collectionImage);
+        collection.setImageUrl(imageUrl);
+      }
       collection.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+
+      // Save the updated collection
       repository.save(collection);
       return Map.of("message", "Collection updated successfully");
     } catch (NumberFormatException e) {
@@ -162,24 +176,25 @@ public class CollectionService {
     }
   }
 
-    public List<CollectionModel> getCollectionsWithPartitionedItems() {
-      List<CollectionModel> collections = repository.findAllByOrderByCreatedAtDesc();
+  // GET ALL COLLECTIONS WITH PARTITIONED ITEMS
+  public List<CollectionModel> getCollectionsWithPartitionedItems() {
+    List<CollectionModel> collections = repository.findAllByOrderByCreatedAtDesc();
 
-      for (CollectionModel collection : collections) {
-          // Fetch items for each collection
-          List<ItemModel> items = itemService.getAllItemsByCollectionId(collection.getId());
-          // Set the items in the collection
-          collection.setItems(items);
-      }
+    for (CollectionModel collection : collections) {
+      // Fetch items for each collection
+      List<ItemModel> items = itemService.getAllItemsByCollectionId(collection.getId());
+      // Set the items in the collection
+      collection.setItems(items);
+    }
 
-      return collections;
+    return collections;
   }
 
   // GET ALL COLLECTIONS
   public List<CollectionModel> getAllCollections() {
     List<CollectionModel> collections = repository.findAllByOrderByCreatedAtDesc();
     if (collections == null || collections.isEmpty()) {
-        throw new CollectionCreationException("No collections found");
+      throw new CollectionCreationException("No collections found");
     }
     return collections;
   }
