@@ -110,9 +110,8 @@ public class ItemService {
   }
 
   public List<ItemModel> getAllItemsByCollectionId(Long collectionId) {
-    System.out.println("Fetching items for collectionId: " + collectionId);
+
     List<ItemModel> items = itemRepository.findAllByCollectionIdOrderByCreatedAtDesc(collectionId);
-    System.out.println("Items fetched: " + (items != null ? items.size() : "null"));
     return items;
   }
 

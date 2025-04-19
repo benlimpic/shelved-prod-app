@@ -96,13 +96,10 @@ public class ContentController {
         UserModel userProfile = userService.getUserById(userId);
         if (userProfile == null) {
             return "redirect:/index"; // Handle missing user profile
-        }
-        else if (userProfile.getId().equals(userService.getCurrentUserId())) {
+        } else if (userProfile.getId().equals(userService.getCurrentUserId())) {
             return "redirect:/profile"; // Redirect to own profile
         }
 
-
-    
         // Fetch collections for the user
         List<CollectionModel> collections = collectionService.getCollectionsByUserId(userId);
         // Partition collections into rows of 3 for display
@@ -113,7 +110,7 @@ public class ContentController {
         model.addAttribute("collectionCount", collectionCount);
         model.addAttribute("partitionedCollections", partitionedCollections);
         model.addAttribute("userProfile", userProfile);
-    
+
         return handleAuthentication(model, "userProfile");
     }
 
