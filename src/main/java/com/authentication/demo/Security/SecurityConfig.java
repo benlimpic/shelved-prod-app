@@ -31,6 +31,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf
                 .ignoringRequestMatchers("/create_collection")
                 .ignoringRequestMatchers("/create_item")
+                .ignoringRequestMatchers("/follow/**", "/unfollow/**")
             )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/login", "/signup", "/css/**", "/js/**", "/images/**").permitAll()

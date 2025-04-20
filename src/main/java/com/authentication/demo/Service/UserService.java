@@ -65,6 +65,17 @@ public class UserService implements UserDetailsService {
         authorities);
   }
 
+  // GET CURRENT USER
+  public Optional<UserModel> getCurrentUser() {
+    SecurityContext securityContext = SecurityContextHolder.getContext();
+    if (securityContext.getAuthentication() == null || !securityContext.getAuthentication().isAuthenticated()) {
+      return Optional.empty();
+    }
+
+    String username = securityContext.getAuthentication().getName();
+    return repository.findByUsername(username);
+  }
+
   // GET CURRENT USER ID
   public Long getCurrentUserId() {
     SecurityContext securityContext = SecurityContextHolder.getContext();
@@ -78,21 +89,13 @@ public class UserService implements UserDetailsService {
         .orElseThrow(() -> new RuntimeException("User not found for username: " + username));
   }
 
+
   //Get User By ID
   public UserModel getUserById(Long id) {
     return repository.findById(id)
         .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
   }
 
-  // GET CURRENT USER
-  private Optional<UserModel> getCurrentUser() {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-      UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-      return repository.findByUsername(userDetails.getUsername());
-    }
-    return Optional.empty();
-  }
 
   // UPDATE USERNAME
   public String updateUsername(String newUsername) {
