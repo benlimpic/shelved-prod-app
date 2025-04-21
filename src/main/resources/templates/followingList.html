@@ -15,6 +15,9 @@
             </a>
           </li>
           <li class="flex items-center">
+            <h2>Following</h2>
+          </li>
+          <li class="flex items-center">
 
           </li>
         </ul>
@@ -22,6 +25,9 @@
     </header>
 
     <div class="overflow-auto w-full">
+      <div th:if="${followingList.size() == 0}" class="flex justify-center items-center w-full h-12 bg-slate-100 shadow-sm">
+        <span class="text-sm font-semibold">Not following users yet</span>
+      </div>
       <div th:each="follow : ${followingList}">
         <ul class="flex justify-start items-center w-full p-2 h-12 bg-slate-100 shadow-sm">
           <li class="pr-2">
