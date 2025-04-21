@@ -1,11 +1,12 @@
 package com.authentication.demo.Service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.authentication.demo.Model.FollowModel;
-import com.authentication.demo.Repository.FollowRepository;
 import com.authentication.demo.Model.UserModel;
-
+import com.authentication.demo.Repository.FollowRepository;
 @Service
 public class FollowService {
 
@@ -29,6 +30,24 @@ public class FollowService {
             .orElseThrow(() -> new IllegalArgumentException("Follow relationship not found"));
         followRepository.delete(follow);
     }
+
+    public List<UserModel> getFollowers(UserModel user) {
+        return followRepository.findByFollowed(user).stream()
+            .map(FollowModel::getFollower)
+            .toList();
+    }
+
+    public List<UserModel> getFollowing(UserModel user) {
+        return followRepository.findByFollower(user).stream()
+            .map(FollowModel::getFollowed)
+            .toList();
+    }
+
+    public int countByFollowed(UserModel user) {
+        return (int) followRepository.countByFollowed(user);
+    }
+
+    public int countByFollower(UserModel user) {
+        return (int) followRepository.countByFollower(user);
+    }
 }
-
-

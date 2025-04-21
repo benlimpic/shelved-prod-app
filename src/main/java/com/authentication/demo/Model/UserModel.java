@@ -20,6 +20,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 
 @Entity
@@ -68,6 +69,11 @@ public class UserModel implements UserDetails {
     
     @Column(name = "updated_at", nullable = false)
     private Timestamp updatedAt;
+
+    @Transient
+    private boolean isFollowing;
+
+
 
     public UserModel() {
     }
@@ -209,6 +215,14 @@ public class UserModel implements UserDetails {
     
     public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = new Timestamp(System.currentTimeMillis());
+    }
+
+    public boolean isFollowing() {
+        return isFollowing;
+    }
+
+    public void setFollowing(boolean isFollowing) {
+        this.isFollowing = isFollowing;
     }
 
     @Override

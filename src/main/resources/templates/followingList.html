@@ -1,0 +1,76 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Following</title>
+    <link rel="stylesheet" href="/css/output.css" />
+  </head>
+  <body>
+    <header>
+      <nav class="navbar">
+        <ul class="flex justify-between w-full">
+          <li class="flex items-center">
+            <a th:href="@{/profile/{id}(id=${userProfile.id})}">
+              <span>&#8592;</span>
+            </a>
+          </li>
+          <li class="flex items-center">
+
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="overflow-auto w-full">
+      <div th:each="follow : ${followingList}">
+        <ul class="flex justify-start items-center w-full p-2 h-12 bg-slate-100 shadow-sm">
+          <li class="pr-2">
+            <a th:if="${follow.id != null}" th:href="@{/profile/{id}(id=${follow.id})}">
+              <img
+                class="h-7 w-7 rounded-full bg-white"
+                th:src="${ follow.profilePictureUrl ?: '/images/default-profile-photo.png'}"
+                alt="Profile Picture"
+              />
+            </a>
+          </li>
+          <li class="ml-2">
+            <a th:href="@{/profile/{id}(id=${follow.id})}">
+              <span
+                class="text-sm font-semibold"
+                th:text="${follow.username}"
+              ></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <footer>
+      <div class="h-12 w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto flex items-center">
+        <div class="footerNav">
+          <ul class="flex justify-between items-center w-full">
+            <li>
+              <div class="h-4 w-4 flex items-center justify-center">
+                <a class="text-2xl font-bold" href="/index">
+                  &#8962;
+                </a>
+              </div>
+            </li>
+            <li>
+
+            </li>
+            <li>
+              <a href="/profile">
+                <img
+                  class="h-7 w-7 rounded-full bg-white"
+                  th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}"
+                  alt="Profile Picture"
+                />
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+  </body>
+</html>

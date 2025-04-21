@@ -47,14 +47,22 @@
               <h2 class="text-sm font-bold" th:text="${collectionCount ?: '0'}"></h2>
               <p class="text-xs">collections</p>
             </div>
+
             <!-- Followers -->
             <div class="flex flex-col justify-center items-center">
-              <h2 class="text-sm font-bold">3094</h2>
+              <a
+              th:href="@{/profile/{id}/followers(id=${userProfile?.id})}"
+              class="text-sm font-bold"
+              th:text="${followersCount ?: '0'}"></a>
               <p class="text-xs">followers</p>
             </div>
+            
             <!-- Following -->
             <div class="flex flex-col justify-center items-center">
-              <h2 class="text-sm font-bold">666</h2>
+              <a
+                th:href="@{/profile/{id}/following(id=${userProfile?.id})}"
+                class="text-sm font-bold"
+                th:text="${followingCount ?: '0'}"></a>
               <p class="text-xs">following</p>
             </div>
           </div>
@@ -102,18 +110,25 @@
         </div>
 
         <div>
-          <form th:action="@{/follow/{id}(id=${userProfile?.id})}" method="post">
-            <button type="submit">Follow</button>
-        </form>
+          <div th:if="${!userProfile?.isFollowing}">
+            <form
+              th:action="@{/follow/{id}(id=${userProfile?.id})}"
+              class="deleteButton bg-slate-400 hover:bg-slate-400 flex item-center justify-center col-span-2"
+              method="post">
+                <button type="submit">Follow</button>
+            </form>
+          </div>
+
+          <div th:if="${userProfile?.isFollowing}">
+              <form
+                th:action="@{/unfollow/{id}(id=${userProfile?.id})}"
+                class="deleteButton bg-blue-500 hover:bg-blue-700 flex item-center justify-center col-span-2"
+                method="post">
+                  <button type="submit">Following</button>
+              </form>
+          </div>
         </div>
-          
-          <a
-            class="deleteButton bg-slate-400 hover:bg-slate-400 flex item-center justify-center col-span-2"
-            id="messageButton"
-            href="#"
-            >Message</a
-          >
-        </div>
+
       </div>
       <div class="w-full min-h-fit overflow-y-auto">
         <div class="grid">

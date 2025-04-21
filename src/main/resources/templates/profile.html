@@ -45,17 +45,25 @@
             </div>
             <!-- Collections -->
             <div class="flex flex-col justify-center items-center">
-              <h2 class="text-sm font-bold" th:text="${collectionCount ?: '0'}"></h2>
+              <span class="text-sm font-bold" th:text="${collectionCount != null ? collectionCount : '0'}"></span>
               <p class="text-xs">collections</p>
             </div>
+
             <!-- Followers -->
             <div class="flex flex-col justify-center items-center">
-              <h2 class="text-sm font-bold">3094</h2>
+              <a
+              th:href="@{/profile/{id}/followers(id=${user?.id})}"
+              class="text-sm font-bold"
+              th:text="${followersCount ?: '0'}"></a>
               <p class="text-xs">followers</p>
             </div>
+            
             <!-- Following -->
             <div class="flex flex-col justify-center items-center">
-              <h2 class="text-sm font-bold">666</h2>
+              <a
+                th:href="@{/profile/{id}/following(id=${user?.id})}"
+                class="text-sm font-bold"
+                th:text="${followingCount ?: '0'}"></a>
               <p class="text-xs">following</p>
             </div>
           </div>

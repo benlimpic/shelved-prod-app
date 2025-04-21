@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.ArrayList;
 
 import org.apache.commons.collections4.ListUtils;
 import org.springframework.security.core.Authentication;
@@ -14,10 +15,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.authentication.demo.Model.CollectionModel;
+import com.authentication.demo.Model.FollowModel;
 import com.authentication.demo.Model.ItemModel;
 import com.authentication.demo.Model.UserModel;
 import com.authentication.demo.Repository.UserRepository;
 import com.authentication.demo.Service.CollectionService;
+import com.authentication.demo.Service.FollowService;
 import com.authentication.demo.Service.ItemService;
 import com.authentication.demo.Service.UserService;
 
@@ -28,13 +31,15 @@ public class ContentController {
     private final UserService userService;
     private final CollectionService collectionService;
     private final ItemService itemService;
+    private final FollowService followService;
 
     public ContentController(UserRepository repository, UserService userService, CollectionService collectionService,
-            ItemService itemService) {
+            ItemService itemService, FollowService followService) {
         this.repository = repository;
         this.userService = userService;
         this.collectionService = collectionService;
         this.itemService = itemService;
+        this.followService = followService;
     }
 
     @GetMapping("/login")
@@ -75,6 +80,13 @@ public class ContentController {
 
     @GetMapping("/profile")
     public String profile(Model model) {
+
+        // FETCH CURRENT USER
+        UserModel currentUser = userService.getCurrentUser().orElse(null);
+        if (currentUser == null) {
+            return "redirect:/login"; // Redirect to login if user is not authenticated
+        }
+
         // FETCH SORTED COLLECTIONS BY USER ID
         List<CollectionModel> collections = collectionService.getCollectionsForCurrentUser();
 
@@ -84,6 +96,17 @@ public class ContentController {
         // COUNT COLLECTIONS
         int collectionCount = collections.size();
 
+        int followingCount = 0;
+        int followersCount = 0;
+
+        if (currentUser != null) {
+            followingCount = followService.countByFollower(currentUser);
+            followersCount = followService.countByFollowed(currentUser);
+        }
+
+        model.addAttribute("followingCount", followingCount);
+        model.addAttribute("followersCount", followersCount);
+
         // ADD TO MODEL
         model.addAttribute("collectionCount", collectionCount);
         model.addAttribute("partitionedCollections", partitionedCollections);
@@ -92,12 +115,26 @@ public class ContentController {
 
     @GetMapping("/profile/{id}")
     public String userProfile(@PathVariable("id") Long userId, Model model) {
-        // Fetch the user profile
+
+        UserModel currentUser = userService.getCurrentUser().orElse(null);
         UserModel userProfile = userService.getUserById(userId);
+
+        // Fetch the user profile
         if (userProfile == null) {
-            return "redirect:/index"; // Handle missing user profile
+            return "redirect:/index"; // Redirect to index if user profile is not found
         } else if (userProfile.getId().equals(userService.getCurrentUserId())) {
             return "redirect:/profile"; // Redirect to own profile
+        }
+
+        int followingCount = followService.countByFollower(userProfile);
+        int followersCount = followService.countByFollowed(userProfile);
+    
+        model.addAttribute("followingCount", followingCount);
+        model.addAttribute("followersCount", followersCount);
+
+        if (currentUser != null && userProfile != null) {
+            boolean isFollowing = followService.isFollowing(currentUser, userProfile);
+            userProfile.setFollowing(isFollowing);
         }
 
         // Fetch collections for the user
@@ -113,6 +150,38 @@ public class ContentController {
 
         return handleAuthentication(model, "userProfile");
     }
+
+    @GetMapping("/profile/{id}/following")
+    public String getUserFollowing(@PathVariable Long id, Model model) {
+        UserModel userProfile = userService.getUserById(id);
+        if (userProfile == null) {
+            return "redirect:/index"; // Handle missing user profile
+        }
+    
+        List<UserModel> followingList = followService.getFollowing(userProfile);
+        model.addAttribute("followingList", followingList);
+
+        model.addAttribute("userProfile", userProfile);
+    
+        return handleAuthentication(model, "followingList");
+    }
+
+    @GetMapping("/profile/{id}/followers")
+    public String getUserFollowers(@PathVariable Long id, Model model) {
+        UserModel userProfile = userService.getUserById(id);
+        if (userProfile == null) {
+            return "redirect:/index"; // Handle missing user profile
+        }
+    
+        List<UserModel> followersList = followService.getFollowers(userProfile);
+        model.addAttribute("followersList", followersList);
+
+        model.addAttribute("userProfile", userProfile);
+    
+        return handleAuthentication(model, "followersList");
+    }
+    
+     
 
     @GetMapping("/update-profile")
     public String updateProfile(Model model) {
@@ -204,7 +273,7 @@ public class ContentController {
 
     private String handleAuthentication(Model model, String viewName) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getName() != null) {
+        if (authentication != null && authentication.getName() != null && !authentication.getName().isEmpty()) {
             Optional<UserModel> user = repository.findByUsername(authentication.getName());
             if (user.isPresent()) {
                 UserModel userModel = user.get();
