@@ -89,13 +89,11 @@ public class UserService implements UserDetailsService {
         .orElseThrow(() -> new RuntimeException("User not found for username: " + username));
   }
 
-
-  //Get User By ID
+  // Get User By ID
   public UserModel getUserById(Long id) {
     return repository.findById(id)
         .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
   }
-
 
   // UPDATE USERNAME
   public String updateUsername(String newUsername) {
@@ -224,27 +222,28 @@ public class UserService implements UserDetailsService {
   }
 
   // UPDATE USER PROFILE
-  public String updateProfile(Map<String, String> userDetails, MultipartFile profilePicture, RedirectAttributes redirectAttributes) {
+  public String updateProfile(Map<String, String> userDetails, MultipartFile profilePicture,
+      RedirectAttributes redirectAttributes) {
     try {
       // Fetch the current user
       Optional<UserModel> user = getCurrentUser();
       if (user.isPresent()) {
         UserModel userModel = user.get();
-  
+
         // Update profile picture if provided
         if (profilePicture != null && !profilePicture.isEmpty()) {
           String profilePictureUrl = saveProfilePicture(profilePicture);
           userModel.setProfilePictureUrl(profilePictureUrl);
         }
-  
+
         // Update other user details
         userModel.setLocation(userDetails.get("location"));
         userModel.setWebsite(userDetails.get("website"));
         userModel.setBiography(userDetails.get("biography"));
-  
+
         // Save the updated user back to the database
         repository.save(userModel);
-  
+
         return "User profile updated successfully";
       } else {
         return "User not found";
@@ -261,16 +260,16 @@ public class UserService implements UserDetailsService {
     if (!directory.exists()) {
       directory.mkdirs();
     }
-  
+
     // Generate a unique filename
     String filename = UUID.randomUUID().toString() + "-" + profilePicture.getOriginalFilename();
     File file = new File(directory, filename);
-  
+
     // Save the file
     try (FileOutputStream fos = new FileOutputStream(file)) {
       fos.write(profilePicture.getBytes());
     }
-  
+
     // Return the file URL
     return "/profile-pictures/" + filename;
   }
@@ -373,7 +372,7 @@ public class UserService implements UserDetailsService {
   public Map<Long, UserModel> getUsersByIds(List<Long> userIds) {
     return repository.findAllById(userIds).stream()
         .collect(Collectors.toMap(UserModel::getId, Function.identity()));
-}
+  }
 
   // GET ALL USERS
   public List<UserModel> getAllUsers() {
@@ -393,6 +392,10 @@ public class UserService implements UserDetailsService {
   public Map<Long, UserModel> getUsersMappedById() {
     List<UserModel> users = repository.findAll();
     return users.stream().collect(Collectors.toMap(UserModel::getId, Function.identity()));
-}
+  }
+
+  public List<UserModel> searchUsersByUsername(String query) {
+    return repository.findByUsernameContainingIgnoreCase(query);
+  }
 
 }

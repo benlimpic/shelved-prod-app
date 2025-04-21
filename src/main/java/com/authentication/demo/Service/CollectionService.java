@@ -29,12 +29,22 @@ public class CollectionService {
   }
 
   // GET COLLECTION BY COLLECTION ID
-  public CollectionModel getCollectionById(Long id) throws CollectionCreationException {
-    CollectionModel collection = repository.findById(id).orElse(null);
-    if (collection == null) {
-      throw new CollectionCreationException("Collection not found");
-    }
-    return collection;
+  public CollectionModel getCollectionById(Long id) {
+    return repository.findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("Collection not found with id: " + id));
+  }
+
+  // GET COLLECTIONS BY FOLLOWING WITH LOGGING
+  public List<CollectionModel> getCollectionsByFollowingWithLogging(Long userId) {
+    List<CollectionModel> collections = repository.findAllByFollowing(userId);
+    System.out.println("Collections by Following: " + collections.size());
+    return collections;
+  }
+
+  // GET ALL COLLECTIONS FOR CURRENT USER
+  public List<CollectionModel> getAllCollectionsForCurrentUser() {
+    Long userId = userService.getCurrentUserId();
+    return repository.findAllByUserIdOrderByCreatedAtDesc(userId);
   }
 
   // CREATE COLLECTION
@@ -119,31 +129,36 @@ public class CollectionService {
     return collections;
   }
 
+  // GET ALL COLLECTIONS BY FOLLOWING
+  public List<CollectionModel> getCollectionsByFollowing(Long userId) {
+    return repository.findAllByFollowing(userId);
+  }
+
   // DELETE COLLECTION
   public void deleteCollection(Long collectionId) {
     try {
-        // Validate and fetch the collection
-        CollectionModel collection = getCollectionById(collectionId);
-        if (collection == null) {
-            throw new CollectionCreationException("Collection not found");
-        }
+      // Validate and fetch the collection
+      CollectionModel collection = getCollectionById(collectionId);
+      if (collection == null) {
+        throw new CollectionCreationException("Collection not found");
+      }
 
-        // Fetch and delete items in the collection
-        List<ItemModel> items = itemService.getAllItemsByCollectionId(collectionId);
-        if (items != null && !items.isEmpty()) {
-            for (ItemModel item : items) {
-                itemService.deleteItem(item.getId());
-            }
+      // Fetch and delete items in the collection
+      List<ItemModel> items = itemService.getAllItemsByCollectionId(collectionId);
+      if (items != null && !items.isEmpty()) {
+        for (ItemModel item : items) {
+          itemService.deleteItem(item.getId());
         }
+      }
 
-        // Delete the collection itself
-        repository.delete(collection);
+      // Delete the collection itself
+      repository.delete(collection);
     } catch (NumberFormatException e) {
-        throw new CollectionCreationException("Invalid collection ID", e);
+      throw new CollectionCreationException("Invalid collection ID", e);
     } catch (RuntimeException e) {
-        throw new CollectionCreationException("Unexpected error occurred while deleting collection", e);
+      throw new CollectionCreationException("Unexpected error occurred while deleting collection", e);
     }
-}
+  }
 
   // UPDATE COLLECTION
   public Map<String, String> updateCollection(Map<String, String> params, MultipartFile collectionImage) {
@@ -182,8 +197,6 @@ public class CollectionService {
     }
   }
 
-
-
   // GET ALL COLLECTIONS WITH PARTITIONED ITEMS
   public List<CollectionModel> getCollectionsWithPartitionedItems() {
     List<CollectionModel> collections = repository.findAllByOrderByCreatedAtDesc();
@@ -214,6 +227,10 @@ public class CollectionService {
       throw new CollectionCreationException("No collections found for user ID: " + userId);
     }
     return collections;
-}
+  }
+
+  public List<CollectionModel> searchCollectionsByTitle(String query) {
+    return repository.findByTitleContainingIgnoreCase(query);
+  }
 
 }

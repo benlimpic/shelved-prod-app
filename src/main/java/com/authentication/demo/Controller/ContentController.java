@@ -55,18 +55,25 @@ public class ContentController {
     @GetMapping("/index")
     public String index(Model model) {
 
+        // Fetch current user
+        UserModel currentUser = userService.getCurrentUser().orElse(null);
+        if (currentUser == null) {
+            return "redirect:/login"; // Redirect to login if user is not authenticated
+        }
+
         // Fetch Users
         Map<Long, UserModel> users = userService.getUsersMappedById();
         model.addAttribute("users", users);
 
-        // Fetch all collections
-        List<CollectionModel> collections = collectionService.getAllCollections();
+        // Fetch collections by following
+        
+        List<CollectionModel> collections = collectionService.getCollectionsByFollowing(currentUser.getId());
 
         // Partition items for each collection
         Map<Long, List<List<ItemModel>>> partitionedItemsByCollection = new HashMap<>();
         for (CollectionModel collection : collections) {
             List<ItemModel> items = itemService.getAllItemsByCollectionId(collection.getId());
-            List<List<ItemModel>> partitionedItems = items != null ? ListUtils.partition(items, 3) : List.of();
+            List<List<ItemModel>> partitionedItems = items != null ? ListUtils.partition(items, 3) : new ArrayList<>();
             partitionedItemsByCollection.put(collection.getId(), partitionedItems);
         }
 
@@ -270,6 +277,29 @@ public class ContentController {
 
         return handleAuthentication(model, "updateCollection");
     }
+
+    @GetMapping("/popular")
+    public String popular(Model model) {
+        // Fetch current user
+        UserModel currentUser = userService.getCurrentUser().orElse(null);
+        if (currentUser == null) {
+            return "redirect:/login"; // Redirect to login if user is not authenticated
+        }
+
+        // Fetch collections for the user
+        List<CollectionModel> collections = collectionService.getAllCollectionsByDesc();
+        // Partition collections into rows of 3 for display
+        List<List<CollectionModel>> partitionedCollections = ListUtils.partition(collections, 3);
+
+
+        // Add data to the model
+        model.addAttribute("collections", collections);
+        model.addAttribute("partitionedCollections", partitionedCollections);
+
+        return handleAuthentication(model, "popular");
+    }
+
+
 
     private String handleAuthentication(Model model, String viewName) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
