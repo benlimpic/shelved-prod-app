@@ -18,13 +18,15 @@
             </a>
           </li>
           <li class="flex items-center">
-            <a
+            <div th:if="${isOwner != null && isOwner}">
+              <a
               class="bg-blue-500 hover:bg-blue-700 text-white text-xs px-1 py-0.5 rounded"
               id="redirectUpdateCollection"
               th:href="@{/update-collection/{id}(id=${collection.id})}"
-            >
-              <span class="text-lg">&#9776;</span>
-            </a>
+              >
+                <span class="text-lg">&#9776;</span>
+              </a>
+            </div>
           </li>
         </ul>
       </nav>
@@ -95,8 +97,8 @@
                 <a href="/profile">
                   <span
                     class="font-semibold"
-                    th:if="${user?.username != null}"
-                    th:text="${user?.username}"
+                    th:if="${userProfile?.username != null}"
+                    th:text="${userProfile?.username}"
                   ></span>
                 </a>
                 <span

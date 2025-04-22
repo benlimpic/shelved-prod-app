@@ -187,8 +187,8 @@
                     <a href="/profile">
                       <span
                         class="font-semibold"
-                        th:if="${user?.username != null}"
-                        th:text="${user?.username}"
+                        th:if="${users[collection.user.id]?.username != null}"
+                        th:text="${users[collection.user.id]?.username}"
                       ></span>
                     </a>
                     <span
