@@ -110,7 +110,7 @@
         </div>
 
         <div>
-          <div th:if="${!userProfile?.isFollowing}">
+          <div th:if="${!isFollowing}">
             <form
               th:action="@{/follow/{id}(id=${userProfile?.id})}"
               class="deleteButton bg-slate-400 hover:bg-slate-400 flex item-center justify-center col-span-2"
@@ -119,7 +119,7 @@
             </form>
           </div>
 
-          <div th:if="${userProfile?.isFollowing}">
+          <div th:if="${isFollowing}">
               <form
                 th:action="@{/unfollow/{id}(id=${userProfile?.id})}"
                 class="deleteButton bg-blue-500 hover:bg-blue-700 flex item-center justify-center col-span-2"

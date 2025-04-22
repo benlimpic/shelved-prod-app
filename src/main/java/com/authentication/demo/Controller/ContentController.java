@@ -117,8 +117,10 @@ public class ContentController {
     @GetMapping("/profile/{id}")
     public String userProfile(@PathVariable("id") Long userId, Model model) {
 
-        // UserModel currentUser = userService.getCurrentUser().orElse(null);
+        UserModel currentUser = userService.getCurrentUser().orElse(null);
         UserModel userProfile = userService.getUserById(userId);
+
+        Boolean isFollwing = followService.isFollowing(currentUser, userProfile);
 
         // Fetch the user profile
         if (userProfile == null) {
@@ -140,6 +142,7 @@ public class ContentController {
         // Count Collections
         int collectionCount = collections.size();
         // Add the attributes to model
+        model.addAttribute("isFollowing", isFollwing);
         model.addAttribute("collectionCount", collectionCount);
         model.addAttribute("partitionedCollections", partitionedCollections);
         model.addAttribute("userProfile", userProfile);

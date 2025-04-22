@@ -105,11 +105,6 @@
     </dependency>
 
     <!-- Commons Collections -->
-    <dependency>
-        <groupId>org.apache.commons</groupId>
-        <artifactId>commons-collections4</artifactId>
-        <version>4.4</version>
-    </dependency>
 
     <!-- Apple Java Extensions -->
     <dependency>
