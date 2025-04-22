@@ -102,11 +102,8 @@ public class ContentController {
         // COUNT COLLECTIONS
         int collectionCount = collections.size();
 
-        int followingCount = 0;
-        int followersCount = 0;
-
-        followingCount = followService.countByFollower(currentUser);
-        followersCount = followService.countByFollowed(currentUser);
+        int followingCount = followService.countByFollower(currentUser);
+        int followersCount = followService.countByFollowed(currentUser);
 
         model.addAttribute("followingCount", followingCount);
         model.addAttribute("followersCount", followersCount);
@@ -120,7 +117,7 @@ public class ContentController {
     @GetMapping("/profile/{id}")
     public String userProfile(@PathVariable("id") Long userId, Model model) {
 
-        UserModel currentUser = userService.getCurrentUser().orElse(null);
+        // UserModel currentUser = userService.getCurrentUser().orElse(null);
         UserModel userProfile = userService.getUserById(userId);
 
         // Fetch the user profile
@@ -135,11 +132,6 @@ public class ContentController {
     
         model.addAttribute("followingCount", followingCount);
         model.addAttribute("followersCount", followersCount);
-
-        if (currentUser != null && userProfile != null) {
-            boolean isFollowing = followService.isFollowing(currentUser, userProfile);
-            userProfile.setFollowing(isFollowing);
-        }
 
         // Fetch collections for the user
         List<CollectionModel> collections = collectionService.getCollectionsByUserId(userId);
