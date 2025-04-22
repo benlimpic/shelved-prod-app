@@ -1,10 +1,10 @@
 package com.authentication.demo.Controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.ArrayList;
 
 import org.apache.commons.collections4.ListUtils;
 import org.springframework.security.core.Authentication;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.authentication.demo.Model.CollectionModel;
-import com.authentication.demo.Model.FollowModel;
 import com.authentication.demo.Model.ItemModel;
 import com.authentication.demo.Model.UserModel;
 import com.authentication.demo.Repository.UserRepository;
@@ -106,10 +105,8 @@ public class ContentController {
         int followingCount = 0;
         int followersCount = 0;
 
-        if (currentUser != null) {
-            followingCount = followService.countByFollower(currentUser);
-            followersCount = followService.countByFollowed(currentUser);
-        }
+        followingCount = followService.countByFollower(currentUser);
+        followersCount = followService.countByFollowed(currentUser);
 
         model.addAttribute("followingCount", followingCount);
         model.addAttribute("followersCount", followersCount);
@@ -207,10 +204,22 @@ public class ContentController {
 
     @GetMapping("/collection/{id}")
     public String collection(@PathVariable("id") Long collectionId, Model model) {
+        // Fetch current user
+        UserModel currentUser = userService.getCurrentUser().orElse(null);
+        if (currentUser == null) {
+            return "redirect:/login"; // Redirect to login if user is not authenticated
+        }
+
         // Fetch the collection by ID
         CollectionModel collection = collectionService.getCollectionById(collectionId);
         if (collection == null) {
             return "redirect:/profile"; // Redirect if the collection is not found
+        }
+
+        // Fetch the collection owner by ID
+        UserModel userProfile = userService.getUserById(collection.getUser().getId());
+        if (userProfile == null) {
+            return "redirect:/profile"; // Redirect if the collection owner is not found
         }
 
         // Fetch items for the collection
@@ -219,7 +228,11 @@ public class ContentController {
         // Partition items into rows of 3 for display
         List<List<ItemModel>> partitionedItems = items != null ? ListUtils.partition(items, 3) : List.of();
 
+        boolean isOwner = collection.getUser().getId().equals(userService.getCurrentUserId());
+
         // Add data to the model
+        model.addAttribute("isOwner", isOwner);
+        model.addAttribute("userProfile", userProfile);
         model.addAttribute("collection", collection);
         model.addAttribute("partitionedItems", partitionedItems);
 

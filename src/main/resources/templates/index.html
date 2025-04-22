@@ -47,7 +47,7 @@
     </header>
 
     <div class="overflow-auto w-full bg-slate-200">
-      <div th:if="${collections == null}">
+      <div th:if="${collections.size == 0}">
         <div class="flex justify-center items-center w-full h-12 bg-slate-100 shadow-sm">
           <span class="text-sm font-semibold">No collections yet</span>
         </div>

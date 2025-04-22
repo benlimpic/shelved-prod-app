@@ -36,20 +36,20 @@
           <div class="flex justify-between items-center w-full">
             <ul class="flex justify-start items-center w-full">
               <li class="pr-2">
-                <a href="/profile">
+                <a th:href="@{/profile/{id}(id=${userProfile?.id})}">
                   <img
                     class="h-7 w-7 rounded-full bg-white"
-                    th:src="${user?.profilePictureUrl ?: '/images/default-profile-photo.png'}"
+                    th:src="${userProfile?.profilePictureUrl ?: '/images/default-profile-photo.png'}"
                     alt="Profile Picture"
                   />
                 </a>
               </li>
               <li>
-                <a href="/profile">
+                <a th:href="@{/profile/{id}(id=${userProfile?.id})}">
                   <span
                     class="text-sm font-semibold"
-                    th:if="${user?.username != null}"
-                    th:text="${user?.username}"
+                    th:if="${userProfile?.username != null}"
+                    th:text="${userProfile?.username}"
                   ></span>
                 </a>
               </li>
@@ -699,42 +699,66 @@
     </div>
 
     <footer>
-      <div
-        class="h-12 w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto flex items-center"
-      >
-        <div id="footerNavContent" class="footerNav">
-          <ul class="flex justify-between items-center w-full">
-            <li>
-              <div class="h-4 w-4 flex items-center justify-center">
-                <a class="text-2xl font-bold" href="/index">
-                  &#8962;
+      <div class="h-12 w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto flex items-center">
+
+        <div id="footerNavContent" class="footerNav w-full">
+          <div th:if="${isOwner != null && isOwner}" class="w-full">
+            <!-- Footer for owner -->
+            <ul class="flex justify-between items-center w-full" id="footerNavOwner">
+              <li>
+                <div class="h-4 w-4 flex items-center justify-center">
+                  <a class="text-2xl font-bold" href="/index">
+                    &#8962;
+                  </a>
+                </div>
+              </li>
+              <li>
+                <div class="h-4 w-4 flex items-center justify-center">
+                  <a class="text-2xl font-bold" href="/popular">
+                    &#10066;
+                  </a>
+                </div>
+              </li>
+              <li>
+                <div class="h-4 w-4 flex items-center justify-center">
+                  <a class="text-2xl font-bold" th:href="@{/create-item/{collectionId}(collectionId=${collection.id})}">
+                    &#43;
+                  </a>
+                </div>
+              </li>
+              <li>
+                <a href="/profile">
+                  <img
+                    class="h-7 w-7 rounded-full bg-white"
+                    th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}"
+                    alt="Profile Picture"
+                  />
                 </a>
-              </div>
-            </li>
-            <li>
-              <div class="h-4 w-4 flex items-center justify-center">
-                <a class="text-2xl font-bold" href="/popular">
-                  &#10066;
+              </li>
+            </ul>
+          </div>
+          
+          <div th:if="${isOwner != null && !isOwner}" class="w-full">
+            <!-- Footer for non-owner -->
+            <ul class="flex justify-between items-center w-full" id="footerNavUser">
+              <li>
+                <div class="h-4 w-4 flex items-center justify-center">
+                  <a class="text-2xl font-bold" href="/index">
+                    &#8962;
+                  </a>
+                </div>
+              </li>
+              <li>
+                <a href="/profile">
+                  <img
+                    class="h-7 w-7 rounded-full bg-white"
+                    th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}"
+                    alt="Profile Picture"
+                  />
                 </a>
-              </div>
-            </li>
-            <li>
-              <div class="h-4 w-4 flex items-center justify-center">
-                <a class="text-2xl font-bold" href="/create-collection">
-                  &#43;
-                </a>
-              </div>
-            </li>
-            <li>
-              <a href="/profile">
-                <img
-                  class="h-7 w-7 rounded-full bg-white"
-                  th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}"
-                  alt="Profile Picture"
-                />
-              </a>
-            </li>
-          </ul>
+              </li>
+            </ul>
+          </div>
         </div>
 
         <div id="commentActivity" class="commentNav hidden">

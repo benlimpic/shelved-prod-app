@@ -17,6 +17,12 @@
             </a>
           </li>
           <li class="flex items-center">
+            <h2
+            class="text-sm font-medium"
+            th:if="${user?.username != null}"
+            th:text="${user?.username}"></h2>
+          </li>
+          <li class="flex items-center">
             <a
               class="bg-blue-500 hover:bg-blue-700 text-white text-xs px-1 py-0.5 rounded"
               id="redirectUpdateUserDetails"
