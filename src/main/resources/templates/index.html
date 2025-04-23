@@ -206,7 +206,7 @@
                     class="truncate-multiline leading-[1rem]"
                     onclick="toggleTruncate(this)"
                   >
-                    <a href="/profile">
+                    <a th:href="@{/profile/{id}(id=${collection.user.id})}">
                       <span
                         class="font-semibold"
                         th:if="${users[collection.user.id]?.username != null}"
