@@ -43,15 +43,17 @@ public class CollectionModel {
   @Column(name = "updated_at", nullable = false)
   private Timestamp updatedAt;
 
-  @OneToMany(mappedBy = "collection", cascade = {jakarta.persistence.CascadeType.ALL}, orphanRemoval = true)
+  @OneToMany(mappedBy = "collection", cascade = { jakarta.persistence.CascadeType.ALL }, orphanRemoval = true)
   private List<ItemModel> items;
+
+  @OneToMany(mappedBy = "collection", cascade = { jakarta.persistence.CascadeType.ALL }, orphanRemoval = true)
+  private List<CommentModel> comments;
 
   @Transient
   private Integer likeCount;
 
   @Transient
   private Boolean isLiked;
-
 
   public CollectionModel() {
 
@@ -161,5 +163,23 @@ public class CollectionModel {
 
   public void setIsLiked(Boolean isLiked) {
     this.isLiked = isLiked;
+  }
+
+  public List<CommentModel> getComments() {
+    return comments;
+  }
+
+  public void setComments(List<CommentModel> comments) {
+    this.comments = comments;
+  }
+
+  public void addComment(CommentModel comment) {
+    this.comments.add(comment);
+    comment.setCollection(this);
+  }
+
+  public void removeComment(CommentModel comment) {
+    this.comments.remove(comment);
+    comment.setCollection(null);
   }
 }

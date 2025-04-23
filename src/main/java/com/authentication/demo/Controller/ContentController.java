@@ -258,6 +258,7 @@ public class ContentController {
         List<LikeModel> likes = likeRepository.findAllByCollectionId(collectionId);
         boolean isLiked = likes.stream().anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
         
+        collection.setComments(collectionService.getCommentsByCollectionIdDesc(collectionId));
         
         // Add data to the model
         model.addAttribute("likeCount", likeCount);

@@ -12,21 +12,27 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.authentication.demo.Exceptions.CollectionCreationException;
 import com.authentication.demo.Model.CollectionModel;
+import com.authentication.demo.Model.CommentModel;
 import com.authentication.demo.Model.ItemModel;
 import com.authentication.demo.Repository.CollectionRepository;
+import com.authentication.demo.Repository.CommentRepository;
 
 @Service
 public class CollectionService {
 
   private final CollectionRepository repository;
-  private final UserService userService;
   private final ItemService itemService;
+  private final CommentRepository commentRepository;
+  private final UserService userService;
 
-  public CollectionService(CollectionRepository repository, UserService userService, ItemService itemService) {
-    this.userService = userService;
+  public CollectionService(CollectionRepository repository, ItemService itemService, 
+                           CommentRepository commentRepository, UserService userService) {
     this.repository = repository;
     this.itemService = itemService;
+    this.commentRepository = commentRepository;
+    this.userService = userService;
   }
+  
 
   // GET COLLECTION BY COLLECTION ID
   public CollectionModel getCollectionById(Long id) {
@@ -231,6 +237,12 @@ public class CollectionService {
 
   public List<CollectionModel> searchCollectionsByTitle(String query) {
     return repository.findByTitleContainingIgnoreCase(query);
+  }
+
+  public List<CommentModel> getCommentsByCollectionIdDesc(Long collectionId) {
+    // Implement logic to fetch comments by collection ID in descending order
+    // Example:
+    return commentRepository.findByCollectionIdOrderByCreatedAtDesc(collectionId);
   }
 
 }
