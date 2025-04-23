@@ -279,6 +279,13 @@ public class ContentController {
 
     @GetMapping("/item/{id}")
     public String getItem(@PathVariable("id") Long itemId, Model model) {
+
+        // Fetch current user
+        UserModel currentUser = userService.getCurrentUser().orElse(null);
+        if (currentUser == null) {
+            return "redirect:/login"; // Redirect to login if user is not authenticated
+        }
+
         // Fetch the item by ID
         ItemModel item = itemService.getItemById(itemId);
         if (item == null) {
@@ -291,7 +298,21 @@ public class ContentController {
             return "redirect:/profile"; // Redirect if the collection is not found
         }
 
+        // Is the current user the owner of the collection?
+        boolean isOwner = item.getUserId().equals(userService.getCurrentUserId());
+
+        // Fetch the number of likes for the collection
+        Integer likeCount = likeService.countLikesItem(itemId);
+        
+        // Fetch the isLiked status for the collection
+
+        List<LikeModel> likes = likeRepository.findAllByItemId(itemId);
+        boolean isLiked = likes.stream().anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
+
         // Add the item and collection to the model
+        model.addAttribute("likeCount", likeCount);
+        model.addAttribute("isLiked", isLiked);
+        model.addAttribute("isOwner", isOwner);
         model.addAttribute("item", item);
         model.addAttribute("collection", collection);
 

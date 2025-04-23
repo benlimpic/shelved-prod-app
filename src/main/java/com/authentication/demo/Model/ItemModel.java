@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "items")
@@ -46,6 +47,12 @@ public class ItemModel {
 
   @Column(name = "updated_at", nullable = false)
   private Timestamp updatedAt;
+
+  @Transient
+  private Integer likeCount;
+
+  @Transient
+  private Boolean isLiked;
 
   public ItemModel() {
 
@@ -136,5 +143,21 @@ public class ItemModel {
 
   public void setUpdatedAt(Timestamp updatedAt) {
     this.updatedAt = new Timestamp(System.currentTimeMillis());
+  }
+
+  public Integer getLikeCount() {
+    return likeCount;
+  }
+
+  public void setLikeCount(Integer likeCount) {
+    this.likeCount = likeCount;
+  }
+
+  public Boolean getIsLiked() {
+    return isLiked;
+  }
+
+  public void setIsLiked(Boolean isLiked) {
+    this.isLiked = isLiked;
   }
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.authentication.demo.Model.LikeModel;
 import com.authentication.demo.Model.UserModel;
 import com.authentication.demo.Repository.CollectionRepository;
+import com.authentication.demo.Repository.ItemRepository;
 import com.authentication.demo.Repository.LikeRepository;
 import com.authentication.demo.Repository.UserRepository;
 
@@ -16,10 +17,12 @@ public class LikeService {
   private final LikeRepository likeRepository;
   private final CollectionRepository collectionRepository;
   private final UserRepository userRepository;
+  private final ItemRepository itemRepository;
 
 
   public LikeService(LikeRepository likeRepository, CollectionRepository collectionRepository,
-      UserRepository userRepository) {
+      UserRepository userRepository, ItemRepository itemRepository) {
+    this.itemRepository = itemRepository;
     this.likeRepository = likeRepository;
     this.collectionRepository = collectionRepository;
     this.userRepository = userRepository;
@@ -51,6 +54,34 @@ public class LikeService {
 
   public Integer countLikes(Long collectionId) {
     return likeRepository.countByCollectionId(collectionId);
+  }
+
+  public void toggleLikeItem(Long userId, Long itemId) {
+    UserModel currentUser = userRepository.findById(userId)
+        .orElseThrow(() -> new RuntimeException("User not found"));
+    List<LikeModel> existingLikes = likeRepository.findAllByItemId(itemId);
+    boolean alreadyLiked = existingLikes.stream()
+        .anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
+    if (alreadyLiked) {
+      // If the user already liked the collection, remove the like
+      LikeModel existingLike = existingLikes.stream()
+          .filter(like -> like.getUser().getId().equals(currentUser.getId()))
+          .findFirst()
+          .orElseThrow(() -> new RuntimeException("Like not found"));
+      likeRepository.delete(existingLike);
+    } else {
+      // If the user has not liked the collection, add a new like
+      LikeModel newLike = new LikeModel();
+      newLike.setUser(currentUser);
+      newLike.setItem(itemRepository.findById(itemId)
+          .orElseThrow(() -> new RuntimeException("Collection not found")));
+      likeRepository.save(newLike);
+    }
+
+  }
+
+  public Integer countLikesItem(Long itemId) {
+    return likeRepository.countByItemId(itemId);
   }
 
 }

@@ -21,17 +21,21 @@ public class LikeModel {
   private UserModel user;
 
   @ManyToOne
-  @JoinColumn(name = "collection_id", nullable = false)
+  @JoinColumn(name = "collection_id")
   private CollectionModel collection;
 
+  @ManyToOne
+  @JoinColumn(name = "item_id")
+  private ItemModel item;
 
   public LikeModel() {
   }
 
-  public LikeModel(Long id, UserModel user, CollectionModel collection) {
+  public LikeModel(Long id, UserModel user, CollectionModel collection, ItemModel item) {
     this.id = id;
     this.user = user;
     this.collection = collection;
+    this.item = item;
   }
 
   public Long getId() {
@@ -56,5 +60,13 @@ public class LikeModel {
 
   public void setCollection(CollectionModel collection) {
     this.collection = collection;
+  }
+
+  public ItemModel getItem() {
+    return item;
+  }
+
+  public void setItem(ItemModel item) {
+    this.item = item;
   }
 }
