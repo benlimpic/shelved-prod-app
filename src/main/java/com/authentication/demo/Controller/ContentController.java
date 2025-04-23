@@ -16,11 +16,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.authentication.demo.Model.CollectionModel;
 import com.authentication.demo.Model.ItemModel;
+import com.authentication.demo.Model.LikeModel;
 import com.authentication.demo.Model.UserModel;
+import com.authentication.demo.Repository.LikeRepository;
 import com.authentication.demo.Repository.UserRepository;
 import com.authentication.demo.Service.CollectionService;
 import com.authentication.demo.Service.FollowService;
 import com.authentication.demo.Service.ItemService;
+import com.authentication.demo.Service.LikeService;
 import com.authentication.demo.Service.UserService;
 
 @Controller
@@ -31,14 +34,19 @@ public class ContentController {
     private final CollectionService collectionService;
     private final ItemService itemService;
     private final FollowService followService;
+    private final LikeService likeService;
+    private final LikeRepository likeRepository;
 
     public ContentController(UserRepository repository, UserService userService, CollectionService collectionService,
-            ItemService itemService, FollowService followService) {
+            ItemService itemService, FollowService followService, LikeService likeService,
+            LikeRepository likeRepository) {
         this.repository = repository;
         this.userService = userService;
         this.collectionService = collectionService;
         this.itemService = itemService;
         this.followService = followService;
+        this.likeService = likeService;
+        this.likeRepository = likeRepository;
     }
 
     @GetMapping("/login")
@@ -65,12 +73,29 @@ public class ContentController {
         model.addAttribute("users", users);
 
         // Fetch collections by following
-        
+
         List<CollectionModel> collections = collectionService.getCollectionsByFollowing(currentUser.getId());
 
         // Partition items for each collection
         Map<Long, List<List<ItemModel>>> partitionedItemsByCollection = new HashMap<>();
         for (CollectionModel collection : collections) {
+            // Fetch the collection owner
+            UserModel collectionOwner = userService.getUserById(collection.getUser().getId());
+            if (collectionOwner != null) {
+                collection.setUser(collectionOwner); // Set the owner in the collection
+            }
+
+            // Fetch the number of likes for the collection
+            Integer likeCount = likeService.countLikes(collection.getId());
+            collection.setLikeCount(likeCount);
+
+            // Fetch the isLiked status for the collection
+            List<LikeModel> likes = likeRepository.findAllByCollectionId(collection.getId());
+            boolean isLiked = likes.stream().anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
+            collection.setIsLiked(isLiked);
+
+
+            // Fetch items for each collection
             List<ItemModel> items = itemService.getAllItemsByCollectionId(collection.getId());
             List<List<ItemModel>> partitionedItems = items != null ? ListUtils.partition(items, 3) : new ArrayList<>();
             partitionedItemsByCollection.put(collection.getId(), partitionedItems);
@@ -131,7 +156,7 @@ public class ContentController {
 
         int followingCount = followService.countByFollower(userProfile);
         int followersCount = followService.countByFollowed(userProfile);
-    
+
         model.addAttribute("followingCount", followingCount);
         model.addAttribute("followersCount", followersCount);
 
@@ -156,12 +181,12 @@ public class ContentController {
         if (userProfile == null) {
             return "redirect:/index"; // Handle missing user profile
         }
-    
+
         List<UserModel> followingList = followService.getFollowing(userProfile);
         model.addAttribute("followingList", followingList);
 
         model.addAttribute("userProfile", userProfile);
-    
+
         return handleAuthentication(model, "followingList");
     }
 
@@ -171,16 +196,14 @@ public class ContentController {
         if (userProfile == null) {
             return "redirect:/index"; // Handle missing user profile
         }
-    
+
         List<UserModel> followersList = followService.getFollowers(userProfile);
         model.addAttribute("followersList", followersList);
 
         model.addAttribute("userProfile", userProfile);
-    
+
         return handleAuthentication(model, "followersList");
     }
-    
-     
 
     @GetMapping("/update-profile")
     public String updateProfile(Model model) {
@@ -199,6 +222,7 @@ public class ContentController {
 
     @GetMapping("/collection/{id}")
     public String collection(@PathVariable("id") Long collectionId, Model model) {
+
         // Fetch current user
         UserModel currentUser = userService.getCurrentUser().orElse(null);
         if (currentUser == null) {
@@ -223,9 +247,21 @@ public class ContentController {
         // Partition items into rows of 3 for display
         List<List<ItemModel>> partitionedItems = items != null ? ListUtils.partition(items, 3) : List.of();
 
+        // Is the current user the owner of the collection?
         boolean isOwner = collection.getUser().getId().equals(userService.getCurrentUserId());
 
+        // Fetch the number of likes for the collection
+        Integer likeCount = likeService.countLikes(collectionId);
+        
+        // Fetch the isLiked status for the collection
+
+        List<LikeModel> likes = likeRepository.findAllByCollectionId(collectionId);
+        boolean isLiked = likes.stream().anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
+        
+        
         // Add data to the model
+        model.addAttribute("likeCount", likeCount);
+        model.addAttribute("isLiked", isLiked);
         model.addAttribute("isOwner", isOwner);
         model.addAttribute("userProfile", userProfile);
         model.addAttribute("collection", collection);
@@ -299,15 +335,12 @@ public class ContentController {
         // Partition collections into rows of 3 for display
         List<List<CollectionModel>> partitionedCollections = ListUtils.partition(collections, 3);
 
-
         // Add data to the model
         model.addAttribute("collections", collections);
         model.addAttribute("partitionedCollections", partitionedCollections);
 
         return handleAuthentication(model, "popular");
     }
-
-
 
     private String handleAuthentication(Model model, String viewName) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

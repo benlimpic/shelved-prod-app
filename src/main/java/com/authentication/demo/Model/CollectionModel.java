@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "collections")
@@ -44,6 +45,12 @@ public class CollectionModel {
 
   @OneToMany(mappedBy = "collection", cascade = {jakarta.persistence.CascadeType.ALL}, orphanRemoval = true)
   private List<ItemModel> items;
+
+  @Transient
+  private Integer likeCount;
+
+  @Transient
+  private Boolean isLiked;
 
 
   public CollectionModel() {
@@ -138,5 +145,21 @@ public class CollectionModel {
 
   public void setItems(List<ItemModel> items) {
     this.items = items;
+  }
+
+  public Integer getLikeCount() {
+    return likeCount;
+  }
+
+  public void setLikeCount(Integer likeCount) {
+    this.likeCount = likeCount;
+  }
+
+  public Boolean getIsLiked() {
+    return isLiked;
+  }
+
+  public void setIsLiked(Boolean isLiked) {
+    this.isLiked = isLiked;
   }
 }

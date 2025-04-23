@@ -147,12 +147,34 @@
               <div class="flex flex-row justify-between items-center">
                 <div class="flex flex-row w-full h-auto py-1 text-sm">
                   <ul class="flex flex-row justify-start items-center pr-2">
+
+
+
                     <li class="flex flex-row justify-start items-center pr-2">
-                      <a>
-                        <span class="pr-2 font-medium">&#9825;</span>
-                      </a>
-                      <p class="font-thin">0</p>
+                      <div class="flex justify-start items-center">
+                        <form th:if="${collection?.id != null}" th:action="@{/collections/{id}/like(id=${collection.id})}" method="post">
+    
+                          <input type="hidden" name="collectionId" th:value="${collection.id}" />
+                          <input type="hidden" name="userId" th:value="${user.id}" />
+                          <input type="hidden" name="liked" th:value="${collection.isLiked}" />
+    
+                          <button type="submit" class="likeButton" th:if="${collection.user.id != user.id}">
+                            <span class="pr-2 font-medium" th:if="${collection?.isLiked}">&#9829;</span>
+                            <span class="pr-2 font-medium" th:if="${collection?.isLiked != null && !collection.isLiked}">&#9825;</span>
+                          </button>
+                          <button type="button" class="likeButton" th:if="${collection.user.id == user.id}" disabled>
+                            <span class="pr-2 font-medium"  th:text="${collection?.likeCount ?: 0}">&#9829;</span>
+                          </button>
+    
+                        </form>
+                      </div>
+                      <div class="flex justify-start items-center">
+                        <p class="font-thin" th:text="${collection.likeCount ?: 0}"></p>
+                      </div>
                     </li>
+
+
+
                     <li class="flex flex-row justify-start items-center pr-2">
                       <a
                         class="commentToggle cursor-pointer"
