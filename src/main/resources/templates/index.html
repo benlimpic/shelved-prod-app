@@ -60,7 +60,7 @@
             class="collectionContainer"
           >
             <!-- COLLECTION NAVBAR -->
-            <div class="collectionContainerNavbar collectionNavbar shadow-sm">
+            <div th:id="'collection-' + ${collection.id}" class="collectionContainerNavbar collectionNavbar shadow-sm">
               <div class="flex justify-between items-center w-full">
                 <div>
                   <ul class="flex justify-start items-center w-full">
@@ -152,7 +152,7 @@
 
                     <li class="flex flex-row justify-start items-center pr-2">
                       <div class="flex justify-start items-center">
-                        <form th:if="${collection?.id != null}" th:action="@{/collections/{id}/like(id=${collection.id})}" method="post">
+                        <form th:if="${collection?.id != null}" th:action="@{/collections/{collectionId}/like-from-index (collectionId=${collection.id})}" method="post">
     
                           <input type="hidden" name="collectionId" th:value="${collection.id}" />
                           <input type="hidden" name="userId" th:value="${user.id}" />

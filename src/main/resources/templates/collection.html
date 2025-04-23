@@ -32,7 +32,7 @@
       </nav>
     </header>
 
-    <div class="profileContainerScroll overflow-y-auto bg-slate-200 h-full">
+    <div th:id="'collection-' + ${collection.id}" class="profileContainerScroll overflow-y-auto bg-slate-200 h-full">
       <div class="h-auto w-full border-b-2 bg-slate-100 shadow-sm">
         <div class="collectionNavbar shadow-sm">
           <div class="flex justify-between items-center w-full">
