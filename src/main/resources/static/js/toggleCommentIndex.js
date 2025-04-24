@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const commentForm = collectionContainer.querySelector('.commentForm');
     const commentFormAction = collectionContainer.querySelector('.commentFormAction');
     const commentFormInput = collectionContainer.querySelector('.commentFormCollectionIdInput');
+    
 
     collectionCommentButton.addEventListener('click', () => {
       if (collectionCommentBox.classList.contains('hidden')) {
@@ -36,8 +37,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // Pass the collectionContainer.id to the footer
         if (collectionContainer.id && footerComment) {
           footerComment.setAttribute('data-collection-id', collectionContainer.id);
-          commentFormAction.setAttribute('action', `/collections/${collectionContainer.id}/comments`);
-          commentFormInput.setAttribute('value', collectionContainer.id);
+          if (commentFormAction) {
+            commentFormAction.setAttribute('action', `/collections/${collectionContainer.id}/comments-from-index`);
+            console.log(`Collection ID: ${collectionContainer.id}`);
+          }
+          if (commentFormInput) {
+            commentFormInput.setAttribute('value', collectionContainer.id);
+            console.log(`Collection ID: ${collectionContainer.id}`);
+          }
         }
 
         // Exit Comment Box

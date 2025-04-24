@@ -15,8 +15,11 @@
       src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
     ></script>
     <script src="/js/toggleTruncate.js" defer></script>
+    <script src="/js/passTheCollectionId.js"></script>
     <script src="/js/toggleCommentIndex.js" defer></script>
     <script src="/js/toggleItemsIndex.js" defer></script>
+    <script type="module" src="/js/commentBoxOpenIndex.js"></script>
+
 
     <link rel="stylesheet" href="/css/output.css" />
   </head>
@@ -58,6 +61,7 @@
           <div
             th:each="collection : ${collections}"
             class="collectionContainer"
+            id="${collection.id}"
           >
             <!-- COLLECTION NAVBAR -->
             <div th:id="'collection-' + ${collection.id}" class="collectionContainerNavbar collectionNavbar shadow-sm">
@@ -179,13 +183,16 @@
                       <a
                         class="commentToggle cursor-pointer"
                         th:attr="data-collection-id=${collection.id}"
+                        onclick="passCollectionId(this.getAttribute('data-collection-id'))"
                         >
                         <!-- onclick trigger the comment activity box to have the collection id -->
-                        <span class="collectionCommentButton pr-2 font-medium">
+                        <span class="collectionCommentButton pr-2 font-medium"
+
+                        >
                           comment
                         </span>
                       </a>
-<span class="font-thin" th:text="${collection.commentCount}"></span>
+                        <span class="font-thin" th:text="${collection.commentCount ?: 0}"></span>
                     </li>
                   </ul>
                 </div>
@@ -391,7 +398,7 @@
         <div id="commentActivity" class="commentNav hidden">
           <div id="commentInputContainer" class="w-full">
             <form
-              action=""
+              th:action="@{/collections/{collectionId}/comment-from-index (collectionId=${collection?.id})}"
               method="post"
               class="commentForm flex flex-row w-full items-center justify-center px-2 bg-white"
             >

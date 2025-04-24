@@ -55,5 +55,35 @@ public class CommentService {
 
   }
 
+  public Map<String, String> createCommentFromIndex(Map<String, String> params) {
+    // Validate input parameters
+    if (params.get("content") == null || params.get("content").isEmpty()) {
+      throw new RuntimeException("Comment content is required");
+    }
+
+    if (params.get("collectionId") == null) {
+      throw new RuntimeException("Collection ID is required");
+    }
+
+    Long collectionId = Long.valueOf(params.get("collectionId"));
+    CollectionModel collection = collectionService.getCollectionById(collectionId);
+
+    // Create comment
+    CommentModel comment = new CommentModel();
+    Optional<UserModel> optionalUser = userService.getCurrentUser();
+    if (optionalUser.isPresent()) {
+      comment.setUser(optionalUser.get());
+    } else {
+      throw new RuntimeException("User not found");
+    }
+    comment.setCollection(collection);
+    comment.setContent(params.get("content"));
+    comment.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+    commentRepository.save(comment);
+
+    return Map.of("message", "Comment created successfully");
+
+  }
+
 
 }
