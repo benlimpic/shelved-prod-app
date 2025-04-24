@@ -245,4 +245,8 @@ public class CollectionService {
     return commentRepository.findByCollectionIdOrderByCreatedAtDesc(collectionId);
   }
 
+  public Integer countComments(Long collectionId) {
+    return commentRepository.countByCollectionId(collectionId);
+  }
+
 }

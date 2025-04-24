@@ -55,6 +55,9 @@ public class CollectionModel {
   @Transient
   private Boolean isLiked;
 
+  @Transient
+  private Integer commentCount;
+
   public CollectionModel() {
 
   }
@@ -181,5 +184,13 @@ public class CollectionModel {
   public void removeComment(CommentModel comment) {
     this.comments.remove(comment);
     comment.setCollection(null);
+  }
+
+  public Integer getCommentCount() {
+    return commentCount;
+  }
+
+  public void setCommentCount(Integer commentCount) {
+    this.commentCount = commentCount;
   }
 }

@@ -33,6 +33,8 @@ public class CommentModel {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Timestamp createdAt;
 
+
+
     // Getters and setters
     public Long getId() {
         return id;
@@ -73,4 +75,6 @@ public class CommentModel {
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
+
+
 }

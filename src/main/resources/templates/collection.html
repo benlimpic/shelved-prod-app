@@ -104,7 +104,7 @@
                   <a id="commentToggle" th:class="'commentToggle' + collection.id" th:value="${collection.id}">
                     <span class="pr-2 font-medium">comment</span>
                   </a>
-                  <p class="font-thin">0</p>
+                  <span class="font-thin" th:text="${collection.commentCount}"></span>
                 </li>
               </ul>
             </div>

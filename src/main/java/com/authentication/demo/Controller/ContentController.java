@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.authentication.demo.Model.CollectionModel;
+import com.authentication.demo.Model.CommentModel;
 import com.authentication.demo.Model.ItemModel;
 import com.authentication.demo.Model.LikeModel;
 import com.authentication.demo.Model.UserModel;
@@ -88,6 +89,15 @@ public class ContentController {
             // Fetch the number of likes for the collection
             Integer likeCount = likeService.countLikes(collection.getId());
             collection.setLikeCount(likeCount);
+
+            //NUMBER OF COMMENTS
+            Integer commentCount = collectionService.countComments(collection.getId());
+            collection.setCommentCount(commentCount);
+
+
+            // REVERSE ORDER COMMENTS
+            List<CommentModel> comments = collectionService.getCommentsByCollectionIdDesc(collection.getId());
+            collection.setComments(comments);
 
             // Fetch the isLiked status for the collection
             List<LikeModel> likes = likeRepository.findAllByCollectionId(collection.getId());
@@ -259,7 +269,12 @@ public class ContentController {
         boolean isLiked = likes.stream().anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
         
         collection.setComments(collectionService.getCommentsByCollectionIdDesc(collectionId));
+
+        Integer commentCount = collectionService.countComments(collectionId);
+        collection.setCommentCount(commentCount);
         
+
+
         // Add data to the model
         model.addAttribute("likeCount", likeCount);
         model.addAttribute("isLiked", isLiked);

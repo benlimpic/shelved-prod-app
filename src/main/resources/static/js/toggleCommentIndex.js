@@ -14,24 +14,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const footerNavContent = document.getElementById('footerNavContent');
     const footerComment = document.getElementById('commentActivity');
 
+    const commentForm = collectionContainer.querySelector('.commentForm');
+    const commentFormAction = collectionContainer.querySelector('.commentFormAction');
+    const commentFormInput = collectionContainer.querySelector('.commentFormCollectionIdInput');
 
     collectionCommentButton.addEventListener('click', () => {
-
-
       if (collectionCommentBox.classList.contains('hidden')) {
-
         // Collection Full Screen
         collectionContainer.classList.add('fullscreen');
 
-        //Disable Page Scrolling
+        // Disable Page Scrolling
         body.classList.add('overflow-hidden');
         html.classList.add('overflow-hidden');
 
         // Show Comment Box
         collectionCommentBox.classList.remove('hidden');
 
-        //Show Comment Box Exit
+        // Show Comment Box Exit
         collectionCommentBoxExit.classList.remove('hidden');
+
+        // Pass the collectionContainer.id to the footer
+        if (collectionContainer.id && footerComment) {
+          footerComment.setAttribute('data-collection-id', collectionContainer.id);
+          commentFormAction.setAttribute('action', `/collections/${collectionContainer.id}/comments`);
+          commentFormInput.setAttribute('value', collectionContainer.id);
+        }
 
         // Exit Comment Box
         collectionCommentBoxExit.addEventListener('click', () => {
@@ -50,8 +57,11 @@ document.addEventListener('DOMContentLoaded', () => {
           footerNavContent.classList.remove('hidden');
           footerComment.classList.add('hidden');
 
+          // Clear the footer content
+          footerComment.removeAttribute('data-collection-id');
+          footerComment.textContent = '';
         });
-        
+
         // Calculate Comment Box Height
         const footer = document.querySelector('footer');
         const footerTop = footer.getBoundingClientRect().top;
@@ -67,13 +77,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // Add padding to the bottom of the comment box
         collectionCommentBox.style.paddingBottom = '20px';
 
-        //Footer Content
+        // Footer Content
         footerNavContent.classList.add('hidden');
         footerComment.classList.remove('hidden');
-
-
       } else {
-
         // Reset Index Page
         collectionCommentBox.classList.add('hidden');
         collectionCommentBoxExit.classList.add('hidden');
@@ -82,9 +89,12 @@ document.addEventListener('DOMContentLoaded', () => {
         collectionContainer.classList.remove('fullscreen');
         footerNavContent.classList.remove('hidden');
         footerComment.classList.add('hidden');
+
+        // Clear the footer content
+        footerComment.removeAttribute('data-collection-id');
+        commentFormAction.setAttribute('action', '');
+        commentFormInput.setAttribute('value', '');
       }
     });
-
-
-  })
+  });
 });

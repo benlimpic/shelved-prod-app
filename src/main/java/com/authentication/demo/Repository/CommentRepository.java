@@ -11,4 +11,5 @@ import com.authentication.demo.Model.CommentModel;
 public interface CommentRepository extends JpaRepository<CommentModel, Long> {
 
   List<CommentModel> findByCollectionIdOrderByCreatedAtDesc(Long collectionId);
+  Integer countByCollectionId(Long collectionId);
 }
