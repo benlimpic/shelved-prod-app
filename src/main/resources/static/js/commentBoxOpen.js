@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Disable body scrolling
             document.body.style.overflow = 'hidden';
+            collectionCommentBoxExit.classList.remove('hidden');
           }
 
           collectionCommentBoxExit.addEventListener('click', () => {
