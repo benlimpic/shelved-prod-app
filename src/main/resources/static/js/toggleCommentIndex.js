@@ -5,16 +5,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Iterate over each collectionContainer
   collectionContainer.forEach((collectionContainer) => {
-    const collectionContainerNavbar = collectionContainer.querySelector('.collectionContainerNavbar');
-    const collectionImage = collectionContainer.querySelector('.collectionImage');
+
     const collectionCaption = collectionContainer.querySelector('.collectionCaption');
     const collectionCommentButton = collectionContainer.querySelector('.collectionCommentButton');
     const collectionCommentBoxExit = collectionContainer.querySelector('.collectionCommentBoxExit');
     const collectionCommentBox = collectionContainer.querySelector('.collectionCommentBox');
     const footerNavContent = document.getElementById('footerNavContent');
     const footerComment = document.getElementById('commentActivity');
-
-    const commentForm = collectionContainer.querySelector('.commentForm');
     const commentFormAction = collectionContainer.querySelector('.commentFormAction');
     const commentFormInput = collectionContainer.querySelector('.commentFormCollectionIdInput');
     
@@ -47,28 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         }
 
-        // Exit Comment Box
-        collectionCommentBoxExit.addEventListener('click', () => {
-          // Hide Comment Box
-          collectionCommentBox.classList.add('hidden');
-
-          // Show Comment Box Exit
-          collectionCommentBoxExit.classList.add('hidden');
-
-          // Enable Page Scrolling
-          body.classList.remove('overflow-hidden');
-          html.classList.remove('overflow-hidden');
-
-          // Collection Full Screen
-          collectionContainer.classList.remove('fullscreen');
-          footerNavContent.classList.remove('hidden');
-          footerComment.classList.add('hidden');
-
-          // Clear the footer content
-          footerComment.removeAttribute('data-collection-id');
-          footerComment.textContent = '';
-        });
-
         // Calculate Comment Box Height
         const footer = document.querySelector('footer');
         const footerTop = footer.getBoundingClientRect().top;
@@ -87,6 +62,26 @@ document.addEventListener('DOMContentLoaded', () => {
         // Footer Content
         footerNavContent.classList.add('hidden');
         footerComment.classList.remove('hidden');
+
+
+        
+        // Exit Comment Box
+        collectionCommentBoxExit.addEventListener('click', () => {
+        // Reset Index Page
+        collectionCommentBox.classList.add('hidden');
+        collectionCommentBoxExit.classList.add('hidden');
+        body.classList.remove('overflow-hidden');
+        html.classList.remove('overflow-hidden');
+        collectionContainer.classList.remove('fullscreen');
+        footerNavContent.classList.remove('hidden');
+        footerComment.classList.add('hidden');
+
+        // Clear the footer content
+        footerComment.removeAttribute('data-collection-id');
+        commentFormAction.setAttribute('action', '');
+        commentFormInput.setAttribute('value', '');
+        });
+
       } else {
         // Reset Index Page
         collectionCommentBox.classList.add('hidden');
