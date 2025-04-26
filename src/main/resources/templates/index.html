@@ -61,7 +61,7 @@
           <div
             th:each="collection : ${collections}"
             class="collectionContainer"
-            id="${collection.id}"
+            th:id="${collection.id}"
           >
             <!-- COLLECTION NAVBAR -->
             <div th:id="'collection-' + ${collection.id}" class="collectionContainerNavbar collectionNavbar shadow-sm">
@@ -201,7 +201,7 @@
 
                 <!-- COMMENT BOX EXIT -->
                 <div 
-                  th:id="'collectionCommentBoxExit-' + ${collection.id}"
+                  id="collectionCommentBoxExit" th:id="'collectionCommentBoxExit-' + ${collection.id}"
                   class="collectionCommentBoxExit hidden">
                   <a>
                     <span class="font-semibold">X</span>

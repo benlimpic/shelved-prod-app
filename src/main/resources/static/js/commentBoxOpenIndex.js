@@ -1,111 +1,143 @@
 document.addEventListener('DOMContentLoaded', function () {
+  if (window.location.hash) {
+    const hash = window.location.hash.replace('#comments-', ''); // Extract the collection ID
+    console.log(`Hash: ${hash}`);
 
-  
-  // Check if the URL contains a hash with the format #comments-{collectionId}
-  if (window.location.hash && window.location.hash.startsWith('#comments-')) {
-
-    const collectionContainer = document.querySelector('.collectionContainer');
     const body = document.body;
     const html = document.documentElement;
 
-    // Extract collection ID from URL
-    const hash = window.location.hash;
-    const collectionId = hash.split('-')[1];
+    const collectionContainer = document.getElementById(hash);
+    if (!collectionContainer) {
+      console.error(`No collectionContainer found with id: ${hash}`);
+      return; // Exit if the container is not found
+    }
 
-    const collectionCaption = document.querySelector('.collectionCaption');
-    const commentFormAction = document.querySelector('.commentFormAction');
-    const footerComment = document.getElementById('commentActivity');
-    const footerNavContent = document.getElementById('footerNavContent');
+    console.log(`Found collectionContainer with id: ${hash}`);
+    collectionContainer.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
 
-    
-    const collectionCommentButton = document.getElementById(`commentToggle-${collectionId}`);
-    const collectionCommentBox = document.getElementById(`collectionCommentBox-${collectionId}`);
-    const collectionCommentBoxExit = document.getElementById(`collectionCommentBoxExit-${collectionId}`);
-
-
-    //SHOW THE COMMENT BOX AND FOOTER COMMENT
-
-    // Collection Full Screen
+    // Make the collection fullscreen
     collectionContainer.classList.add('fullscreen');
-
     // Disable Page Scrolling
     body.classList.add('overflow-hidden');
     html.classList.add('overflow-hidden');
 
-    // Show Comment Box
-    collectionCommentBox.classList.remove('hidden');
-
-
-
-    //COMMENT BOX AND WINDOW RESIZING
-
-    // Calculate Comment Box Height
-    const footer = document.querySelector('footer');
-    const footerTop = footer.getBoundingClientRect().top;
-    const captionBottom = collectionCaption.getBoundingClientRect().bottom;
-    const availableHeight = Math.max(0, footerTop - captionBottom);
-
-    // Set the height of the comment box
-    collectionCommentBox.style.maxHeight = `${availableHeight}px`;
-
-    // Add Scrolling to Comment Box
-    collectionCommentBox.style.overflowY = 'auto';
-
-    // Add padding to the bottom of the comment box
-    collectionCommentBox.style.paddingBottom = '20px';
-
-    // Footer Content
-    footerNavContent.classList.add('hidden');
-    footerComment.classList.remove('hidden');
-    collectionCommentBoxExit.classList.remove('hidden');
-
-    
-
-    //PASS THE COLLECTION ID TO THE FOOTER COMMENT
-
-    const commentFormInput = document.querySelector(
-      '.commentFormCollectionIdInput'
+    // Unhide the comment navigation
+    const footerComment = document.getElementById('commentActivity');
+    const footerNavContent = document.getElementById('footerNavContent');
+    const collectionCommentBoxExit = collectionContainer.querySelector(
+      '.collectionCommentBoxExit'
     );
-    if (commentFormInput) {
-      commentFormInput.setAttribute('value', collectionId);
-    }
-
-    // Set the action attribute of the form to include the collection ID
-    const commentForm = document.querySelector('.commentForm');
-    if (commentForm) {
-      commentForm.setAttribute(
-        'action',
-        `/collections/${collectionId}/comments-from-index`
-      );
-    }
-
-
+    const collectionCommentBox = collectionContainer.querySelector(
+      '.collectionCommentBox'
+    );
     
 
+    if (footerComment && footerNavContent) {
+      footerNavContent.classList.add('hidden');
+      footerComment.classList.remove('hidden');
+      collectionCommentBox.classList.remove('hidden');
+      collectionCommentBoxExit.classList.remove('hidden');
+    } else {
+      console.error('Footer elements not found');
+    }
 
 
-    // COMMENT BOX EXIT
+    const commentForm = document.querySelector('.commentForm'); // Ensure this is the correct selector
+    if (!commentForm) {
+      console.error('CommentForm not found');
+      return;
+    }
 
+
+
+// THIS SHIT SUCKS AND IS BROKEN AS FUCK
+
+// ----------------------------------------------------------------------------
+
+    const commentFormAction = commentForm.querySelector('.commentFormAction');
+    const commentFormInput = commentForm.querySelector('.commentFormCollectionIdInput');
+    if (commentFormAction && commentFormInput) {
+      commentFormAction.setAttribute('action', `/collections/${hash}/comments-from-index`);
+      commentFormInput.setAttribute('value', hash);
+    } else {
+      console.error('Comment form action or input not found');
+    }
+
+// ----------------------------------------------------------------------------
+
+
+
+
+
+    // Exit Comment Box
     collectionCommentBoxExit.addEventListener('click', () => {
       // Reset Index Page
-      collectionCommentBox.classList.add('hidden');
-      collectionCommentBoxExit.classList.add('hidden');
+      if (collectionCommentBox) {
+        collectionCommentBox.classList.add('hidden');
+      }
+      if (collectionCommentBoxExit) {
+        collectionCommentBoxExit.classList.add('hidden');
+      }
       body.classList.remove('overflow-hidden');
       html.classList.remove('overflow-hidden');
-      collectionContainer.classList.remove('fullscreen');
-      footerNavContent.classList.remove('hidden');
-      footerComment.classList.add('hidden');
-  
-      // Clear the footer content
-      footerComment.removeAttribute('data-collection-id');
-      commentFormAction.setAttribute('action', '');
-      commentFormInput.setAttribute('value', '');
-      });
-
+      if (collectionContainer) {
+        collectionContainer.classList.remove('fullscreen');
+      }
+      if (footerNavContent) {
+        footerNavContent.classList.remove('hidden');
+      }
+      if (footerComment) {
+        footerComment.classList.add('hidden');
+        // Clear the footer content
+        footerComment.removeAttribute('data-collection-id');
+      }
+      if (commentFormAction) {
+        commentFormAction.setAttribute('action', '');
+      }
+      if (commentFormInput) {
+        commentFormInput.setAttribute('value', '');
+      }
+    });
   }
-  else {
-    
-    console.log("Comment box with id 'comments' not found.");
-  }
+});
 
+document.addEventListener('DOMContentLoaded', function () {
+  if (window.location.hash) {
+    const hash = window.location.hash.replace('#comments-', ''); // Extract the collection ID
+    console.log(`Extracted hash: ${hash}`);
+
+    const collectionContainer = document.getElementById(hash);
+    if (!collectionContainer) {
+      console.error(`No collectionContainer found with id: ${hash}`);
+      return; // Exit if the container is not found
+    }
+
+    console.log(`Found collectionContainer with id: ${hash}`);
+
+    const commentForm = document.querySelector('.commentForm'); // Ensure this is the correct selector
+    if (!commentForm) {
+      console.error('CommentForm not found');
+      return;
+    }
+
+    const commentFormAction = commentForm.querySelector('.commentFormAction');
+    const commentFormInput = commentForm.querySelector('.commentFormCollectionIdInput');
+
+    if (commentFormAction) {
+      commentFormAction.setAttribute('action', `/collections/${hash}/comments-from-index`);
+      console.log(`Set action to: ${commentFormAction.getAttribute('action')}`);
+    } else {
+      console.error('CommentFormAction not found');
+    }
+
+    if (commentFormInput) {
+      commentFormInput.setAttribute('value', hash);
+      console.log(`Set value to: ${commentFormInput.getAttribute('value')}`);
+    } else {
+      console.error('CommentFormCollectionIdInput not found');
+    }
+  }
 });
