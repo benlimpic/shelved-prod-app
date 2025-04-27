@@ -24,8 +24,12 @@ public class CommentModel {
     private UserModel user;
 
     @ManyToOne
-    @JoinColumn(name = "collection_id", nullable = false)
+    @JoinColumn(name = "collection_id")
     private CollectionModel collection;
+
+    @ManyToOne
+    @JoinColumn(name = "item_id")
+    private ItemModel item;
 
     @Column(name = "content", nullable = false)
     private String content;
@@ -58,6 +62,14 @@ public class CommentModel {
 
     public void setCollection(CollectionModel collection) {
         this.collection = collection;
+    }
+
+    public ItemModel getItem() {
+        return item;
+    }
+
+    public void setItem(ItemModel item) {
+        this.item = item;
     }
 
     public String getContent() {

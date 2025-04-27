@@ -1,6 +1,7 @@
 package com.authentication.demo.Model;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
@@ -48,11 +50,17 @@ public class ItemModel {
   @Column(name = "updated_at", nullable = false)
   private Timestamp updatedAt;
 
+  @OneToMany(mappedBy = "item", cascade = { jakarta.persistence.CascadeType.ALL }, orphanRemoval = true)
+  private List<CommentModel> comments;
+
   @Transient
   private Integer likeCount;
 
   @Transient
   private Boolean isLiked;
+
+  @Transient
+  private Integer commentCount;
 
   public ItemModel() {
 
@@ -159,5 +167,21 @@ public class ItemModel {
 
   public void setIsLiked(Boolean isLiked) {
     this.isLiked = isLiked;
+  }
+
+  public List<CommentModel> getComments() {
+    return comments;
+  }
+
+  public void setComments(List<CommentModel> comments) {
+    this.comments = comments;
+  }
+
+  public Integer getCommentCount() {
+    return commentCount;
+  }
+
+  public void setCommentCount(Integer commentCount) {
+    this.commentCount = commentCount;
   }
 }

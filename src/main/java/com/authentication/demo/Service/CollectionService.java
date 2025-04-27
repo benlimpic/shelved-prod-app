@@ -240,8 +240,6 @@ public class CollectionService {
   }
 
   public List<CommentModel> getCommentsByCollectionIdDesc(Long collectionId) {
-    // Implement logic to fetch comments by collection ID in descending order
-    // Example:
     return commentRepository.findByCollectionIdOrderByCreatedAtDesc(collectionId);
   }
 

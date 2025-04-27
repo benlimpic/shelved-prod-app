@@ -1,114 +1,94 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const collectionContainer = document.querySelectorAll('.collectionContainer');
-  const body = document.body;
-  const html = document.documentElement;
-  
-  // Iterate over each collectionContainer
-  collectionContainer.forEach((collectionContainer) => {
-    
-    const collectionId = collectionContainer.id;
-    const collectionContainerId = document.getElementById(collectionId);
-    const collectionCommentButtonId = document.getElementById('collectionCommentButton-' + collectionId);
-    const collectionCommentBoxId = document.getElementById('collectionCommentBox-' + collectionId);
-    const collectionCommentBoxExitId = document.getElementById('collectionCommentBoxExit-' + collectionId);
-    const collectionCaptionId = document.getElementById('collectionCaption-' + collectionId);
-    const footerNavContent = document.getElementById('footerNavContent');
-    const footerComment = document.getElementById('commentActivity');
-    const commentFormAction = collectionContainerId.querySelector('.commentFormAction');
-    const commentFormInput = collectionContainerId.querySelector('.commentFormCollectionIdInput');
-    
-
-    collectionCommentButtonId.addEventListener('click', () => {
-      
-      if (collectionCommentBoxId.classList.contains('hidden')) {
-        
-        // Disable Page Scrolling
-        body.classList.add('overflow-hidden');
-        html.classList.add('overflow-hidden');
-
-        // Collection Full Screen
-        collectionContainerId.classList.add('fullscreen');
-
-        // Show Comment Box
-        collectionCommentBoxId.classList.remove('hidden');
-
-        // Show Comment Box Exit
-        collectionCommentBoxExitId.classList.remove('hidden');
-
-        // Pass the collectionContainer.id to the footer
-        if (collectionContainer.id && footerComment) {
-          footerComment.setAttribute('data-collection-id', collectionContainer.id);
-          if (commentFormAction) {
-            commentFormAction.setAttribute('action', `/collections/${collectionContainer.id}/comments-from-index`);
-            console.log(`Collection ID: ${collectionContainer.id}`);
-          }
-          if (commentFormInput) {
-            commentFormInput.setAttribute('value', collectionContainer.id);
-            console.log(`Collection ID: ${collectionContainer.id}`);
-          }
-        }
-
-        // Calculate Comment Box Height
-        const footer = document.querySelector('footer');
-        const footerTop = footer.getBoundingClientRect().top;
-        const captionBottom = collectionCaptionId.getBoundingClientRect().bottom;
-        const availableHeight = Math.max(0, footerTop - captionBottom);
-
-        // Set the height of the comment box
-        collectionCommentBoxId.style.maxHeight = `${availableHeight}px`;
-
-        // Add Scrolling to Comment Box
-        collectionCommentBoxId.style.overflowY = 'auto';
-
-        // Add padding to the bottom of the comment box
-        collectionCommentBoxId.style.paddingBottom = '20px';
-
-        // Footer Content
-        footerNavContent.classList.add('hidden');
-        footerComment.classList.remove('hidden');
 
 
-        
-        // Exit Comment Box
-        collectionCommentBoxExitId.addEventListener('click', () => {
-        // Reset Index Page
-        collectionCommentBoxId.classList.add('hidden');
-        collectionCommentBoxExitId.classList.add('hidden');
-        body.classList.remove('overflow-hidden');
-        html.classList.remove('overflow-hidden');
-        collectionContainerId.classList.remove('fullscreen');
-        footerNavContent.classList.remove('hidden');
-        footerComment.classList.add('hidden');
+<!-- Reply Box -->
+<div id="replyDiv" class="w-full">
+  <!-- Reply Template -->
+  <div id="replyTemplate" class="py-1 w-full">
+    <div
+      class="w-full h-auto flex flex-row justify-start items-start text-sm py-2"
+    >
+      <!-- Profile Picture -->
+      <div id="imageBoxComment" class="flex-shrink-0 w-10">
+        <a href="/profile">
+          <img
+            class="h-7 w-7 rounded-full bg-white"
+            th:src="${user?.profilePictureUrl ?: '/images/default-profile-photo.png'}"
+            alt="Profile Picture"
+          />
+        </a>
+      </div>
 
-        // Clear the footer content
-        footerComment.removeAttribute('data-collection-id');
-        if (commentFormAction) {
-          commentFormAction.setAttribute('action', '');
-        }
-        if (commentFormInput) {
-          commentFormInput.setAttribute('value', '');
-        }
-        });
+      <!-- Content Box -->
+      <div
+        id="contentBoxComment"
+        class="flex flex-col items-start w-full"
+      >
+        <div
+          class="flex flex-row justify-start items-start w-full"
+        >
+          <!-- Profile Link -->
+          <div class="flex items-start">
+            <a href="/profile" class="flex items-start">
+              <span
+                style="font-size: 10px; line-height: 1"
+                class="font-semibold leading-[1]"
+                th:if="${user?.username != null}"
+                th:text="${user?.username}"
+              ></span>
+            </a>
+          </div>
 
-      } else {
-        // Reset Index Page
-        collectionCommentBoxId.classList.add('hidden');
-        collectionCommentBoxExitId.classList.add('hidden');
-        body.classList.remove('overflow-hidden');
-        html.classList.remove('overflow-hidden');
-        collectionContainerId.classList.remove('fullscreen');
-        footerNavContent.classList.remove('hidden');
-        footerComment.classList.add('hidden');
+          <!-- Time Container -->
+          <div class="pl-2 flex items-end">
+            <span
+              style="font-size: 8px; line-height: 1"
+              class="font-thin leading-[1]"
+            >
+              6h
+            </span>
+          </div>
+        </div>
 
-        // Clear the footer content
-        footerComment.removeAttribute('data-collection-id');
-        if (commentFormAction) {
-          commentFormAction.setAttribute('action', '');
-        }
-        if (commentFormInput) {
-          commentFormInput.setAttribute('value', '');
-        }
-      }
-    });
-  });
-});
+        <div class="flex flex-row justify-start items-start">
+          <span
+            class="font-light truncate-multiline"
+            onclick="toggleTruncate(this)"
+            th:text="'This is a placeholder text for the comment content. We are unsure exactly how long it needs to be to invoke the truncate feature.'"
+          ></span>
+        </div>
+
+        <div
+          style="font-size: 8px; line-height: 1"
+          class="w-full flex flex-col justify-center items-start pt-1 pr-2 text-slate-500 font-semibold"
+        >
+          <span class="leading-[1.2]">Reply</span>
+        </div>
+      </div>
+
+      <!-- Like Box -->
+      <div
+        id="likeBox"
+        class="flex flex-col justify-start items-center pr-2"
+      >
+        <div class="flex flex-row justify-center items-center">
+          <a>
+            <span
+              style="font-size: 10px; line-height: 1"
+              class="font-medium text-xs"
+            >
+              &#9825;
+            </span>
+          </a>
+        </div>
+        <div class="flex flex-row justify-center items-center">
+          <p
+            style="font-size: 10px; line-height: 1"
+            class="font-thin text-xs"
+          >
+            0
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

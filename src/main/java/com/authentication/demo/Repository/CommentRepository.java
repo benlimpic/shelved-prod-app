@@ -12,4 +12,7 @@ public interface CommentRepository extends JpaRepository<CommentModel, Long> {
 
   List<CommentModel> findByCollectionIdOrderByCreatedAtDesc(Long collectionId);
   Integer countByCollectionId(Long collectionId);
+
+  List<CommentModel> findByItemIdOrderByCreatedAtDesc(Long itemId);
+  Integer countByItemId(Long itemId);
 }

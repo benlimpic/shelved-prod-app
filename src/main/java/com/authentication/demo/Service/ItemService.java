@@ -12,23 +12,30 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.authentication.demo.Exceptions.ItemCreationException;
 import com.authentication.demo.Model.CollectionModel;
+import com.authentication.demo.Model.CommentModel;
 import com.authentication.demo.Model.ItemModel;
 import com.authentication.demo.Repository.CollectionRepository;
+import com.authentication.demo.Repository.CommentRepository;
 import com.authentication.demo.Repository.ItemRepository;
 
 @Service
 public class ItemService {
-
   private final ItemRepository itemRepository;
   private final UserService userService;
   private final CollectionRepository collectionRepository;
+  private final CommentRepository commentRepository;
 
-  public ItemService(ItemRepository itemRepository, UserService userService,
-      CollectionRepository collectionRepository) {
+  public ItemService(
+      ItemRepository itemRepository,
+      UserService userService,
+      CollectionRepository collectionRepository,
+      CommentRepository commentRepository) {
     this.itemRepository = itemRepository;
     this.userService = userService;
     this.collectionRepository = collectionRepository;
+    this.commentRepository = commentRepository;
   }
+
 
   // GET ITEM BY ITEM ID
   public ItemModel getItemById(Long id) {
@@ -178,6 +185,14 @@ public class ItemService {
       throw new ItemCreationException("Item not found");
     }
     return item.getCollection().getId();
+  }
+
+  public List<CommentModel> getCommentsByItemIdDesc(Long itemId) {
+    return commentRepository.findByItemIdOrderByCreatedAtDesc(itemId);
+  }
+
+  public Integer countComments(Long itemId) {
+    return commentRepository.countByItemId(itemId);
   }
 
 }

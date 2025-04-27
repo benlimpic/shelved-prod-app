@@ -56,4 +56,21 @@ public class CommentController {
         return "redirect:/index#comments-" + collectionId;
     }
 
+    @PostMapping("/items/{itemId}/comments")
+    public String postCommentItem(@PathVariable Long itemId, @RequestParam String content) {
+        if (content == null || content.isEmpty()) {
+            throw new RuntimeException("Comment content is required");
+        }
+
+        // Call the service to create the comment
+        Map<String, String> commentData = Map.of(
+            "collectionId", itemId.toString(),
+            "content", content
+        );
+        commentService.createComment(commentData);
+
+        // Redirect back to the collection page
+        return "redirect:/collection/" + itemId + "#comments";
+    }
+
 }

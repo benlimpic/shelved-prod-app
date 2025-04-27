@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.authentication.demo.Model.CollectionModel;
 import com.authentication.demo.Model.CommentModel;
+import com.authentication.demo.Model.ItemModel;
 import com.authentication.demo.Model.UserModel;
 import com.authentication.demo.Repository.CommentRepository;
 
@@ -17,12 +18,14 @@ public class CommentService {
   private final CommentRepository commentRepository;
   private final UserService userService;
   private final CollectionService collectionService;
+  private final ItemService itemService;
 
   public CommentService(CommentRepository commentRepository, UserService userService,
-      CollectionService collectionService) {
+      CollectionService collectionService, ItemService itemService) {
     this.commentRepository = commentRepository;
     this.userService = userService;
     this.collectionService = collectionService;
+    this.itemService = itemService;
   }
 
   public Map<String, String> createComment(Map<String, String> params) {
@@ -85,5 +88,34 @@ public class CommentService {
 
   }
 
+  public Map<String, String> createCommentItem(Map<String, String> params) {
+    // Validate input parameters
+    if (params.get("content") == null || params.get("content").isEmpty()) {
+      throw new RuntimeException("Comment content is required");
+    }
+
+    if (params.get("itemId") == null) {
+      throw new RuntimeException("Collection ID is required");
+    }
+
+    Long itemId = Long.valueOf(params.get("itemId"));
+    ItemModel item = itemService.getItemById(itemId);
+
+    // Create comment
+    CommentModel comment = new CommentModel();
+    Optional<UserModel> optionalUser = userService.getCurrentUser();
+    if (optionalUser.isPresent()) {
+      comment.setUser(optionalUser.get());
+    } else {
+      throw new RuntimeException("User not found");
+    }
+    comment.setItem(item);
+    comment.setContent(params.get("content"));
+    comment.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+    commentRepository.save(comment);
+
+    return Map.of("message", "Comment created successfully");
+
+  }
 
 }
