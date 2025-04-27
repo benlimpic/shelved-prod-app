@@ -104,12 +104,28 @@ public class ContentController {
             boolean isLiked = likes.stream().anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
             collection.setIsLiked(isLiked);
 
+            for (CommentModel comment : collection.getComments()) {
+                UserModel commentOwner = userService.getUserById(comment.getUser().getId());
+                if (commentOwner != null) {
+                    comment.setUser(commentOwner); // Set the owner in the comment
+                }
+                // Fetch the number of likes for the comment
+                Integer commentLikeCount = likeService.countLikesComment(comment.getId());
+                comment.setLikeCount(commentLikeCount);
+                // Fetch the isLiked status for the comment
+                List<LikeModel> commentLikes = likeRepository.findAllByCommentId(comment.getId());
+                boolean isCommentLiked = commentLikes.stream().anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
+                comment.setIsLiked(isCommentLiked);
+            }
+
 
             // Fetch items for each collection
             List<ItemModel> items = itemService.getAllItemsByCollectionId(collection.getId());
             List<List<ItemModel>> partitionedItems = items != null ? ListUtils.partition(items, 3) : new ArrayList<>();
             partitionedItemsByCollection.put(collection.getId(), partitionedItems);
         }
+
+        
 
         // Add data to the model
         model.addAttribute("collections", collections);
@@ -270,9 +286,22 @@ public class ContentController {
         
         collection.setComments(collectionService.getCommentsByCollectionIdDesc(collectionId));
 
+        for (CommentModel comment : collection.getComments()) {
+            UserModel commentOwner = userService.getUserById(comment.getUser().getId());
+            if (commentOwner != null) {
+                comment.setUser(commentOwner); // Set the owner in the comment
+            }
+            // Fetch the number of likes for the comment
+            Integer commentLikeCount = likeService.countLikesComment(comment.getId());
+            comment.setLikeCount(commentLikeCount);
+            // Fetch the isLiked status for the comment
+            List<LikeModel> commentLikes = likeRepository.findAllByCommentId(comment.getId());
+            boolean isCommentLiked = commentLikes.stream().anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
+            comment.setIsLiked(isCommentLiked);
+        }
+
         Integer commentCount = collectionService.countComments(collectionId);
         collection.setCommentCount(commentCount);
-        
 
 
         // Add data to the model
@@ -326,6 +355,20 @@ public class ContentController {
         boolean isLiked = likes.stream().anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
 
         item.setComments(itemService.getCommentsByItemIdDesc(itemId));
+
+        for (CommentModel comment : item.getComments()) {
+            UserModel commentOwner = userService.getUserById(comment.getUser().getId());
+            if (commentOwner != null) {
+                comment.setUser(commentOwner); // Set the owner in the comment
+            }
+            // Fetch the number of likes for the comment
+            Integer commentLikeCount = likeService.countLikesComment(comment.getId());
+            comment.setLikeCount(commentLikeCount);
+            // Fetch the isLiked status for the comment
+            List<LikeModel> commentLikes = likeRepository.findAllByCommentId(comment.getId());
+            boolean isCommentLiked = commentLikes.stream().anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
+            comment.setIsLiked(isCommentLiked);
+        }
 
         Integer commentCount = itemService.countComments(itemId);
         item.setCommentCount(commentCount);

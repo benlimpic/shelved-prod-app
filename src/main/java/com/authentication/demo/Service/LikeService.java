@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.authentication.demo.Model.LikeModel;
 import com.authentication.demo.Model.UserModel;
 import com.authentication.demo.Repository.CollectionRepository;
+import com.authentication.demo.Repository.CommentRepository;
 import com.authentication.demo.Repository.ItemRepository;
 import com.authentication.demo.Repository.LikeRepository;
 import com.authentication.demo.Repository.UserRepository;
@@ -18,14 +19,16 @@ public class LikeService {
   private final CollectionRepository collectionRepository;
   private final UserRepository userRepository;
   private final ItemRepository itemRepository;
+  private final CommentRepository commentRepository;
 
-
-  public LikeService(LikeRepository likeRepository, CollectionRepository collectionRepository,
-      UserRepository userRepository, ItemRepository itemRepository) {
-    this.itemRepository = itemRepository;
+  public LikeService(LikeRepository likeRepository, CollectionRepository collectionRepository, 
+                     UserRepository userRepository, ItemRepository itemRepository, 
+                     CommentRepository commentRepository) {
     this.likeRepository = likeRepository;
     this.collectionRepository = collectionRepository;
     this.userRepository = userRepository;
+    this.itemRepository = itemRepository;
+    this.commentRepository = commentRepository;
   }
 
   public void toggleLike(Long userId, Long collectionId) {
@@ -35,21 +38,20 @@ public class LikeService {
     boolean alreadyLiked = existingLikes.stream()
         .anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
     if (alreadyLiked) {
-      // If the user already liked the collection, remove the like
+      // If the user already liked the comment, remove the like
       LikeModel existingLike = existingLikes.stream()
           .filter(like -> like.getUser().getId().equals(currentUser.getId()))
           .findFirst()
           .orElseThrow(() -> new RuntimeException("Like not found"));
       likeRepository.delete(existingLike);
     } else {
-      // If the user has not liked the collection, add a new like
+      // If the user has not liked the comment, add a new like
       LikeModel newLike = new LikeModel();
       newLike.setUser(currentUser);
       newLike.setCollection(collectionRepository.findById(collectionId)
           .orElseThrow(() -> new RuntimeException("Collection not found")));
       likeRepository.save(newLike);
     }
-
   }
 
   public Integer countLikes(Long collectionId) {
@@ -63,14 +65,14 @@ public class LikeService {
     boolean alreadyLiked = existingLikes.stream()
         .anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
     if (alreadyLiked) {
-      // If the user already liked the collection, remove the like
+      // If the user already liked the comment, remove the like
       LikeModel existingLike = existingLikes.stream()
           .filter(like -> like.getUser().getId().equals(currentUser.getId()))
           .findFirst()
           .orElseThrow(() -> new RuntimeException("Like not found"));
       likeRepository.delete(existingLike);
     } else {
-      // If the user has not liked the collection, add a new like
+      // If the user has not liked the comment, add a new like
       LikeModel newLike = new LikeModel();
       newLike.setUser(currentUser);
       newLike.setItem(itemRepository.findById(itemId)
@@ -105,6 +107,35 @@ public class LikeService {
       newLike.setUser(currentUser);
       newLike.setCollection(collectionRepository.findById(collectionId)
           .orElseThrow(() -> new RuntimeException("Collection not found")));
+      likeRepository.save(newLike);
+    }
+
+  }
+
+  public Integer countLikesComment(Long commentId) {
+    return likeRepository.countByCommentId(commentId);
+  }
+
+
+  public void toggleLikeComment(Long userId, Long commentId) {
+    UserModel currentUser = userRepository.findById(userId)
+        .orElseThrow(() -> new RuntimeException("User not found"));
+    List<LikeModel> existingLikes = likeRepository.findAllByCommentId(commentId);
+    boolean alreadyLiked = existingLikes.stream()
+        .anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
+    if (alreadyLiked) {
+      // If the user already liked the collection, remove the like
+      LikeModel existingLike = existingLikes.stream()
+          .filter(like -> like.getUser().getId().equals(currentUser.getId()))
+          .findFirst()
+          .orElseThrow(() -> new RuntimeException("Like not found"));
+      likeRepository.delete(existingLike);
+    } else {
+      // If the user has not liked the collection, add a new like
+      LikeModel newLike = new LikeModel();
+      newLike.setUser(currentUser);
+      newLike.setComment(commentRepository.findById(commentId)
+          .orElseThrow(() -> new RuntimeException("Comment not found")));
       likeRepository.save(newLike);
     }
 

@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.authentication.demo.Model.LikeModel;
 
 public interface LikeRepository extends JpaRepository<LikeModel, Long> {
+  List<LikeModel> findAllByCommentId(Long commentId);
+
   List<LikeModel> findAllByCollectionId(Long collectionId);
 
   List<LikeModel> findAllByItemId(Long itemId);
@@ -16,5 +18,7 @@ public interface LikeRepository extends JpaRepository<LikeModel, Long> {
   int countByCollectionId(Long collectionId);
 
   int countByItemId(Long itemId);
+
+  int countByCommentId(Long commentId);
 
 }

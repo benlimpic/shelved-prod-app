@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
   // Check if the URL contains the #comments hash
-  if (window.location.hash && window.location.hash === "#comments") {
+  if (window.location.hash && window.location.hash.includes("#comments")) {
       const commentBox = document.getElementById("commentBox");
       const collectionCommentBoxExit = document.querySelector(".collectionCommentBoxExit");
       const itemGrid = document.getElementById('itemGrid');

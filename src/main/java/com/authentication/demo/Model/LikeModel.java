@@ -28,14 +28,19 @@ public class LikeModel {
   @JoinColumn(name = "item_id")
   private ItemModel item;
 
+  @ManyToOne
+  @JoinColumn(name = "comment_id")
+  private CommentModel comment;
+
   public LikeModel() {
   }
 
-  public LikeModel(Long id, UserModel user, CollectionModel collection, ItemModel item) {
+  public LikeModel(Long id, UserModel user, CollectionModel collection, ItemModel item, CommentModel comment) {
     this.id = id;
     this.user = user;
     this.collection = collection;
     this.item = item;
+    this.comment = comment;
   }
 
   public Long getId() {
@@ -68,5 +73,13 @@ public class LikeModel {
 
   public void setItem(ItemModel item) {
     this.item = item;
+  }
+
+  public CommentModel getComment() {
+    return comment;
+  }
+
+  public void setComment(CommentModel comment) {
+    this.comment = comment;
   }
 }

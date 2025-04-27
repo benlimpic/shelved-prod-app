@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "comments")
@@ -36,6 +37,12 @@ public class CommentModel {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Timestamp createdAt;
+
+    @Transient
+    private Integer likeCount;
+
+    @Transient
+    private Boolean isLiked;
 
 
 
@@ -86,6 +93,22 @@ public class CommentModel {
 
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Integer getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(Integer likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public Boolean getIsLiked() {
+        return isLiked;
+    }
+
+    public void setIsLiked(Boolean isLiked) {
+        this.isLiked = isLiked;
     }
 
 
