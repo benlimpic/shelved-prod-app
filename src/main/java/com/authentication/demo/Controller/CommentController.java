@@ -64,13 +64,13 @@ public class CommentController {
 
         // Call the service to create the comment
         Map<String, String> commentData = Map.of(
-            "collectionId", itemId.toString(),
+            "itemId", itemId.toString(),
             "content", content
         );
-        commentService.createComment(commentData);
+        commentService.createCommentItem(commentData);
 
-        // Redirect back to the collection page
-        return "redirect:/collection/" + itemId + "#comments";
+        // Redirect back to the item page
+        return "redirect:/item/" + itemId + "#comments";
     }
 
 }
