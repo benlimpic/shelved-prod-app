@@ -1,10 +1,22 @@
-<!DOCTYPE html>
+<!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
     <link rel="stylesheet" href="/css/output.css" />
-        <script th:src="@{/js/fadeAnimations.js}" defer></script>
+    <script src="/js/visitedPages.js" defer></script>
+    <script th:src="@{/js/fadeAnimations.js}" defer></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        let visitedUrls =
+          JSON.parse(sessionStorage.getItem('visitedUrls')) || [];
+        if (visitedUrls.length === 0) {
+          visitedUrls.push(window.location.href); // Add the current page as the first entry
+          sessionStorage.setItem('visitedUrls', JSON.stringify(visitedUrls));
+        }
+      });
+    </script>
   </head>
   <body>
     <header>
@@ -12,12 +24,16 @@
         <ul class="flex justify-center items-center w-full">
           <li>
             <a href="/index">
-              <img class="h-5" src="/images/Shelved_Logo_White.png" alt="Shelved Logo" />
+              <img
+                class="h-5"
+                src="/images/Shelved_Logo_White.png"
+                alt="Shelved Logo"
+              />
             </a>
           </li>
         </ul>
       </nav>
-    </header> 
+    </header>
     <div class="container bg-slate-200">
       <div class="card">
         <div class="headerBox">
@@ -26,12 +42,20 @@
 
         <div class="errorBox">
           <!-- SUCCESS MESSAGE -->
-          <div id="successMessageDiv" th:if="${param.logout != null}" class="success">
-              You have been logged out
+          <div
+            id="successMessageDiv"
+            th:if="${param.logout != null}"
+            class="success"
+          >
+            You have been logged out
           </div>
           <!-- ERROR MESSAGE -->
-          <div id="errorMessageDiv" th:if="${param.error != null}" class="failure">
-              Invalid username or password
+          <div
+            id="errorMessageDiv"
+            th:if="${param.error != null}"
+            class="failure"
+          >
+            Invalid username or password
           </div>
           <div th:if="${message}" class="success" th:text="${message}"></div>
           <div th:if="${error}" class="success" th:text="${error}"></div>
@@ -41,29 +65,28 @@
           <div class="labelInputBox">
             <label class="label" for="Username">Username:</label>
             <input
-            class="input"
-            label="Username"
-            type="text"
-            id="username"
-            name="username"
-            placeholder="Username"
-            required
+              class="input"
+              label="Username"
+              type="text"
+              id="username"
+              name="username"
+              placeholder="Username"
+              required
             />
           </div>
           <div class="labelInputBox">
             <label class="label" for="password">Password:</label>
             <input
-            class="input"
-            type="password"
-            id="password"
-            name="password"
-            placeholder="Password"
-            required
+              class="input"
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Password"
+              required
             />
           </div>
           <button class="button" type="submit">Login</button>
           <a class="link" href="/signup">Sign Up</a>
-
         </form>
       </div>
     </div>

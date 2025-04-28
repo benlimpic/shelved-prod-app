@@ -4,19 +4,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>User Profile</title>
     <link rel="stylesheet" href="/css/output.css" />
+    <script src="/js/visitedPages.js" defer></script>
     <script src="/js/fadeAnimations.js" defer></script>
     <script src="/js/toggleTruncate.js" defer></script>
     <script src="/js/toggleCommentBox.js" defer></script>
     <script src="/js/triggerComment.js" defer></script>
     <script src="/js/sinceCreated.js" defer></script>
     <script src="/js/commentBoxOpen.js"></script>
+    <script src="/js/backButton.js"></script>
   </head>
   <body id="scrollablePage">
     <header>
       <nav class="navbar">
         <ul class="flex justify-between w-full">
           <li class="flex items-center">
-            <a href="/profile">
+            <a id="backButton">
               <span>&#8592;</span>
             </a>
           </li>
@@ -168,7 +170,7 @@
             >
               <!-- Profile Picture -->
               <div id="imageBoxComment" class="flex-shrink-0 w-10">
-                <a href="/profile/{comment.user.id}">
+                <a th:href="@{/profile/{id}(id=${comment.user.id})}">
                   <img
                     class="h-7 w-7 rounded-full bg-white"
                     th:src="${comment.user?.profilePictureUrl ?: '/images/default-profile-photo.png'}"
@@ -185,7 +187,7 @@
                 <div class="flex flex-row justify-start items-start w-full">
                   <!-- Profile Link -->
                   <div class="flex items-start">
-                    <a href="/profile/{comment.user.id}" class="flex items-start">
+                    <a th:href="@{/profile/{id}(id=${comment.user.id})}" class="flex items-start">
                       <span
                         style="font-size: 10px; line-height: 1"
                         class="font-semibold leading-[1]"

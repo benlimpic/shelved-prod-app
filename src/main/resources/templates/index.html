@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Login</title>
+    <script src="/js/visitedPages.js" defer></script>
     <script
       type="module"
       src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
@@ -19,6 +20,20 @@
     <script src="/js/toggleCommentIndex.js" defer></script>
     <script src="/js/toggleItemsIndex.js" defer></script>
     <script type="module" src="/js/commentBoxOpenIndex.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Retrieve the visitedUrls stack from sessionStorage
+        let visitedUrls = JSON.parse(sessionStorage.getItem("visitedUrls")) || [];
+    
+        // Add the current URL to the stack
+        if (!visitedUrls.includes(window.location.href)) {
+          visitedUrls.push(window.location.href);
+        }
+    
+        // Save the updated stack back to sessionStorage
+        sessionStorage.setItem("visitedUrls", JSON.stringify(visitedUrls));
+      });
+    </script>
 
 
     <link rel="stylesheet" href="/css/output.css" />
@@ -264,7 +279,7 @@
                 >
                   <!-- Profile Picture -->
                   <div id="imageBoxComment" class="flex-shrink-0 w-10">
-                    <a href="/profile/{comment.user.id}">
+                    <a th:href="@{/profile/{id}(id=${comment.user.id})}">
                       <img
                         class="h-7 w-7 rounded-full bg-white"
                         th:src="${comment.user?.profilePictureUrl ?: '/images/default-profile-photo.png'}"
@@ -281,7 +296,7 @@
                     <div class="flex flex-row justify-start items-start w-full">
                       <!-- Profile Link -->
                       <div class="flex items-start">
-                        <a href="/profile/{comment.user.id}" class="flex items-start">
+                        <a th:href="@{/profile/{id}(id=${comment.user.id})}" class="flex items-start">
                           <span
                             style="font-size: 10px; line-height: 1"
                             class="font-semibold leading-[1]"

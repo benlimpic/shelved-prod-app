@@ -4,6 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>User Profile</title>
     <link rel="stylesheet" href="/css/output.css" />
+    <script src="/js/visitedPages.js" defer></script>
     <script src="/js/fadeAnimations.js" defer></script>
     <script src="/js/toggleTruncate.js" defer></script>
     <script src="/js/toggleOverlay.js" defer></script>
@@ -11,6 +12,7 @@
     <script src="/js/toggleCommentBoxItem.js" defer></script>
     <script src="/js/commentBoxOpen.js" defer></script>
     <script src="/js/toggleReply.js" defer></script>
+    <script src="/js/backButton.js"></script>
   </head>
 
   <body>
@@ -18,10 +20,7 @@
       <nav class="navbar">
         <ul class="flex justify-between w-full">
           <li class="flex items-center">
-            <a
-              id="redirectCollection"
-              th:href="@{/collection/{collectionId}(collectionId=${collection?.id})}"
-            >
+            <a id="backButton">
               <span>&#8592;</span>
             </a>
           </li>
@@ -226,7 +225,7 @@
             <div class="w-full flex flex-row justify-start items-start" >
               <!-- Profile Picture -->
               <div id="imageBoxComment" class="flex-shrink-0 w-10">
-                <a href="/profile/{comment.user.id}">
+                <a th:href="@{/profile/{userId}(userId=${comment.user?.id})}">
                   <img
                     class="h-7 w-7 rounded-full bg-white"
                     th:src="${comment.user?.profilePictureUrl ?: '/images/default-profile-photo.png'}"
@@ -243,7 +242,7 @@
                 <div class="flex flex-row justify-start items-start w-full">
                   <!-- Profile Link -->
                   <div class="flex items-start">
-                    <a href="/profile/{comment.user.id}" class="flex items-start">
+                    <a th:href="@{/profile/{userId}(userId=${comment.user?.id})}" class="flex items-start">
                       <span
                         style="font-size: 10px; line-height: 1"
                         class="font-semibold leading-[1]"

@@ -5,7 +5,9 @@
     <meta charset="UTF-8" />
 
     <title>Login</title>
+    <script src="/js/visitedPages.js" defer></script>
     <script th:src="@{/js/previewFile.js}" defer></script>
+    <script src="/js/backButton.js"></script>
 
     <link rel="stylesheet" href="/css/output.css" />
   </head>
@@ -14,9 +16,7 @@
       <nav class="navbar">
         <ul class="flex justify-between items-center w-full">
           <li class="flex items-center">
-            <a
-              id="redirectCollection"
-              th:href="@{/collection/{collectionId}(collectionId=${collectionId})}">
+            <a id="backButton">
               <span>&#8592;</span>
             </a>
           </li>
