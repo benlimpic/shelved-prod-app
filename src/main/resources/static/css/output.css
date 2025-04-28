@@ -875,6 +875,13 @@ body {
   /* Default stack order */
 }
 
+.\!collectionContainer {
+  position: relative !important;
+  /* Ensure z-index works */
+  z-index: 1 !important;
+  /* Default stack order */
+}
+
 .truncate {
   white-space: nowrap;
   overflow: hidden;

@@ -67,19 +67,23 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Exit Comment Box
         collectionCommentBoxExit.addEventListener('click', () => {
-        // Reset Index Page
-        collectionCommentBox.classList.add('hidden');
-        collectionCommentBoxExit.classList.add('hidden');
-        body.classList.remove('overflow-hidden');
-        html.classList.remove('overflow-hidden');
-        collectionContainer.classList.remove('fullscreen');
-        footerNavContent.classList.remove('hidden');
-        footerComment.classList.add('hidden');
-
-        // Clear the footer content
-        footerComment.removeAttribute('data-collection-id');
-        commentFormAction.setAttribute('action', '');
-        commentFormInput.setAttribute('value', '');
+          // Reset Index Page
+          collectionCommentBox.classList.add('hidden');
+          collectionCommentBoxExit.classList.add('hidden');
+          body.classList.remove('overflow-hidden');
+          html.classList.remove('overflow-hidden');
+          collectionContainer.classList.remove('fullscreen');
+          footerNavContent.classList.remove('hidden');
+          footerComment.classList.add('hidden');
+    
+          // Clear the footer content
+          footerComment.removeAttribute('data-collection-id');
+          if (commentFormAction) {
+            commentFormAction.setAttribute('action', '');
+          }
+          if (commentFormInput) {
+            commentFormInput.setAttribute('value', '');
+          }
         });
 
       } else {

@@ -9,11 +9,19 @@
 
     <script>
       document.addEventListener('DOMContentLoaded', function () {
-        let visitedUrls =
-          JSON.parse(sessionStorage.getItem('visitedUrls')) || [];
-        if (visitedUrls.length === 0) {
-          visitedUrls.push(window.location.href); // Add the current page as the first entry
-          sessionStorage.setItem('visitedUrls', JSON.stringify(visitedUrls));
+        if (typeof sessionStorage !== 'undefined') {
+          let visitedUrls = sessionStorage.getItem('visitedUrls');
+          try {
+            visitedUrls = visitedUrls ? JSON.parse(visitedUrls) : [];
+          } catch (e) {
+            visitedUrls = [];
+          }
+          if (visitedUrls.length === 0) {
+            visitedUrls.push(window.location.href); // Add the current page as the first entry
+            sessionStorage.setItem('visitedUrls', JSON.stringify(visitedUrls));
+          }
+        } else {
+          console.warn('SessionStorage is not supported in this browser.');
         }
       });
     </script>

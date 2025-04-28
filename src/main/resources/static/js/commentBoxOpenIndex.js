@@ -11,6 +11,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const collectionContainer = document.getElementById(hash);
 
     // SCROLL TO COLLECTION CONTAINER
+    if (!collectionContainer) {
+      console.error(`Element with ID ${hash} not found.`);
+      return;
+    }
     collectionContainer.scrollIntoView({
       behavior: 'smooth',
       block: 'start',
