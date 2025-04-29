@@ -4,27 +4,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
     <link rel="stylesheet" href="/css/output.css" />
-    <script src="/js/visitedPages.js" defer></script>
+
     <script th:src="@{/js/fadeAnimations.js}" defer></script>
+    <script src="/js/BackButton/visitedPages.js" defer></script>
 
     <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        if (typeof sessionStorage !== 'undefined') {
-          let visitedUrls = sessionStorage.getItem('visitedUrls');
-          try {
-            visitedUrls = visitedUrls ? JSON.parse(visitedUrls) : [];
-          } catch (e) {
-            visitedUrls = [];
-          }
-          if (visitedUrls.length === 0) {
-            visitedUrls.push(window.location.href); // Add the current page as the first entry
-            sessionStorage.setItem('visitedUrls', JSON.stringify(visitedUrls));
-          }
-        } else {
-          console.warn('SessionStorage is not supported in this browser.');
+      document.addEventListener("DOMContentLoaded", function () {
+        // Clear the visitedUrls array in sessionStorage when the login page loads
+        sessionStorage.setItem("visitedUrls", JSON.stringify([]));
+        console.log("Visited URLs reset to empty on login page load.");
+
+        const loginForm = document.querySelector('form[action="/login"]');
+
+        if (loginForm) {
+          loginForm.addEventListener("submit", function () {
+            // Clear the visitedUrls array again on form submission (optional redundancy)
+            sessionStorage.setItem("visitedUrls", JSON.stringify([]));
+            console.log("Visited URLs reset to empty on login form submission.");
+          });
         }
       });
     </script>
+    
   </head>
   <body>
     <header>

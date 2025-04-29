@@ -1,13 +1,14 @@
-
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>User Profile</title>
     <link rel="stylesheet" href="/css/output.css" />
-    <script src="/js/visitedPages.js" defer></script>
+
     <script src="/js/fadeAnimations.js" defer></script>
-    <script src="/js/backButton.js"></script>
+
+    <script src="/js/BackButton/visitedPages.js" defer></script>
+    
   </head>
   <body>
     <header>
@@ -20,17 +21,19 @@
           </li>
           <li class="flex items-center">
             <h2
-            class="text-sm font-medium"
-            th:if="${user?.username != null}"
-            th:text="${user?.username}"></h2>
+              class="text-sm font-medium"
+              th:if="${user?.username != null}"
+              th:text="${user?.username}"
+            ></h2>
           </li>
           <li class="flex items-center">
             <a
               class="bg-blue-500 hover:bg-blue-700 text-white text-xs px-1 py-0.5 rounded"
               id="redirectUpdateUserDetails"
               href="./update-user-details"
-              ><span class="text-lg">&#9776;</span></a
             >
+              <span class="text-lg">&#9776;</span>
+            </a>
           </li>
         </ul>
       </nav>
@@ -53,25 +56,30 @@
             </div>
             <!-- Collections -->
             <div class="flex flex-col justify-center items-center">
-              <span class="text-sm font-bold" th:text="${collectionCount != null ? collectionCount : '0'}"></span>
+              <span
+                class="text-sm font-bold"
+                th:text="${collectionCount != null ? collectionCount : '0'}"
+              ></span>
               <p class="text-xs">collections</p>
             </div>
 
             <!-- Followers -->
             <div class="flex flex-col justify-center items-center">
               <a
-              th:href="@{/profile/{id}/followers(id=${user?.id})}"
-              class="text-sm font-bold"
-              th:text="${followersCount ?: '0'}"></a>
+                th:href="@{/profile/{id}/followers(id=${user?.id})}"
+                class="text-sm font-bold"
+                th:text="${followersCount ?: '0'}"
+              ></a>
               <p class="text-xs">followers</p>
             </div>
-            
+
             <!-- Following -->
             <div class="flex flex-col justify-center items-center">
               <a
                 th:href="@{/profile/{id}/following(id=${user?.id})}"
                 class="text-sm font-bold"
-                th:text="${followingCount ?: '0'}"></a>
+                th:text="${followingCount ?: '0'}"
+              ></a>
               <p class="text-xs">following</p>
             </div>
           </div>
@@ -150,25 +158,33 @@
             class="deleteButton bg-slate-400 hover:bg-slate-400 flex item-center justify-center col-span-2"
             id="redirectUpdateUserDetails"
             href="/update-profile"
-            >Edit Profile</a
           >
+            Edit Profile
+          </a>
           <a
             class="deleteButton bg-slate-400 hover:bg-slate-400 flex item-center justify-center col-span-2"
             id="redirectShareProfile"
             href="#"
-            >Share Profile</a
           >
+            Share Profile
+          </a>
         </div>
       </div>
       <div class="w-full min-h-fit overflow-y-auto">
         <div class="grid">
-          <div th:each="row : ${partitionedCollections}" class="grid grid-cols-3 border-0">
-            <div th:each="collection : ${row}" class="flex flex-col items-center">
+          <div
+            th:each="row : ${partitionedCollections}"
+            class="grid grid-cols-3 border-0"
+          >
+            <div
+              th:each="collection : ${row}"
+              class="flex flex-col items-center"
+            >
               <a th:href="@{/collection/{id}(id=${collection.id})}">
                 <img
-                th:src="${#strings.defaultString(collection?.getImageUrl(), '/images/default-image.png')}"
-                alt="Collection Image"
-                class="aspect-square w-full h-auto object-cover"
+                  th:src="${#strings.defaultString(collection?.getImageUrl(), '/images/default-image.png')}"
+                  alt="Collection Image"
+                  class="aspect-square w-full h-auto object-cover"
                 />
               </a>
             </div>
@@ -177,21 +193,19 @@
       </div>
     </div>
     <footer>
-      <div class="h-12 w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto flex items-center">
+      <div
+        class="h-12 w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto flex items-center"
+      >
         <div class="footerNav">
           <ul class="flex justify-between items-center w-full">
             <li>
               <div class="h-4 w-4 flex items-center justify-center">
-                <a class="text-2xl font-bold" href="/index">
-                  &#8962;
-                </a>
+                <a class="text-2xl font-bold" href="/index">&#8962;</a>
               </div>
             </li>
             <li>
               <div class="h-4 w-4 flex items-center justify-center">
-                <a class="text-2xl font-bold" href="/popular">
-                  &#10066;
-                </a>
+                <a class="text-2xl font-bold" href="/popular">&#10066;</a>
               </div>
             </li>
             <li>

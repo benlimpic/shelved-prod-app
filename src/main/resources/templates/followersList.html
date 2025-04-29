@@ -4,8 +4,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>User Following</title>
     <link rel="stylesheet" href="/css/output.css" />
-    <script src="/js/visitedPages.js" defer></script>
-    <script src="/js/backButton.js"></script>
+
+    <script src="/js/BackButton/visitedPages.js" defer></script>
+    
   </head>
   <body>
     <header>
@@ -19,21 +20,27 @@
           <li class="flex items-center">
             <h2>Followers</h2>
           </li>
-          <li class="flex items-center">
-
-          </li>
+          <li class="flex items-center"></li>
         </ul>
       </nav>
     </header>
 
     <div class="overflow-auto w-full">
-      <div th:if="${followersList.size() == 0}" class="flex justify-center items-center w-full h-12 bg-slate-100 shadow-sm">
+      <div
+        th:if="${followersList.size() == 0}"
+        class="flex justify-center items-center w-full h-12 bg-slate-100 shadow-sm"
+      >
         <span class="text-sm font-semibold">No followers yet</span>
       </div>
       <div th:each="follow : ${followersList}">
-        <ul class="flex justify-start items-center w-full p-2 h-12 bg-slate-100 shadow-sm">
+        <ul
+          class="flex justify-start items-center w-full p-2 h-12 bg-slate-100 shadow-sm"
+        >
           <li class="pr-2">
-            <a th:if="${follow.id != null}" th:href="@{/profile/{id}(id=${follow.id})}">
+            <a
+              th:if="${follow.id != null}"
+              th:href="@{/profile/{id}(id=${follow.id})}"
+            >
               <img
                 class="h-7 w-7 rounded-full bg-white"
                 th:src="${ follow.profilePictureUrl ?: '/images/default-profile-photo.png'}"
@@ -53,21 +60,19 @@
       </div>
     </div>
     <footer>
-      <div class="h-12 w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto flex items-center">
+      <div
+        class="h-12 w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto flex items-center"
+      >
         <div class="footerNav">
           <ul class="flex justify-between items-center w-full">
             <li>
               <div class="h-4 w-4 flex items-center justify-center">
-                <a class="text-2xl font-bold" href="/index">
-                  &#8962;
-                </a>
+                <a class="text-2xl font-bold" href="/index">&#8962;</a>
               </div>
             </li>
             <li>
               <div class="h-4 w-4 flex items-center justify-center">
-                <a class="text-2xl font-bold" href="/popular">
-                  &#10066;
-                </a>
+                <a class="text-2xl font-bold" href="/popular">&#10066;</a>
               </div>
             </li>
             <li>
@@ -90,6 +95,5 @@
         </div>
       </div>
     </footer>
-
   </body>
 </html>

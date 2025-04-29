@@ -868,17 +868,17 @@ body {
   background-color: rgba(255, 255, 255) !important;
 }
 
-.collectionContainer {
-  position: relative;
-  /* Ensure z-index works */
-  z-index: 1;
-  /* Default stack order */
-}
-
 .\!collectionContainer {
   position: relative !important;
   /* Ensure z-index works */
   z-index: 1 !important;
+  /* Default stack order */
+}
+
+.collectionContainer {
+  position: relative;
+  /* Ensure z-index works */
+  z-index: 1;
   /* Default stack order */
 }
 

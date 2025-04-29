@@ -1,13 +1,14 @@
-
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>User Profile</title>
     <link rel="stylesheet" href="/css/output.css" />
-    <script src="/js/visitedPages.js" defer></script>
+
     <script src="/js/fadeAnimations.js" defer></script>
-    <script src="/js/backButton.js"></script>
+
+    <script src="/js/BackButton/visitedPages.js" defer></script>
+    
   </head>
   <body>
     <header>
@@ -21,9 +22,7 @@
           <li class="flex items-center">
             <h2>Search</h2>
           </li>
-          <li class="flex items-center">
-
-          </li>
+          <li class="flex items-center"></li>
         </ul>
       </nav>
     </header>
@@ -39,31 +38,31 @@
           <!-- Search results will be dynamically inserted here -->
         </div>
       </div>
-      
 
       <script>
-        const searchInput = document.getElementById("search-input");
-        const searchResults = document.getElementById("search-results");
-      
-        searchInput.addEventListener("input", () => {
+        const searchInput = document.getElementById('search-input');
+        const searchResults = document.getElementById('search-results');
+
+        searchInput.addEventListener('input', () => {
           const query = searchInput.value;
-      
+
           if (query.length > 0) {
             fetch(`/search-live?query=${encodeURIComponent(query)}`)
               .then((response) => response.json())
               .then((data) => {
                 // Clear previous results
-                searchResults.innerHTML = "";
-      
+                searchResults.innerHTML = '';
+
                 // Display users
                 if (data.users.length > 0) {
-                  const userSection = document.createElement("div");
-                  userSection.innerHTML = "<h3 class='font-bold text-lg mb-2'>Users</h3>";
-                  const userList = document.createElement("ul");
-                  userList.className = "space-y-2";
-      
+                  const userSection = document.createElement('div');
+                  userSection.innerHTML =
+                    "<h3 class='font-bold text-lg mb-2'>Users</h3>";
+                  const userList = document.createElement('ul');
+                  userList.className = 'space-y-2';
+
                   data.users.forEach((user) => {
-                    const userItem = document.createElement("li");
+                    const userItem = document.createElement('li');
                     userItem.innerHTML = `
                       <ul class="flex justify-start items-center w-full p-2 h-12 bg-slate-100 shadow-sm">
                         <li class="pr-2">
@@ -84,20 +83,21 @@
                     `;
                     userList.appendChild(userItem);
                   });
-      
+
                   userSection.appendChild(userList);
                   searchResults.appendChild(userSection);
                 }
-      
+
                 // Display collections
                 if (data.collections.length > 0) {
-                  const collectionSection = document.createElement("div");
-                  collectionSection.innerHTML = "<h3 class='font-bold text-lg mt-4 mb-2'>Collections</h3>";
-                  const collectionList = document.createElement("ul");
-                  collectionList.className = "space-y-2";
-      
+                  const collectionSection = document.createElement('div');
+                  collectionSection.innerHTML =
+                    "<h3 class='font-bold text-lg mt-4 mb-2'>Collections</h3>";
+                  const collectionList = document.createElement('ul');
+                  collectionList.className = 'space-y-2';
+
                   data.collections.forEach((collection) => {
-                    const collectionItem = document.createElement("li");
+                    const collectionItem = document.createElement('li');
                     collectionItem.innerHTML = `
                       <ul class="flex justify-start items-center w-full p-2 h-12 bg-slate-100 shadow-sm">
                         <li class="pr-2">
@@ -118,28 +118,33 @@
                     `;
                     collectionList.appendChild(collectionItem);
                   });
-      
+
                   collectionSection.appendChild(collectionList);
                   searchResults.appendChild(collectionSection);
                 }
               });
           } else {
-            searchResults.innerHTML = ""; // Clear results if input is empty
+            searchResults.innerHTML = ''; // Clear results if input is empty
           }
         });
       </script>
 
-
       <div class="h-auto w-full bg-slate-100">
         <div class="w-full min-h-fit overflow-y-auto">
           <div class="grid">
-            <div th:each="row : ${partitionedCollections}" class="grid grid-cols-3 border-0">
-              <div th:each="collection : ${row}" class="flex flex-col items-center">
+            <div
+              th:each="row : ${partitionedCollections}"
+              class="grid grid-cols-3 border-0"
+            >
+              <div
+                th:each="collection : ${row}"
+                class="flex flex-col items-center"
+              >
                 <a th:href="@{/collection/{id}(id=${collection.id})}">
                   <img
-                  th:src="${#strings.defaultString(collection?.getImageUrl(), '/images/default-image.png')}"
-                  alt="Collection Image"
-                  class="aspect-square w-full h-auto object-cover"
+                    th:src="${#strings.defaultString(collection?.getImageUrl(), '/images/default-image.png')}"
+                    alt="Collection Image"
+                    class="aspect-square w-full h-auto object-cover"
                   />
                 </a>
               </div>
@@ -149,21 +154,19 @@
       </div>
     </div>
     <footer>
-      <div class="h-12 w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto flex items-center">
+      <div
+        class="h-12 w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto flex items-center"
+      >
         <div class="footerNav">
           <ul class="flex justify-between items-center w-full">
             <li>
               <div class="h-4 w-4 flex items-center justify-center">
-                <a class="text-2xl font-bold" href="/index">
-                  &#8962;
-                </a>
+                <a class="text-2xl font-bold" href="/index">&#8962;</a>
               </div>
             </li>
             <li>
               <div class="h-4 w-4 flex items-center justify-center">
-                <a class="text-2xl font-bold" href="/popular">
-                  &#10066;
-                </a>
+                <a class="text-2xl font-bold" href="/popular">&#10066;</a>
               </div>
             </li>
             <li>
