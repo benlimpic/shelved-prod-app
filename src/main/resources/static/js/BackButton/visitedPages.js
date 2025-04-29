@@ -14,17 +14,20 @@ document.addEventListener('DOMContentLoaded', function () {
   // ADDING CURRENT PAGE TO VISITED PAGES
   const currentUrl = window.location.href;
 
-  
+  // Check if the navigation was triggered by the back button
+  const isNavigatingBack = sessionStorage.getItem('isNavigatingBack') === 'true';
 
-  // Check if the current page is already in the visited pages
-  if (!visitedPages.some((page) => page.url === currentUrl && page.isBack)) {
+  if (!isNavigatingBack && !visitedPages.some((page) => page.url === currentUrl && page.isBack)) {
     const pageItem = new PageItem(currentUrl, window.scrollY, false); // isBack = false for normal navigation
     visitedPages.push(pageItem);
     sessionStorage.setItem('visitedUrls', JSON.stringify(visitedPages));
     console.log('Added new page to visited pages:', pageItem);
   } else {
-    console.log('Page is marked as isBack and will not be added:', currentUrl);
+    console.log('Page is marked as isBack or navigation was triggered by back button and will not be added:', currentUrl);
   }
+
+  // Clear the isNavigatingBack flag after processing
+  sessionStorage.setItem('isNavigatingBack', 'false');
 
   // BACK BUTTON FUNCTIONALITY
   const backButton = document.getElementById('backButton');
@@ -41,6 +44,9 @@ document.addEventListener('DOMContentLoaded', function () {
         // Mark the last visited page as isBack = true
         lastVisitedPage.isBack = true;
         console.log('Navigating back to:', lastVisitedPage);
+
+        // Set the isNavigatingBack flag
+        sessionStorage.setItem('isNavigatingBack', 'true');
 
         // Navigate to the last visited page
         window.location.href = lastVisitedPage.url;
