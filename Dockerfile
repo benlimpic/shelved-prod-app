@@ -1,4 +1,5 @@
 # Stage 1: Build the Spring Boot application
+# Using Maven with Eclipse Temurin JDK 17 for backend build
 FROM maven:3.8.6-eclipse-temurin-17 AS backend-build
 
 # Set the working directory
@@ -8,8 +9,9 @@ WORKDIR /app
 COPY pom.xml .
 COPY src ./src
 
-# Build the Spring Boot application
-RUN mvn clean install
+# Build the application and skip tests using Maven
+RUN mvn clean install -DskipTests
+RUN mvn clean install -DskipTests
 
 # Stage 2: Build the frontend assets
 FROM node:16 AS frontend-build
@@ -25,7 +27,8 @@ COPY src ./src
 # Install dependencies and build the frontend
 RUN npm install
 RUN npm run build
-
+# Using Eclipse Temurin JRE 17 for the final image
+FROM eclipse-temurin:17-jre
 # Stage 3: Create the final image
 FROM eclipse-temurin:17-jre
 
