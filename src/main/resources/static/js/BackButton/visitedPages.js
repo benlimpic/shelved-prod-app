@@ -126,6 +126,22 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // LIKE BUTTON FUNCTIONALITY
+  const likeButton = document.querySelector('.likeButton');
+  if (likeButton) {
+      likeButton.addEventListener('click', function (event) {
+          const indexPage = {
+              url: '/index',
+              scrollY: window.scrollY, // Save the current scroll position
+              isBack: true,
+          };
+          visitedPages.push(indexPage);
+          sessionStorage.setItem('visitedUrls', JSON.stringify(visitedPages));
+          console.log('Saved scrollY before redirect:', window.scrollY);
+      });
+  }
+
+
   console.log('Visited Pages:', visitedPages);
 
   // SAVE SCROLL POSITION ON BEFOREUNLOAD

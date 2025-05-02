@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.authentication.demo.Model.CollectionModel;
 import com.authentication.demo.Model.CommentModel;
@@ -37,7 +38,35 @@ public class LikeController {
   }
 
   @PostMapping("/collections/{collectionId}/like-from-index")
-  public String toggleLikeFromIndex(@PathVariable Long collectionId, long userId) {
+  public String toggleLikeFromIndex(@PathVariable Long collectionId, @RequestParam long userId) {
+    UserModel currentUser = userRepository.findById(userId)
+        .orElseThrow(() -> new RuntimeException("User not found"));
+    CollectionModel collection = collectionRepository.findById(collectionId)
+        .orElseThrow(() -> new RuntimeException("Collection not found"));
+
+    // Process the like/unlike logic
+    List<LikeModel> existingLikes = likeRepository.findAllByCollectionId(collectionId);
+    boolean alreadyLiked = existingLikes.stream()
+        .anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
+    if (alreadyLiked) {
+      LikeModel existingLike = existingLikes.stream()
+          .filter(like -> like.getUser().getId().equals(currentUser.getId()))
+          .findFirst()
+          .orElseThrow(() -> new RuntimeException("Like not found"));
+      likeRepository.delete(existingLike);
+    } else {
+      LikeModel newLike = new LikeModel();
+      newLike.setUser(currentUser);
+      newLike.setCollection(collection);
+      likeRepository.save(newLike);
+    }
+
+    // Redirect back to the index page with the hash
+    return "redirect:/index";
+  }
+
+  @PostMapping("/collections/{collectionId}/like-comment-open")
+  public String toggleLikeCommentOpen(@PathVariable Long collectionId, @RequestParam long userId) {
     UserModel currentUser = userRepository.findById(userId)
         .orElseThrow(() -> new RuntimeException("User not found"));
     CollectionModel collection = collectionRepository.findById(collectionId)
@@ -59,8 +88,11 @@ public class LikeController {
       newLike.setCollection(collection);
       likeRepository.save(newLike);
     }
-    return "redirect:/index#collection-" + collectionId;
+
+    return "redirect:/collection/" + collectionId + "/comments";
   }
+
+
 
   @PostMapping("/collections/{collectionId}/like")
   public String toggleLike(@PathVariable Long collectionId, long userId) {
@@ -117,7 +149,6 @@ public class LikeController {
 
   @PostMapping("/comments/{commentId}/like")
   public String toggleLikeComment(@PathVariable Long commentId, long userId) {
-    
     UserModel currentUser = userRepository.findById(userId)
         .orElseThrow(() -> new RuntimeException("User not found"));
     CommentModel comment = commentRepository.findById(commentId)
@@ -142,13 +173,11 @@ public class LikeController {
 
     if (comment.getCollection() != null) {
       Long collectionId = comment.getCollection().getId();
-      return "redirect:/collection/" + collectionId + "#comments-" + commentId;
-    }
-    else if (comment.getItem() != null) {
+      return "redirect:/collection/" + collectionId + "/comments#comment-" + commentId;
+    } else if (comment.getItem() != null) {
       Long itemId = comment.getItem().getId();
-      return "redirect:/item/" + itemId + "#comments-" + commentId;
-    }
-    else {
+      return "redirect:/item/" + itemId + "/comments#comment-" + commentId;
+    } else {
       throw new RuntimeException("Comment does not belong to a collection or item");
     }
   }

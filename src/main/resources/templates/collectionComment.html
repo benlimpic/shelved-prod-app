@@ -9,6 +9,33 @@
     <script src="/js/triggerComment.js" defer></script>
     <script src="/js/sinceCreated.js" defer></script>
     <script src="/js/BackButton/visitedPages.js" defer></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+          console.log('Page loaded. Checking for hash...');
+          if (window.location.hash) {
+              const hash = window.location.hash.substring(1); // Remove the '#' symbol
+              console.log('Hash detected:', hash);
+
+              setTimeout(() => {
+                  const targetElement = document.getElementById(hash);
+                  console.log('Target element:', targetElement);
+
+                  if (targetElement) {
+                      targetElement.scrollIntoView({ behavior: 'smooth' });
+                      targetElement.style.transition = 'background-color 0.5s ease';
+                      targetElement.style.backgroundColor = '#ffff99';
+
+                      setTimeout(() => {
+                          targetElement.style.backgroundColor = '';
+                      }, 2000);
+                  } else {
+                      console.warn('No element found for hash:', hash);
+                  }
+              }, 200); // Adjust the delay as needed
+          }
+      });
+    </script>
+
   </head>
   <body id="scrollablePage">
     <header>
@@ -33,7 +60,8 @@
         </ul>
       </nav>
     </header>
-    <div th:id="'collection-' + ${collection.id}" class="profileContainerScroll overflow-y-auto bg-slate-200 h-full">
+    <div th:id="'collection-' + ${collection.id}" class="profileContainerScroll bg-slate-200 h-full">
+      <!-- COLLECTION NAV -->
       <div class="h-auto w-full bg-slate-100">
         <div class="collectionNavbar shadow-sm">
           <div class="flex justify-between items-center w-full">
@@ -75,7 +103,7 @@
               <ul class="flex flex-row justify-start items-center pr-2">
                 <li class="flex flex-row justify-start items-center pr-2">
                   <div class="flex justify-start items-center">
-                    <form th:if="${collection?.id != null}" th:action="@{/collections/{id}/like(id=${collection.id})}" method="post">
+                    <form th:if="${collection?.id != null}" th:action="@{/collections/{collectionId}/like-comment-open(collectionId=${collection.id})}" method="post">
                       <input type="hidden" name="collectionId" th:value="${collection.id}" />
                       <input type="hidden" name="userId" th:value="${user.id}" />
                       <input type="hidden" name="liked" th:value="${collection.isLiked}" />
@@ -93,7 +121,7 @@
                   </div>
                 </li>
                 <li class="flex flex-row justify-start items-center pr-2">
-                  <a id="commentToggle" th:class="'commentToggle' + collection.id" th:value="${collection.id}">
+                  <a th:href="@{/collection/{id}(id=${collection.id})}" th:class="'commentToggle' + collection.id" th:value="${collection.id}">
                     <span class="pr-2 font-medium">comment</span>
                   </a>
                   <span class="font-thin" th:text="${collection.commentCount}"></span>
@@ -148,10 +176,8 @@
           th:value="${collection.id}"
           id="commentBox">
           <!-- Comment Template -->
-          <div class="px-3 pt-1 pb-2" th:each="comment : ${collection.comments}">
-            <div
-              th:id="'comment-' + ${comment.id}"
-              class="w-full h-auto flex flex-row justify-start items-start text-sm">
+          <div th:id="'comment-' + ${comment.id}" class="px-3 pt-1 pb-2" th:each="comment : ${collection.comments}">
+            <div class="w-full h-auto flex flex-row justify-start items-start text-sm">
             <!-- Profile Picture -->
             <div id="imageBoxComment" class="flex-shrink-0 w-10">
               <a th:href="@{/profile/{id}(id=${comment.user.id})}">

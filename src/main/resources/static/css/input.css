@@ -31,8 +31,10 @@
     box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
   }
 
-  body#scrollablePage{
-    @apply py-12 overflow-auto;
+  html, body#scrollablePage {
+    overflow: auto;
+    height: auto;
+
   }
 
   body {

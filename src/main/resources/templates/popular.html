@@ -31,7 +31,7 @@
         <input
           type="text"
           id="search-input"
-          placeholder="Search for usernames or collections"
+          placeholder="Search for other Users by Username"
           class="border border-gray-300 rounded-md w-full"
         />
         <div id="search-results">
@@ -88,40 +88,6 @@
                   searchResults.appendChild(userSection);
                 }
 
-                // Display collections
-                if (data.collections.length > 0) {
-                  const collectionSection = document.createElement('div');
-                  collectionSection.innerHTML =
-                    "<h3 class='font-bold text-lg mt-4 mb-2'>Collections</h3>";
-                  const collectionList = document.createElement('ul');
-                  collectionList.className = 'space-y-2';
-
-                  data.collections.forEach((collection) => {
-                    const collectionItem = document.createElement('li');
-                    collectionItem.innerHTML = `
-                      <ul class="flex justify-start items-center w-full p-2 h-12 bg-slate-100 shadow-sm">
-                        <li class="pr-2">
-                          <a href="/collection/${collection.id}">
-                            <img
-                              class="h-7 w-7 rounded-full bg-white"
-                              src="${collection.imageUrl || '/images/default-image.png'}"
-                              alt="Collection Image"
-                            />
-                          </a>
-                        </li>
-                        <li class="ml-2">
-                          <a href="/collection/${collection.id}">
-                            <span class="text-sm font-semibold">${collection.title}</span>
-                          </a>
-                        </li>
-                      </ul>
-                    `;
-                    collectionList.appendChild(collectionItem);
-                  });
-
-                  collectionSection.appendChild(collectionList);
-                  searchResults.appendChild(collectionSection);
-                }
               });
           } else {
             searchResults.innerHTML = ''; // Clear results if input is empty

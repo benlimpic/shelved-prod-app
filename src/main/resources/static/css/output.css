@@ -811,10 +811,9 @@ footer {
   box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
 }
 
-body#scrollablePage {
+html, body#scrollablePage {
   overflow: auto;
-  padding-top: 3rem;
-  padding-bottom: 3rem;
+  height: auto;
 }
 
 body {

@@ -412,6 +412,12 @@ public class ContentController {
             return "redirect:/profile"; // Redirect if the collection is not found
         }
 
+        // Fetch the collection owner by ID
+        UserModel userProfile = userService.getUserById(collection.getUser().getId());
+        if (userProfile == null) {
+            return "redirect:/profile"; // Redirect if the collection owner is not found
+        }
+
         // Is the current user the owner of the collection?
         boolean isOwner = item.getUserId().equals(userService.getCurrentUserId());
 
@@ -447,6 +453,7 @@ public class ContentController {
         model.addAttribute("likeCount", likeCount);
         model.addAttribute("isLiked", isLiked);
         model.addAttribute("isOwner", isOwner);
+        model.addAttribute("userProfile", userProfile);
         model.addAttribute("item", item);
         model.addAttribute("collection", collection);
 
@@ -474,6 +481,12 @@ public class ContentController {
             return "redirect:/profile"; // Redirect if the collection is not found
         }
 
+        // Fetch the collection owner by ID
+        UserModel userProfile = userService.getUserById(collection.getUser().getId());
+        if (userProfile == null) {
+            return "redirect:/profile"; // Redirect if the collection owner is not found
+        }
+
         // Is the current user the owner of the collection?
         boolean isOwner = item.getUserId().equals(userService.getCurrentUserId());
 
@@ -509,6 +522,7 @@ public class ContentController {
         model.addAttribute("likeCount", likeCount);
         model.addAttribute("isLiked", isLiked);
         model.addAttribute("isOwner", isOwner);
+        model.addAttribute("userProfile", userProfile);
         model.addAttribute("item", item);
         model.addAttribute("collection", collection);
 

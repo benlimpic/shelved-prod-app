@@ -118,4 +118,14 @@ public class CommentService {
 
   }
 
+  public Long getLatestCommentUrl() {
+
+    UserModel currentUser = userService.getCurrentUser().orElseThrow(() -> new RuntimeException("User not found"));
+    Long userId = currentUser.getId();
+    Long latestCommentId = commentRepository.findTopByUserIdOrderByCreatedAtDesc(userId)
+        .orElseThrow(() -> new RuntimeException("No comments found for user")).getId();
+    return latestCommentId;
+
+  }
+
 }
