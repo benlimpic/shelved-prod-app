@@ -315,6 +315,75 @@ public class ContentController {
         return handleAuthentication(model, "collection");
     }
 
+    @GetMapping("/collection/{id}/comments")
+    public String collectionComment(@PathVariable("id") Long collectionId, Model model) {
+
+        // Fetch current user
+        UserModel currentUser = userService.getCurrentUser().orElse(null);
+        if (currentUser == null) {
+            return "redirect:/login"; // Redirect to login if user is not authenticated
+        }
+
+        // Fetch the collection by ID
+        CollectionModel collection = collectionService.getCollectionById(collectionId);
+        if (collection == null) {
+            return "redirect:/profile"; // Redirect if the collection is not found
+        }
+
+        // Fetch the collection owner by ID
+        UserModel userProfile = userService.getUserById(collection.getUser().getId());
+        if (userProfile == null) {
+            return "redirect:/profile"; // Redirect if the collection owner is not found
+        }
+
+        // Fetch items for the collection
+        List<ItemModel> items = itemService.getAllItemsByCollectionId(collectionId);
+
+        // Partition items into rows of 3 for display
+        List<List<ItemModel>> partitionedItems = items != null ? ListUtils.partition(items, 3) : List.of();
+
+        // Is the current user the owner of the collection?
+        boolean isOwner = collection.getUser().getId().equals(userService.getCurrentUserId());
+
+        // Fetch the number of likes for the collection
+        Integer likeCount = likeService.countLikes(collectionId);
+        
+        // Fetch the isLiked status for the collection
+
+        List<LikeModel> likes = likeRepository.findAllByCollectionId(collectionId);
+        boolean isLiked = likes.stream().anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
+        
+        collection.setComments(collectionService.getCommentsByCollectionIdDesc(collectionId));
+
+        for (CommentModel comment : collection.getComments()) {
+            UserModel commentOwner = userService.getUserById(comment.getUser().getId());
+            if (commentOwner != null) {
+                comment.setUser(commentOwner); // Set the owner in the comment
+            }
+            // Fetch the number of likes for the comment
+            Integer commentLikeCount = likeService.countLikesComment(comment.getId());
+            comment.setLikeCount(commentLikeCount);
+            // Fetch the isLiked status for the comment
+            List<LikeModel> commentLikes = likeRepository.findAllByCommentId(comment.getId());
+            boolean isCommentLiked = commentLikes.stream().anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
+            comment.setIsLiked(isCommentLiked);
+        }
+
+        Integer commentCount = collectionService.countComments(collectionId);
+        collection.setCommentCount(commentCount);
+
+
+        // Add data to the model
+        model.addAttribute("likeCount", likeCount);
+        model.addAttribute("isLiked", isLiked);
+        model.addAttribute("isOwner", isOwner);
+        model.addAttribute("userProfile", userProfile);
+        model.addAttribute("collection", collection);
+        model.addAttribute("partitionedItems", partitionedItems);
+
+        return handleAuthentication(model, "collectionComment");
+    }
+
     @GetMapping("/create-item/{collectionId}")
     public String createItem(@PathVariable("collectionId") Long collectionId, Model model) {
         // Add the collectionId to the model
@@ -383,6 +452,69 @@ public class ContentController {
 
         return handleAuthentication(model, "item");
     }
+
+    @GetMapping("/item/{id}/comments")
+    public String getItemComment(@PathVariable("id") Long itemId, Model model) {
+
+        // Fetch current user
+        UserModel currentUser = userService.getCurrentUser().orElse(null);
+        if (currentUser == null) {
+            return "redirect:/login"; // Redirect to login if user is not authenticated
+        }
+
+        // Fetch the item by ID
+        ItemModel item = itemService.getItemById(itemId);
+        if (item == null) {
+            return "redirect:/profile"; // Redirect if the item is not found
+        }
+
+        // Fetch the collection associated with the item
+        CollectionModel collection = item.getCollection();
+        if (collection == null) {
+            return "redirect:/profile"; // Redirect if the collection is not found
+        }
+
+        // Is the current user the owner of the collection?
+        boolean isOwner = item.getUserId().equals(userService.getCurrentUserId());
+
+        // Fetch the number of likes for the collection
+        Integer likeCount = likeService.countLikesItem(itemId);
+        
+        // Fetch the isLiked status for the collection
+
+        List<LikeModel> likes = likeRepository.findAllByItemId(itemId);
+        boolean isLiked = likes.stream().anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
+
+        item.setComments(itemService.getCommentsByItemIdDesc(itemId));
+
+        for (CommentModel comment : item.getComments()) {
+            UserModel commentOwner = userService.getUserById(comment.getUser().getId());
+            if (commentOwner != null) {
+                comment.setUser(commentOwner); // Set the owner in the comment
+            }
+            // Fetch the number of likes for the comment
+            Integer commentLikeCount = likeService.countLikesComment(comment.getId());
+            comment.setLikeCount(commentLikeCount);
+            // Fetch the isLiked status for the comment
+            List<LikeModel> commentLikes = likeRepository.findAllByCommentId(comment.getId());
+            boolean isCommentLiked = commentLikes.stream().anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
+            comment.setIsLiked(isCommentLiked);
+        }
+
+        Integer commentCount = itemService.countComments(itemId);
+        item.setCommentCount(commentCount);
+
+        // Add the item and collection to the model
+
+        model.addAttribute("likeCount", likeCount);
+        model.addAttribute("isLiked", isLiked);
+        model.addAttribute("isOwner", isOwner);
+        model.addAttribute("item", item);
+        model.addAttribute("collection", collection);
+
+        return handleAuthentication(model, "itemComment");
+    }
+
 
     @GetMapping("/update-item/{id}")
     public String updateItem(@PathVariable("id") Long itemId, Model model) {

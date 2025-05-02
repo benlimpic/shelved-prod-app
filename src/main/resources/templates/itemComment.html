@@ -22,15 +22,13 @@
             </a>
           </li>
           <li class="flex items-center">
-            <div th:if="${isOwner != null && isOwner}">
-              <a
+            <a
               class="bg-blue-500 hover:bg-blue-700 text-white text-xs px-1 py-0.5 rounded"
               id="redirectUpdateItemDetails"
               th:href="@{/update-item/{itemId}(itemId=${item?.id})}"
             >
               <span class="text-lg">&#9776;</span>
             </a>
-            </div>
           </li>
         </ul>
       </nav>
@@ -226,61 +224,33 @@
       </div>
     </div>
     <footer>
-      <div id="footerNavContent" class="footerNav w-full">
-        <div th:if="${isOwner != null && isOwner}" class="w-full">
-          <!-- Footer for owner -->
-          <ul class="flex justify-between items-center w-full" id="footerNavOwner">
-            <li>
-              <div id="homeButton" class="h-4 w-4 flex items-center justify-center">
-                <a class="text-2xl font-bold" href="/index">&#8962;</a>
-              </div>
-            </li>
-            <li>
-              <div class="h-4 w-4 flex items-center justify-center">
-                <a class="text-2xl font-bold" href="/popular">
-                  &#10066;
-                </a>
-              </div>
-            </li>
-            <li>
-              <div class="h-4 w-4 flex items-center justify-center">
-                <!-- <a class="text-2xl font-bold" th:href="@{/create-item/{collectionId}(collectionId=${collection.id})}">
-                  &#43;
-                </a> -->
-              </div>
-            </li>
-            <li>
-              <a href="/profile">
+      <div
+        class="h-12 w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto flex items-center"
+      >
+        <div id="commentActivity" class="commentNav">
+          <div id="commentInputContainer" class="w-full">
+            <form
+              th:action="@{/items/{itemId}/comments(itemId=${item.id})}"
+              method="post"
+              class="flex flex-row w-full items-center justify-center px-2 bg-white"
+            >
+              <a href="/profile" class="w-10">
                 <img
                   class="h-7 w-7 rounded-full bg-white"
-                  th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}"
+                  th:src="${user?.profilePictureUrl ?: '/images/default-profile-photo.png'}"
                   alt="Profile Picture"
                 />
               </a>
-            </li>
-          </ul>
-        </div>
-        
-        <div th:if="${isOwner != null && !isOwner}" class="w-full">
-          <!-- Footer for non-owner -->
-          <ul class="flex justify-between items-center w-full" id="footerNavUser">
-            <li>
-              <div class="h-4 w-4 flex items-center justify-center">
-                <a class="text-2xl font-bold" href="/index">
-                  &#8962;
-                </a>
-              </div>
-            </li>
-            <li>
-              <a href="/profile">
-                <img
-                  class="h-7 w-7 rounded-full bg-white"
-                  th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}"
-                  alt="Profile Picture"
-                />
-              </a>
-            </li>
-          </ul>
+              <input type="hidden" name="itemId" th:value="${item.id}" />
+              <input
+                type="text"
+                name="content"
+                placeholder="Leave a comment..."
+                class="w-full border-none outline-none focus:ring-0 text-sm font-thin bg-slate-100 rounded-md px-2 py-1 mx-2"
+              />
+              <button id="commentButton" type="submit" class="text-sm bg-blue-500 text-white font-semibold text-center h-full w-7"><span>C</span></button>
+            </form>
+          </div>
         </div>
       </div>
     </footer>
