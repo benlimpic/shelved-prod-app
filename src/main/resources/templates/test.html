@@ -1,7 +1,5 @@
 
 
-
-
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
@@ -9,12 +7,95 @@
     <title>Test</title>
     <link rel="stylesheet" href="/css/output.css" />
   </head>
-  <body class="flex flex-col min-h-screen h-full w-full bg-orange-700">
-    <header class="h-12 w-full bg-yellow-500 fixed top-0">
+
+  <body class="flex flex-col h-screen w-full bg-orange-700 overflow-hidden">
+
+    <!-- Header -->
+    <header class="fixed top-0 h-12 w-full bg-orange-500 flex-shrink-0">
+      <p class="text-center text-white text-lg font-bold">HEADER</p>
     </header>
-    <main class="flex-grow fixed top-12 bottom-12 w-full bg-red-500 overflow-y-auto">
+  
+    <!-- Main Content -->
+    <main class="flex flex-col flex-grow mt-12 mb-12 bg-red-500">
+      <!-- ImageBox -->
+      <div id="imageBox" class="aspect-square w-full bg-red-300 flex-shrink-0">
+        <p class="text-center text-white text-lg font-bold">BIG IMAGE</p>
+      </div>
+  
+      <!-- CaptionBox -->
+      <div id="captionBox" class="min-h-16 w-full bg-blue-500 flex-shrink-0">
+        <p class="text-center text-white text-lg font-bold">CAPTION</p>
+      </div>
+  
+      <!-- CommentBox -->
+      <div id="commentBox" class="flex-grow h-64 w-full bg-yellow-500 overflow-y-auto">
+        <div id="box-1" class="h-12 w-full bg-red-100 flex-shrink-0">
+          <p class="text-center text-white text-lg font-bold">box-1</p>
+        </div>
+        <div id="box-2" class="h-12 w-full bg-red-200 flex-shrink-0">
+          <p class="text-center text-white text-lg font-bold">box-2</p>
+        </div>
+        <div id="box-3" class="h-12 w-full bg-red-300 flex-shrink-0">
+          <p class="text-center text-white text-lg font-bold">box-3</p>
+        </div>
+        <div id="box-4" class="h-12 w-full bg-red-400 flex-shrink-0">
+          <p class="text-center text-white text-lg font-bold">box-4</p>
+        </div>
+        <div id="box-5" class="h-12 w-full bg-red-500 flex-shrink-0">
+          <p class="text-center text-white text-lg font-bold">box-5</p>
+        </div>
+        <div id="box-6" class="h-12 w-full bg-red-600 flex-shrink-0">
+          <p class="text-center text-white text-lg font-bold">box-6</p>
+        </div>
+        <div id="box-7" class="h-12 w-full bg-red-700 flex-shrink-0">
+          <p class="text-center text-white text-lg font-bold">box-7</p>
+        </div>
+        <div id="box-8" class="h-12 w-full bg-red-800 flex-shrink-0">
+          <p class="text-center text-white text-lg font-bold">box-8</p>
+        </div>
+        <div id="box-9" class="h-12 w-full bg-red-900 flex-shrink-0">
+          <p class="text-center text-white text-lg font-bold">box-9</p>
+        </div>
+        <div id="box-10" class="h-12 w-full bg-red-950 flex-shrink-0">
+          <p class="text-center text-white text-lg font-bold">box-10</p>
+        </div>
+        <div id="box-11" class="h-12 w-full bg-blue-100 flex-shrink-0">
+          <p class="text-center text-white text-lg font-bold">box-11</p>
+        </div>
+        <div id="box-12" class="h-12 w-full bg-blue-200 flex-shrink-0">
+          <p class="text-center text-white text-lg font-bold">box-12</p>
+        </div>
+        <div id="box-13" class="h-12 w-full bg-blue-300 flex-shrink-0">
+          <p class="text-center text-white text-lg font-bold">box-13</p>
+        </div>
+        <div id="box-14" class="h-12 w-full bg-blue-400 flex-shrink-0">
+          <p class="text-center text-white text-lg font-bold">box-14</p>
+        </div>
+        <div id="box-15" class="h-12 w-full bg-blue-500 flex-shrink-0">
+          <p class="text-center text-white text-lg font-bold">box-15</p>
+        </div>
+        <div id="box-16" class="h-12 w-full bg-blue-600 flex-shrink-0">
+          <p class="text-center text-white text-lg font-bold">box-16</p>
+        </div>
+        <div id="box-17" class="h-12 w-full bg-blue-700 flex-shrink-0">
+          <p class="text-center text-white text-lg font-bold">box-17</p>
+        </div>
+        <div id="box-18" class="h-12 w-full bg-blue-800 flex-shrink-0">
+          <p class="text-center text-white text-lg font-bold">box-18</p>
+        </div>
+        <div id="box-19" class="h-12 w-full bg-blue-900 flex-shrink-0">
+          <p class="text-center text-white text-lg font-bold">box-19</p>
+        </div>
+        <div id="box-20" class="h-12 w-full bg-blue-950 flex-shrink-0">
+          <p class="text-center text-white text-lg font-bold">box-20</p>
+        </div>
+      </div>
     </main>
-    <footer class="h-12 w-full bg-blue-500 fixed bottom-0">
+  
+    <!-- Footer -->
+    <footer class="fixed bottom-0 h-12 w-full bg-green-500 flex-shrink-0">
+      <p class="text-center text-white text-lg font-bold">FOOTER</p>
     </footer>
+  
   </body>
 </html>
