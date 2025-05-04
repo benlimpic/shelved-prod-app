@@ -3,43 +3,7 @@
 @tailwind utilities;
 
 @layer base {
-  a {
-    @apply cursor-default;
-  }
- 
-  nav {
-    @apply h-12 w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto;
-  }
 
-  header {
-    position: fixed; /* Fix the header to the top of the viewport */
-    top: 0; /* Align it to the top */
-    left: 0;
-    width: 100%; /* Full width of the viewport */
-    z-index: 1000; /* Ensure it stays above other elements */
-    background-color: white; /* Optional: Set a background color */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow for better visibility */
-  }
-  
-  footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    z-index: 9999; /* Higher than the fullscreen class */
-    background-color: white;
-    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
-  }
-
-  html, body#scrollablePage {
-    overflow: auto;
-    height: auto;
-
-  }
-
-  body {
-  @apply py-12 overflow-hidden;
-  }
 
 }
 
