@@ -3,28 +3,34 @@
 @tailwind utilities;
 
 @layer base {
+  
+  body {
+    @apply flex flex-col h-screen w-full;
+  }
+  
+  main {
+    @apply flex flex-col flex-grow h-auto top-12 bottom-12 mt-12 mb-12 bg-slate-200;
+  }
 
+  nav {
+    @apply h-12 w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto;
+  }
+
+  a {
+    @apply cursor-default;
+  }
+ 
+  header {
+    @apply fixed top-0 h-12 w-full flex-shrink-0;
+  }
+  
+  footer {
+    @apply fixed bottom-0 h-12 w-full flex-shrink-0
+  }
 
 }
 
 @layer components {
-
-  .fullscreen {
-    position: fixed !important;
-    margin-top: 48px !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    z-index: 8888 !important;
-    background-color: rgba(255, 255, 255) !important;
-  }
-
-
-  .collectionContainer {
-    position: relative; /* Ensure z-index works */
-    z-index: 1; /* Default stack order */
-  }
 
   .truncate {
     white-space: nowrap;
@@ -40,42 +46,11 @@
     overflow: hidden;
   }
 
-  .scrollable-form {
-    max-height: 80vh; /* Adjust as needed */
-    overflow-y: auto;
-  }
-
-  .hidden {
-    display: none;
-  }
-  
-  .containerSimple {
-    @apply h-screen overscroll-none w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto pb-12 bg-slate-100;
-  }
-
   .container {
     @apply flex flex-col items-center justify-center h-screen overscroll-none w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto pb-12 bg-slate-100;
   }
 
-  .indexContainer {
-    @apply flex flex-col items-center justify-center h-screen overscroll-none w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto py-12 bg-slate-100;
-  }
 
-  .containerTop {
-    @apply flex flex-col items-start justify-center h-screen overscroll-none w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto pb-12 bg-slate-100;
-  }
-
-  .profileContainer {
-    @apply flex flex-col items-center justify-start h-screen overscroll-none w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto pb-12 bg-slate-100;
-  }
-
-  .profileContainerScroll {
-    @apply flex flex-col items-center justify-start overflow-y-auto w-full h-screen sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto bg-slate-100;
-  }
-
-  .profileContainerNoScroll {
-    @apply flex flex-col items-center justify-start w-full h-screen sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto bg-slate-100;
-  }
 
   .formContainer {
     @apply flex flex-col w-full items-center justify-center px-4 mt-1;
@@ -160,33 +135,9 @@
 }
 
 @layer utilities {
-  .emptyCard {
-    @apply flex flex-col items-center
-    overflow-y-auto overflow-x-hidden p-4 m-4;
-  }
-
-  .input-no-border {
-    width: 100%; /* Full width */
-    margin: 0 0.5rem; /* Horizontal margin */
-    background: transparent; /* Transparent background */
-    border: none; /* Remove border */
-    outline: none; /* Remove focus outline */
-    padding: 0.5rem; /* Add padding for spacing */
-    border-color: transparent;
-    outline-color: transparent;
-
-  }
-  
-  .input-no-border:hover {
-    border: none; /* Disable hover border */
-    outline: none; /* Disable hover outline */
-    border-color: transparent;
-    outline-color: transparent;
-
-  }
 
   .card {
-    @apply m-10
+    @apply m-auto
     p-4
     flex
     flex-col
@@ -242,10 +193,6 @@
     display: none; /* Chrome, Safari, and Opera */
   }
 
-  .hidden {
-    display: none;
-  }
-
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -275,22 +222,6 @@
 
   #commentBox {
     transition: all 0.3s ease-in-out; /* Smooth transition for toggling */
-  }
-
-  .hidden {
-    display: none; /* Hide the comment box when not visible */
-  }
-
-  .fixed {
-    position: fixed; /* Fix the comment box to the bottom of the screen */
-  }
-
-  .overflow-y-scroll {
-    overflow-y: scroll; /* Enable vertical scrolling */
-  }
-
-  .bg-white {
-    background-color: white; /* Set the background color */
   }
   
 }

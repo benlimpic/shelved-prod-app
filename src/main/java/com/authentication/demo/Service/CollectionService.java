@@ -243,6 +243,10 @@ public class CollectionService {
     return commentRepository.findByCollectionIdOrderByCreatedAtDesc(collectionId);
   }
 
+  public List<CommentModel> getCommentsByCollectionIdAsc(Long collectionId) {
+    return commentRepository.findByCollectionIdOrderByCreatedAtAsc(collectionId);
+  }
+
   public Integer countComments(Long collectionId) {
     return commentRepository.countByCollectionId(collectionId);
   }

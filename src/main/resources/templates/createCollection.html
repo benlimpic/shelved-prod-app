@@ -13,7 +13,7 @@
 
     <link rel="stylesheet" href="/css/output.css" />
   </head>
-  <body>
+  <body class=" bg-slate-200">
     <header>
       <nav class="navbar">
         <ul class="flex justify-between items-center w-full">
@@ -34,98 +34,100 @@
         </ul>
       </nav>
     </header>
-    <div class="bg-white pb-4 h-full overflow-y-auto">
-      <div class="collectionHeader bg-slate-100">
-        <span class="text-sm font-semibold text-slate-600">Create Collection</span>
-      </div>
-
+    <main class="overflow-y-auto">
       <div class="bg-white pb-4">
-        <div class="flex flex-col w-full items-center justify-center">
-          <img
-            class="aspect-square w-full bg-white"
-            id="previewImage"
-            th:src="${'/images/collection_image.png'}"
-            alt="Default Collection Image"
-          />
-          <a href="#" id="triggerUpload" class="mt-2">
-            <span class="text-sm font-semibold text-blue-500"
-              >Update Collection Cover</span
-            >
-          </a>
-        </div>
-        <!-- ERROR / SUCCESS -->
-        <div class="errorBox">
-          <!-- SUCCESS MESSAGE -->
-          <div
-            id="successMessageDiv"
-            th:if="${message}"
-            th:text="${message}"
-            style="color: green"
-          ></div>
-          <!-- ERROR MESSAGE -->
-          <div
-            id="errorMessageDiv"
-            th:if="${error}"
-            th:text="${error}"
-            style="color: red"
-          ></div>
+        <div class="collectionHeader bg-slate-100">
+          <span class="text-sm font-semibold text-slate-600">Create Collection</span>
         </div>
 
-        <form
-          class="flex flex-col w-full items-center justify-center px-2 bg-white"
-          action="/create_collection"
-          method="POST"
-          enctype="multipart/form-data"
-        >
-        <input type="hidden" name="_csrf" th:value="${_csrf?.token}" />
-          <!-- File Upload Field -->
-
-          <input
-            type="file"
-            id="hiddenFileInput"
-            name="collectionImage"
-            style="display: none"
-            accept="image/*"
-          />
-
-          <!-- Title Field -->
-          <div class="flex flex-col w-full h-auto justify-center items-between">
-            <div class="labelInputBox w-full">
-              <label class="label" for="title">Title:</label>
-              <input
-                class="input w-full"
-                type="text"
-                id="collectionTitle"
-                name="title"
-                placeholder="Title"
-              />
-            </div>
-
-          <!-- Caption Field -->
-          <div class="flex flex-col w-full h-auto justify-center items-between">
-            <div class="labelInputBox w-full">
-              <label class="label" for="caption">Caption:</label>
-              <input
-                class="input w-full"
-                type="text"
-                id="caption"
-                name="caption"
-                placeholder="Caption"
-              />
-            </div>
-
-            <!-- Submit Button -->
-            <div class="flex flex-row justify-center items-center">
-              <button
-                class="deleteButton bg-blue-600 hover:bg-blue-800"
-                type="submit"
+        <div class="bg-white pb-4">
+          <div class="flex flex-col w-full items-center justify-center">
+            <img
+              class="aspect-square w-full bg-white"
+              id="previewImage"
+              th:src="${'/images/collection_image.png'}"
+              alt="Default Collection Image"
+            />
+            <a href="#" id="triggerUpload" class="mt-2">
+              <span class="text-sm font-semibold text-blue-500"
+                >Update Collection Cover</span
               >
-                Create Collection
-              </button>
-            </div>
+            </a>
           </div>
-        </form>
+          <!-- ERROR / SUCCESS -->
+          <div class="errorBox">
+            <!-- SUCCESS MESSAGE -->
+            <div
+              id="successMessageDiv"
+              th:if="${message}"
+              th:text="${message}"
+              style="color: green"
+            ></div>
+            <!-- ERROR MESSAGE -->
+            <div
+              id="errorMessageDiv"
+              th:if="${error}"
+              th:text="${error}"
+              style="color: red"
+            ></div>
+          </div>
+
+          <form
+            class="flex flex-col w-full items-center justify-center px-2 bg-white"
+            action="/create_collection"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+          <input type="hidden" name="_csrf" th:value="${_csrf?.token}" />
+            <!-- File Upload Field -->
+
+            <input
+              type="file"
+              id="hiddenFileInput"
+              name="collectionImage"
+              style="display: none"
+              accept="image/*"
+            />
+
+            <!-- Title Field -->
+            <div class="flex flex-col w-full h-auto justify-center items-between">
+              <div class="labelInputBox w-full">
+                <label class="label" for="title">Title:</label>
+                <input
+                  class="input w-full"
+                  type="text"
+                  id="collectionTitle"
+                  name="title"
+                  placeholder="Title"
+                />
+              </div>
+
+            <!-- Caption Field -->
+            <div class="flex flex-col w-full h-auto justify-center items-between">
+              <div class="labelInputBox w-full">
+                <label class="label" for="caption">Caption:</label>
+                <input
+                  class="input w-full"
+                  type="text"
+                  id="caption"
+                  name="caption"
+                  placeholder="Caption"
+                />
+              </div>
+
+              <!-- Submit Button -->
+              <div class="flex flex-row justify-center items-center">
+                <button
+                  class="deleteButton bg-blue-600 hover:bg-blue-800"
+                  type="submit"
+                >
+                  Create Collection
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+    </main>
   </body>
 </html>

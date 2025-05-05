@@ -37,7 +37,7 @@
     </script>
 
   </head>
-  <body id="scrollablePage">
+  <body class="flex flex-col h-screen w-full bg-orange-700">
     <header>
       <nav class="navbar">
         <ul class="flex justify-between w-full">
@@ -60,7 +60,7 @@
         </ul>
       </nav>
     </header>
-    <div th:id="'collection-' + ${collection.id}" class="profileContainerScroll bg-slate-200 h-full">
+    <main th:id="'collection-' + ${collection.id}">
       <!-- COLLECTION NAV -->
       <div class="h-auto w-full bg-slate-100">
         <div class="collectionNavbar shadow-sm">
@@ -169,13 +169,12 @@
             </div>
           </div>
         </div>
-        <!-- Comment Box -->
+          <!-- Comment Box -->
         <div
-          th:if="${collection?.id != null}"
-          class="w-full bg-slate-50 py-3 pb-{48px}"
-          th:value="${collection.id}"
-          id="commentBox">
-          <!-- Comment Template -->
+          id="commentBox"
+          class="flex-grow h-56 w-full bg-slate-100 overflow-y-auto"
+          th:value="${collection.id}">
+            <!-- Comment Template -->
           <div th:id="'comment-' + ${comment.id}" class="px-3 pt-1 pb-2" th:each="comment : ${collection.comments}">
             <div class="w-full h-auto flex flex-row justify-start items-start text-sm">
             <!-- Profile Picture -->
@@ -229,59 +228,58 @@
               </div>
             <!-- REPLY BOX GOES HERE -->
             </div>
-            <!-- Like Box -->
-            <div
+              <!-- Like Box -->
+              <div
               th:id="'likeBox-' + ${comment.id}"
               class="flex flex-col justify-start items-center">
-              <div class="flex flex-row justify-center items-center">
-                <form th:if="${comment?.id != null}" th:action="@{/comments/{id}/like(id=${comment?.id})}" method="post">
-                  <input type="hidden" name="commentId" th:value="${comment.id}" />
-                  <input type="hidden" name="userId" th:value="${user.id}" />
-                  <input type="hidden" name="liked" th:value="${comment.isLiked}" />
-                  <button type="submit" class="likeButton" th:if="${comment.user != null && comment.user.id != user.id}">
-                    <span style="font-size: 10px; line-height: 1" class="font-medium text-xs" th:if="${comment.isLiked}">&#9829;</span>
-                    <span style="font-size: 10px; line-height: 1" class="font-medium text-xs" th:if="${!comment.isLiked}">&#9825;</span>
-                  </button>
-                  <button th:id="'like-button-' + ${comment.id}" type="button" class="likeButton" th:if="${comment.user != null && comment.user.id == user.id}" disabled>
-                    <span style="font-size: 10px; line-height: 1" class="font-medium text-xs">&#9829;</span>
-                  </button>
-                </form>
-              </div>
-              <div class="flex flex-row justify-center items-center">
-                <p  th:id="'likeCount-' + ${comment.id}"
-                    style="font-size: 10px; line-height: 1"
-                    class="font-thin text-xs" th:text="${comment.likeCount != null ? comment.likeCount : '0'}">
-                </p>
+                <div class="flex flex-row justify-center items-center">
+                  <form th:if="${comment?.id != null}" th:action="@{/comments/{id}/like(id=${comment?.id})}" method="post">
+                    <input type="hidden" name="commentId" th:value="${comment.id}" />
+                    <input type="hidden" name="userId" th:value="${user.id}" />
+                    <input type="hidden" name="liked" th:value="${comment.isLiked}" />
+                    <button type="submit" class="likeButton" th:if="${comment.user != null && comment.user.id != user.id}">
+                      <span style="font-size: 10px; line-height: 1" class="font-medium text-xs" th:if="${comment.isLiked}">&#9829;</span>
+                      <span style="font-size: 10px; line-height: 1" class="font-medium text-xs" th:if="${!comment.isLiked}">&#9825;</span>
+                    </button>
+                    <button th:id="'like-button-' + ${comment.id}" type="button" class="likeButton" th:if="${comment.user != null && comment.user.id == user.id}" disabled>
+                      <span style="font-size: 10px; line-height: 1" class="font-medium text-xs">&#9829;</span>
+                    </button>
+                  </form>
+                </div>
+                <div class="flex flex-row justify-center items-center">
+                  <p  th:id="'likeCount-' + ${comment.id}"
+                      style="font-size: 10px; line-height: 1"
+                      class="font-thin text-xs" th:text="${comment.likeCount != null ? comment.likeCount : '0'}">
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </main>
     <footer>
-      <div class="h-12 w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto flex items-center">
-        <div id="commentActivity" class="commentNav">
-          <div id="commentInputContainer" class="w-full">
-            <form
-              th:action="@{/collections/{collectionId}/comments (collectionId=${collection.id})}"
-              method="post"
-              class="flex flex-row w-full items-center justify-center px-2 bg-white">
-              <a href="/profile" class="w-10">
-                <img
-                  class="h-7 w-7 rounded-full bg-white"
-                  th:src="${user?.profilePictureUrl ?: '/images/default-profile-photo.png'}"
-                  alt="Profile Picture"
-                />
-              </a>
-              <input type="hidden" name="collectionId" th:value="${collection.id}" />
-              <input
-                type="text"
-                name="content"
-                placeholder="Leave a comment..."
-                class="w-full border-none outline-none focus:ring-0 text-sm font-thin bg-slate-100 rounded-md px-2 py-1 mx-2"/>
-              <button id="commentButton" type="submit" class="text-sm bg-blue-500 text-white font-semibold text-center h-full w-7"><span>C</span></button>
-            </form>
-          </div>
+      <div id="commentActivity" class="commentNav">
+        <div id="commentInputContainer" class="w-full">
+          <form
+            th:action="@{/collections/{collectionId}/comments (collectionId=${collection.id})}"
+            method="post"
+            class="flex flex-row w-full items-center justify-center px-2 bg-white">
+            <a href="/profile" class="w-10">
+              <img
+                class="h-7 w-7 rounded-full bg-white"
+                th:src="${user?.profilePictureUrl ?: '/images/default-profile-photo.png'}"
+                alt="Profile Picture"
+              />
+            </a>
+            <input type="hidden" name="collectionId" th:value="${collection.id}" />
+            <input
+              type="text"
+              name="content"
+              placeholder="Leave a comment..."
+              class="w-full border-none outline-none focus:ring-0 text-sm font-thin bg-slate-100 rounded-md px-2 py-1 mx-2"/>
+            <button id="commentButton" type="submit" class="text-sm bg-blue-500 text-white font-semibold text-center h-full w-7"><span>C</span></button>
+          </form>
         </div>
       </div>
     </footer>

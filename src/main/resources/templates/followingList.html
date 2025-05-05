@@ -25,7 +25,7 @@
       </nav>
     </header>
 
-    <div class="overflow-auto w-full">
+    <main class="overflow-auto">
       <div
         th:if="${followingList.size() == 0}"
         class="flex justify-center items-center w-full h-12 bg-slate-100 shadow-sm"
@@ -58,7 +58,7 @@
           </li>
         </ul>
       </div>
-    </div>
+    </main>
     <footer>
       <div
         class="h-12 w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto flex items-center"
@@ -93,7 +93,7 @@
             </li>
           </ul>
         </div>
-      </div>
+      </main>
     </footer>
   </body>
 </html>

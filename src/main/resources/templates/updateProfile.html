@@ -35,119 +35,120 @@
         </ul>
       </nav>
     </header>
+    <main>
+      <div class="profileContainer">
+        <div class="h-auto w-full">
+          <div class="flex flex-col justify-center items-center mt-8 p-2">
+            <!-- PROFILE PICTURE -->
+            <a>
+              <img
+                class="h-32 w-32 rounded-full bg-white"
+                id="previewImage"
+                th:src="${user?.profilePictureUrl ?: '/images/default-profile-photo.png'}"
+                alt="Profile Picture"
+              />
+            </a>
 
-    <div class="profileContainer">
-      <div class="h-auto w-full">
-        <div class="flex flex-col justify-center items-center mt-8 p-2">
-          <!-- PROFILE PICTURE -->
-          <a>
-            <img
-              class="h-32 w-32 rounded-full bg-white"
-              id="previewImage"
-              th:src="${user?.profilePictureUrl ?: '/images/default-profile-photo.png'}"
-              alt="Profile Picture"
-            />
-          </a>
+            <!-- UPDATE PROFILE PICTURE BUTTON -->
+            <a href="#" id="triggerUpload" class="mt-2">
+              <span class="text-sm font-semibold text-blue-500 mb-1">
+                Update Profile Picture
+              </span>
+            </a>
 
-          <!-- UPDATE PROFILE PICTURE BUTTON -->
-          <a href="#" id="triggerUpload" class="mt-2">
-            <span class="text-sm font-semibold text-blue-500 mb-1">
-              Update Profile Picture
-            </span>
-          </a>
+            <div class="errorBox">
+              <!-- SUCCESS MESSAGE -->
+              <div
+                id="successMessageDiv"
+                th:if="${message}"
+                th:text="${message}"
+                class="success"
+              ></div>
+              <!-- ERROR MESSAGE -->
+              <div
+                id="errorMessageDiv"
+                th:if="${error}"
+                th:text="${error}"
+                class="failure"
+              ></div>
+            </div>
+          </div>
+          <div class="flex-col justify-center items-center">
+            <form
+              th:action="@{/update_profile}"
+              method="post"
+              enctype="multipart/form-data"
+              id="updateProfileForm"
+            >
+              <!-- Update Profile Picture -->
+              <div class="labelInputBox">
+                <input
+                  type="file"
+                  id="hiddenFileInput"
+                  name="profilePicture"
+                  style="display: none"
+                  accept="image/*"
+                />
+              </div>
 
-          <div class="errorBox">
-            <!-- SUCCESS MESSAGE -->
-            <div
-              id="successMessageDiv"
-              th:if="${message}"
-              th:text="${message}"
-              class="success"
-            ></div>
-            <!-- ERROR MESSAGE -->
-            <div
-              id="errorMessageDiv"
-              th:if="${error}"
-              th:text="${error}"
-              class="failure"
-            ></div>
+              <!-- Location -->
+              <div class="grid grid-cols-5 w-full bg-white">
+                <span
+                  class="text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200"
+                >
+                  Location
+                </span>
+                <input
+                  id="locationInput"
+                  class="col-span-4 text-sm p-2 border-y border-slate-200"
+                  name="location"
+                  th:value="${user?.location ?: ''}"
+                  placeholder="Location"
+                />
+              </div>
+
+              <!-- Website -->
+              <div class="grid grid-cols-5 w-full bg-white">
+                <span
+                  class="text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200"
+                >
+                  Website
+                </span>
+                <input
+                  id="websiteInput"
+                  class="col-span-4 text-sm p-2 border-y border-slate-200"
+                  name="website"
+                  th:value="${user?.website ?: ''}"
+                  placeholder="Website"
+                />
+              </div>
+
+              <!-- Biography -->
+              <div class="grid grid-cols-5 w-full bg-white">
+                <span
+                  class="text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200"
+                >
+                  Biography
+                </span>
+                <textarea
+                  id="biographyInput"
+                  class="col-span-4 text-sm p-2 border-y border-slate-200"
+                  name="biography"
+                  th:text="${user?.biography ?: ''}"
+                  placeholder="Biography"
+                  maxlength="250"
+                ></textarea>
+              </div>
+
+              <button
+                type="submit"
+                id="hiddenSubmitButton"
+                class="hidden"
+              ></button>
+            </form>
           </div>
         </div>
-        <div class="flex-col justify-center items-center">
-          <form
-            th:action="@{/update_profile}"
-            method="post"
-            enctype="multipart/form-data"
-            id="updateProfileForm"
-          >
-            <!-- Update Profile Picture -->
-            <div class="labelInputBox">
-              <input
-                type="file"
-                id="hiddenFileInput"
-                name="profilePicture"
-                style="display: none"
-                accept="image/*"
-              />
-            </div>
-
-            <!-- Location -->
-            <div class="grid grid-cols-5 w-full bg-white">
-              <span
-                class="text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200"
-              >
-                Location
-              </span>
-              <input
-                id="locationInput"
-                class="col-span-4 text-sm p-2 border-y border-slate-200"
-                name="location"
-                th:value="${user?.location ?: ''}"
-                placeholder="Location"
-              />
-            </div>
-
-            <!-- Website -->
-            <div class="grid grid-cols-5 w-full bg-white">
-              <span
-                class="text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200"
-              >
-                Website
-              </span>
-              <input
-                id="websiteInput"
-                class="col-span-4 text-sm p-2 border-y border-slate-200"
-                name="website"
-                th:value="${user?.website ?: ''}"
-                placeholder="Website"
-              />
-            </div>
-
-            <!-- Biography -->
-            <div class="grid grid-cols-5 w-full bg-white">
-              <span
-                class="text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200"
-              >
-                Biography
-              </span>
-              <textarea
-                id="biographyInput"
-                class="col-span-4 text-sm p-2 border-y border-slate-200"
-                name="biography"
-                th:text="${user?.biography ?: ''}"
-                placeholder="Biography"
-                maxlength="250"
-              ></textarea>
-            </div>
-
-            <button
-              type="submit"
-              id="hiddenSubmitButton"
-              class="hidden"
-            ></button>
-          </form>
-        </div>
       </div>
-    </div>
+    </main>
   </body>
 </html>

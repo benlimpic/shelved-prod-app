@@ -12,11 +12,14 @@ import com.authentication.demo.Model.CommentModel;
 public interface CommentRepository extends JpaRepository<CommentModel, Long> {
 
   List<CommentModel> findByCollectionIdOrderByCreatedAtDesc(Long collectionId);
+
+  List<CommentModel> findByCollectionIdOrderByCreatedAtAsc(Long collectionId);
+
   Integer countByCollectionId(Long collectionId);
 
   List<CommentModel> findByItemIdOrderByCreatedAtDesc(Long itemId);
-  Integer countByItemId(Long itemId);
 
+  Integer countByItemId(Long itemId);
 
   Optional<CommentModel> findTopByUserIdOrderByCreatedAtDesc(Long userId);
 }

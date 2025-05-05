@@ -30,24 +30,25 @@
         </ul>
       </nav>
     </header>
-    <div class="profileContainer">
-      <div class="h-auto w-full">
-        <div class="flex flex-col justify-end items-center mt-2 p-2">
-          <h1 class="formHeader">Account Details</h1>
-        </div>
+    <main>
+      <div class="profileContainer">
+        <div class="h-auto w-full">
+          <div class="flex flex-col justify-end items-center mt-2 p-2">
+            <h1 class="formHeader">Account Details</h1>
+          </div>
 
-        <div class="errorBox">
-          <!-- SUCCESS MESSAGE -->
-          <div id="successMessageDiv" th:if="${message}" th:text="${message}" class="success"></div>
-          <!-- ERROR MESSAGE -->
-          <div id="errorMessageDiv" th:if="${error}" th:text="${error}" class="failure"></div>
-        </div>
+          <div class="errorBox">
+            <!-- SUCCESS MESSAGE -->
+            <div id="successMessageDiv" th:if="${message}" th:text="${message}" class="success"></div>
+            <!-- ERROR MESSAGE -->
+            <div id="errorMessageDiv" th:if="${error}" th:text="${error}" class="failure"></div>
+          </div>
 
-        <!-- Username -->
-        <div id="updateUsernameButton" class="grid grid-cols-5 w-full bg-white">
-          <p class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Username</p>
-          <a id="updateUsername" class="col-span-4 text-sm text-blue-600 p-2 border-y border-slate-200" name="username" th:text="${user?.username ?: ''}"></a>
-        </div>
+          <!-- Username -->
+          <div id="updateUsernameButton" class="grid grid-cols-5 w-full bg-white">
+            <p class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Username</p>
+            <a id="updateUsername" class="col-span-4 text-sm text-blue-600 p-2 border-y border-slate-200" name="username" th:text="${user?.username ?: ''}"></a>
+          </div>
           <!-- Name -->
           <div id="updateNameButton" class="grid grid-cols-5 w-full bg-white">
             <p class=" text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200">Name</p>
@@ -65,131 +66,132 @@
           </div>
         </div>
 
-        <div id="updateBox" class="card hidden">
-        <!-- USER DETAILS -->
-        <h3 id="accountDetailsHeader" class="formSubHeader"></h3>
-        
-        <!-- UPDATE USERNAME FORM-->
-        <div class="flex flex-col items-center justify-center w-full">
-          <form class="hidden" id="updateUsernameForm" th:action="@{/update_username}" method="post" >
-            <div class="flex flex-col items-center w-full pb-2">
-            <label class="text-sm font-bold text-slate-600" for="username">New Username</label>
-            <input class="input sm:text-sm" type="text" id="updateUsername" name="username" placeholder="New Username" required>
+          <div id="updateBox" class="card hidden">
+          <!-- USER DETAILS -->
+          <h3 id="accountDetailsHeader" class="formSubHeader"></h3>
+          
+            <!-- UPDATE USERNAME FORM-->
+            <div class="flex flex-col items-center justify-center w-full">
+              <form class="hidden" id="updateUsernameForm" th:action="@{/update_username}" method="post" >
+                <div class="flex flex-col items-center w-full pb-2">
+                <label class="text-sm font-bold text-slate-600" for="username">New Username</label>
+                <input class="input sm:text-sm" type="text" id="updateUsername" name="username" placeholder="New Username" required>
+              </div>
+              <div class="flex flex-row justify-center items-center">
+                <button
+                id="cancelUpdateUsernameButton"
+                type="button"
+                class="cancelButton"
+                >Cancel</button>
+                <button class="submitButton" type="submit">Update</button>
+              </div>
+              </form>
+            </div>
+
+            <!-- UPDATE NAME FORM-->
+            <div class="flex flex-col items-center justify-center w-full">
+              <form id="updateNameForm" class="hidden" th:action="@{/update_name}" method="post">
+                <div class="flex flex-col items-center w-full pb-2">
+                  <label class="text-sm font-bold text-slate-600" for="firstName">First Name</label>
+                  <input id="firstNameInput" class="col-span-2 text-sm p-2 border-y border-slate-200" name="firstName" placeholder="First Name"></input>
+                  <label class="text-sm font-bold text-slate-600"  for="lastName">Last Name</label>
+                  <input id="lastNameInput" class="col-span-2 text-sm p-2 border-y border-slate-200" name="lastName" placeholder="Last Name"></input>
+                </div>
+                <div class="flex flex-row justify-center items-center">
+                  <button
+                  id="cancelUpdateNameButton"
+                  type="button"
+                  class="cancelButton"
+                  >Cancel</button>
+                  <button class="submitButton" type="submit">Update</button>
+                </div>
+              </form>
+            </div>
+
+            <!-- UPDATE EMAIL FORM-->
+            <div class="flex flex-col items-center justify-center w-full">
+              <form id="updateEmailForm" class="hidden" th:action="@{/update_email}" method="post">
+                <div class="flex flex-col items-center w-full pb-2">
+                  <label class="text-sm font-bold text-slate-600" for="newEmail">New Email</label>
+                  <input class="input sm:text-sm" type="email" id="newEmail" name="newEmail" placeholder="New Email" required>
+                  <label class="text-sm font-bold text-slate-600"  for="confirmNewEmail">Confirm New Email</label>
+                  <input class="input sm:text-sm" type="email" id="confirmNewEmail" name="confirmNewEmail" placeholder="Confirm New Email" required>
+                </div>
+                <div class="flex flex-row justify-center items-center">
+                  <button
+                  id="cancelUpdateEmailButton"
+                  type="button"
+                  class="cancelButton"
+                  >Cancel</button>
+                  <button class="submitButton" type="submit">Update</button>
+                </div>
+              </form>
+            </div>
+
+            <!-- UPDATE PASSWORD FORM-->
+            <div class="flex flex-col items-center justify-center w-full">
+              <form class="hidden" id="updatePasswordForm" th:action="@{/update_password}" method="post">
+                <div class="flex flex-col items-center w-full pb-4">
+                  <label class="text-sm font-bold text-slate-600" for="currentPassword">Current Password</label>
+                  <input class="input sm:text-sm" type="password" id="currentPassword" name="currentPassword" placeholder="Current Password" required>
+                  <label class="text-sm font-bold text-slate-600" for="newPassword">New Password</label>
+                  <input class="input sm:text-sm" type="password" id="newPassword" name="newPassword" placeholder="New Password" required>
+                  <label class="text-sm font-bold text-slate-600" for="confirmNewPassword">Confirm New Password</label>
+                  <input class="input sm:text-sm" type="password" id="confirmNewPassword" name="confirmNewPassword" placeholder="Confirm New Password" required>
+                </div>
+                <div class="flex flex-row justify-center items-center">
+                  <button
+                  id="cancelUpdatePasswordButton"
+                  type="button"
+                  class="cancelButton"
+                  >Cancel</button>
+                  <button class="submitButton" type="submit">Update</button>
+                </div>
+              </form>
+            </div>
           </div>
-          <div class="flex flex-row justify-center items-center">
-            <button
-            id="cancelUpdateUsernameButton"
-            type="button"
-            class="cancelButton"
-            >Cancel</button>
-            <button class="submitButton" type="submit">Update</button>
-          </div>
-          </form>
-        </div>
 
-        <!-- UPDATE NAME FORM-->
-        <div class="flex flex-col items-center justify-center w-full">
-          <form id="updateNameForm" class="hidden" th:action="@{/update_name}" method="post">
-            <div class="flex flex-col items-center w-full pb-2">
-              <label class="text-sm font-bold text-slate-600" for="firstName">First Name</label>
-              <input id="firstNameInput" class="col-span-2 text-sm p-2 border-y border-slate-200" name="firstName" placeholder="First Name"></input>
-              <label class="text-sm font-bold text-slate-600"  for="lastName">Last Name</label>
-              <input id="lastNameInput" class="col-span-2 text-sm p-2 border-y border-slate-200" name="lastName" placeholder="Last Name"></input>
+          <!-- DELETE USER FORM -->
+          <div class="h-full w-full flex flex-col items-center justify-end">
+            <div class="h-full w-full flex flex-col items-center justify-end">
+              <a class="deleteButton bg-slate-400 hover:bg-slate-400" id="deleteAccountButton">Delete Account</a>
             </div>
-            <div class="flex flex-row justify-center items-center">
-              <button
-              id="cancelUpdateNameButton"
-              type="button"
-              class="cancelButton"
-              >Cancel</button>
-              <button class="submitButton" type="submit">Update</button>
-            </div>
-          </form>
-        </div>
+            <form class="hidden" id="deleteAccountForm" th:action="@{/delete_user}" method="post" >
+              <h2 id="accountDetailsHeader" class="deleteHeader">Confirm Delete</h2>
+              <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+              <input type="hidden" name="username" th:value="${user != null ? user.username : ''}" />
+              <div class="flex flex-col items-center w-full pb-2">
 
-        <!-- UPDATE EMAIL FORM-->
-        <div class="flex flex-col items-center justify-center w-full">
-          <form id="updateEmailForm" class="hidden" th:action="@{/update_email}" method="post">
-            <div class="flex flex-col items-center w-full pb-2">
-              <label class="text-sm font-bold text-slate-600" for="newEmail">New Email</label>
-              <input class="input sm:text-sm" type="email" id="newEmail" name="newEmail" placeholder="New Email" required>
-              <label class="text-sm font-bold text-slate-600"  for="confirmNewEmail">Confirm New Email</label>
-              <input class="input sm:text-sm" type="email" id="confirmNewEmail" name="confirmNewEmail" placeholder="Confirm New Email" required>
-            </div>
-            <div class="flex flex-row justify-center items-center">
-              <button
-              id="cancelUpdateEmailButton"
-              type="button"
-              class="cancelButton"
-              >Cancel</button>
-              <button class="submitButton" type="submit">Update</button>
-            </div>
-          </form>
-        </div>
+                <label id="confirmDeleteLabel" for="confirmDelete" class="text-sm font-bold text-red-600 m-1" >
+                  Type 'DELETE' To Confirm
+                </label>
 
-        <!-- UPDATE PASSWORD FORM-->
-        <div class="flex flex-col items-center justify-center w-full">
-          <form class="hidden" id="updatePasswordForm" th:action="@{/update_password}" method="post">
-            <div class="flex flex-col items-center w-full pb-4">
-              <label class="text-sm font-bold text-slate-600" for="currentPassword">Current Password</label>
-              <input class="input sm:text-sm" type="password" id="currentPassword" name="currentPassword" placeholder="Current Password" required>
-              <label class="text-sm font-bold text-slate-600" for="newPassword">New Password</label>
-              <input class="input sm:text-sm" type="password" id="newPassword" name="newPassword" placeholder="New Password" required>
-              <label class="text-sm font-bold text-slate-600" for="confirmNewPassword">Confirm New Password</label>
-              <input class="input sm:text-sm" type="password" id="confirmNewPassword" name="confirmNewPassword" placeholder="Confirm New Password" required>
-            </div>
-            <div class="flex flex-row justify-center items-center">
-              <button
-              id="cancelUpdatePasswordButton"
-              type="button"
-              class="cancelButton"
-              >Cancel</button>
-              <button class="submitButton" type="submit">Update</button>
+                <input
+                type="text"
+                id="confirmDelete"
+                name="confirmDelete"
+                placeholder="DELETE"
+                required
+                class="input focus:border-red-500 focus:ring-red-500 sm:text-sm invalid:border-red-500 invalid:ring-red-500"
+                />
+                <p class="text-xs text-red-600 m-1">This Action Cannot be Undone</p>
+                </div>
+                <div class="flex flex-row justify-center items-center">
+                  <button
+                  id="cancelDeleteButton"
+                  type="button"
+                  class="cancelButton"
+                  >Cancel</button>
+                  <button
+                  type="submit" class="deleteButton focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                  Delete
+                </button>
+              </div>
             </div>
           </form>
         </div>
       </div>
-
-        <!-- DELETE USER FORM -->
-        <div class="h-full w-full flex flex-col items-center justify-end">
-          <div class="h-full w-full flex flex-col items-center justify-end">
-            <a class="deleteButton bg-slate-400 hover:bg-slate-400" id="deleteAccountButton">Delete Account</a>
-          </div>
-          <form class="hidden" id="deleteAccountForm" th:action="@{/delete_user}" method="post" >
-            <h2 id="accountDetailsHeader" class="deleteHeader">Confirm Delete</h2>
-            <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
-            <input type="hidden" name="username" th:value="${user != null ? user.username : ''}" />
-            <div class="flex flex-col items-center w-full pb-2">
-
-              <label id="confirmDeleteLabel" for="confirmDelete" class="text-sm font-bold text-red-600 m-1" >
-                Type 'DELETE' To Confirm
-              </label>
-
-              <input
-              type="text"
-              id="confirmDelete"
-              name="confirmDelete"
-              placeholder="DELETE"
-              required
-              class="input focus:border-red-500 focus:ring-red-500 sm:text-sm invalid:border-red-500 invalid:ring-red-500"
-              />
-              <p class="text-xs text-red-600 m-1">This Action Cannot be Undone</p>
-              </div>
-              <div class="flex flex-row justify-center items-center">
-                <button
-                id="cancelDeleteButton"
-                type="button"
-                class="cancelButton"
-                >Cancel</button>
-                <button
-                type="submit" class="deleteButton focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
-                Delete
-              </button>
-            </div>
-          </div>
-          </form>
-        </div>
-    </div>
-    </div>
+    </main>
+    <footer class="bg-slate-100"></footer>
   </body>
 </html>
