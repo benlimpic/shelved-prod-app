@@ -1,7 +1,6 @@
 package com.authentication.demo.Model;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,13 +9,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
 @Entity
-@Table(name = "comments")
-public class CommentModel {
+@Table(name = "replies")
+public class ReplyModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,15 +25,8 @@ public class CommentModel {
     private UserModel user;
 
     @ManyToOne
-    @JoinColumn(name = "collection_id")
-    private CollectionModel collection;
-
-    @ManyToOne
-    @JoinColumn(name = "item_id")
-    private ItemModel item;
-
-    @OneToMany(mappedBy = "comment", cascade = { jakarta.persistence.CascadeType.ALL }, orphanRemoval = true)
-    private List<ReplyModel> replies;
+    @JoinColumn(name = "comment_id", nullable = false)
+    private CommentModel comment;
 
     @Column(name = "content", nullable = false)
     private String content;
@@ -49,7 +40,16 @@ public class CommentModel {
     @Transient
     private Boolean isLiked;
 
+    // Constructors
+    public ReplyModel() {
+    }
 
+    public ReplyModel(UserModel user, CommentModel comment, String content, Timestamp createdAt, Integer likeCount, Boolean isLiked) {
+        this.user = user;
+        this.comment = comment;
+        this.content = content;
+        this.createdAt = createdAt;
+    }
 
     // Getters and setters
     public Long getId() {
@@ -68,28 +68,12 @@ public class CommentModel {
         this.user = user;
     }
 
-    public CollectionModel getCollection() {
-        return collection;
+    public CommentModel getComment() {
+        return comment;
     }
 
-    public void setCollection(CollectionModel collection) {
-        this.collection = collection;
-    }
-
-    public ItemModel getItem() {
-        return item;
-    }
-
-    public void setItem(ItemModel item) {
-        this.item = item;
-    }
-
-    public List<ReplyModel> getReplies() {
-        return replies;
-    }
-
-    public void setReplies(List<ReplyModel> replies) {
-        this.replies = replies;
+    public void setComment(CommentModel comment) {
+        this.comment = comment;
     }
 
     public String getContent() {

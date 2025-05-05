@@ -223,6 +223,10 @@
   #commentBox {
     transition: all 0.3s ease-in-out; /* Smooth transition for toggling */
   }
+
+  .hidden {
+    display: none;
+  }
   
 }
 

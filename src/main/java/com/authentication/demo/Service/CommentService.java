@@ -128,4 +128,9 @@ public class CommentService {
 
   }
 
+  public CommentModel getCommentById(Long commentId) {
+    return commentRepository.findById(commentId)
+            .orElseThrow(() -> new RuntimeException("Comment not found"));
+  }
+
 }

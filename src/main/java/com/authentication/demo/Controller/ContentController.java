@@ -18,6 +18,7 @@ import com.authentication.demo.Model.CollectionModel;
 import com.authentication.demo.Model.CommentModel;
 import com.authentication.demo.Model.ItemModel;
 import com.authentication.demo.Model.LikeModel;
+import com.authentication.demo.Model.ReplyModel;
 import com.authentication.demo.Model.UserModel;
 import com.authentication.demo.Repository.LikeRepository;
 import com.authentication.demo.Repository.UserRepository;
@@ -355,6 +356,8 @@ public class ContentController {
         
         collection.setComments(collectionService.getCommentsByCollectionIdAsc(collectionId));
 
+        int replyCount = 0;
+
         for (CommentModel comment : collection.getComments()) {
             UserModel commentOwner = userService.getUserById(comment.getUser().getId());
             if (commentOwner != null) {
@@ -367,10 +370,28 @@ public class ContentController {
             List<LikeModel> commentLikes = likeRepository.findAllByCommentId(comment.getId());
             boolean isCommentLiked = commentLikes.stream().anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
             comment.setIsLiked(isCommentLiked);
+            System.out.println("Comment: " + comment.getId());
+            if (comment.getReplies() != null) {
+                for (ReplyModel reply : comment.getReplies()) {
+                    replyCount++;
+                    UserModel replyOwner = userService.getUserById(reply.getUser().getId());
+                    if (replyOwner != null) {
+                        reply.setUser(replyOwner); // Set the owner in the reply
+                    }
+                    // Fetch the number of likes for the reply
+                    Integer replyLikeCount = likeService.countLikesReply(reply.getId());
+                    reply.setLikeCount(replyLikeCount);
+                    // Fetch the isLiked status for the reply
+                    List<LikeModel> replyLikes = likeRepository.findAllByReplyId(reply.getId());
+                    boolean isReplyLiked = replyLikes.stream().anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
+                    reply.setIsLiked(isReplyLiked);
+                    System.out.println("Reply: " + reply.getId());
+                }
+            }
         }
 
         Integer commentCount = collectionService.countComments(collectionId);
-        collection.setCommentCount(commentCount);
+        collection.setCommentCount(commentCount + replyCount);
 
 
         // Add data to the model

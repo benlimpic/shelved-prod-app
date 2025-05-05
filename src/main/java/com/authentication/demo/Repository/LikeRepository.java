@@ -15,10 +15,14 @@ public interface LikeRepository extends JpaRepository<LikeModel, Long> {
 
   List<LikeModel> findAllByUserId(Long userId);
 
+  List<LikeModel> findAllByReplyId(Long replyId);
+
   int countByCollectionId(Long collectionId);
 
   int countByItemId(Long itemId);
 
   int countByCommentId(Long commentId);
+
+  int countByReplyId(Long replyId);
 
 }

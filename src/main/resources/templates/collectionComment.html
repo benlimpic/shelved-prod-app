@@ -9,6 +9,7 @@
     <script src="/js/triggerComment.js" defer></script>
     <script src="/js/sinceCreated.js" defer></script>
     <script src="/js/BackButton/visitedPages.js" defer></script>
+    <script src="/js/replyToComment.js" defer></script>
     <script>
       document.addEventListener('DOMContentLoaded', function () {
           console.log('Page loaded. Checking for hash...');
@@ -37,7 +38,7 @@
     </script>
 
   </head>
-  <body class="flex flex-col h-screen w-full bg-orange-700">
+  <body class="flex flex-col h-screen w-full bg-slate-100">
     <header>
       <nav class="navbar">
         <ul class="flex justify-between w-full">
@@ -221,11 +222,19 @@
               </div>
               <div
                 style="font-size: 8px; line-height: 1"
-                class="w-full flex flex-col justify-center items-start pt-1 pr-2 text-slate-500 font-semibold">
-                <a id="replyButton" class="cursor-pointer">
+                class="commentReplyBox w-full flex flex-col justify-center items-start pt-1 pr-2 text-slate-500 font-semibold">
+                <a class="commentReplyButton" data-comment-id="${comment.id}"></a>
                   <span class="leading-[1.2]">Reply</span>
                 </a>
+
+                <!-- REPLY TO COMMENT LOGIC -->
+
               </div>
+
+            <!-- REPLY BOX GOES HERE -->
+
+
+
             <!-- REPLY BOX GOES HERE -->
             </div>
               <!-- Like Box -->
@@ -259,6 +268,8 @@
       </div>
     </main>
     <footer>
+
+
       <div id="commentActivity" class="commentNav">
         <div id="commentInputContainer" class="w-full">
           <form

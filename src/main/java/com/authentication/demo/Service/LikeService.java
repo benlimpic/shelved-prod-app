@@ -141,4 +141,7 @@ public class LikeService {
 
   }
 
+  public Integer countLikesReply(Long replyId) {
+    return likeRepository.countByReplyId(replyId);
+  }
 }
