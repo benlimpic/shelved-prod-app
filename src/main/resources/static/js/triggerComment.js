@@ -1,8 +1,16 @@
 const trigger = document.getElementById("triggerUpload");
-const triggerForm = document.getElementById("commentButton");
+const triggerForm = document.querySelector("form#commentButton");
 
-trigger.addEventListener("click", () => {
+if (trigger) {
+  trigger.addEventListener("click", () => {
 
-  triggerForm.submit();
+    if (triggerForm) {
+      triggerForm.submit();
+    } else {
+      console.error("Form element not found.");
+    }
 
-})
+  });
+} else {
+  console.error("Trigger element not found.");
+}

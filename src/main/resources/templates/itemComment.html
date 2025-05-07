@@ -10,30 +10,34 @@
     <script src="/js/windowOpen.js" defer></script>
     <script src="/js/toggleReply.js" defer></script>
     <script src="/js/BackButton/visitedPages.js" defer></script>
-    <script>
+    <script defer>
       document.addEventListener('DOMContentLoaded', function () {
           console.log('Page loaded. Checking for hash...');
           if (window.location.hash) {
               const hash = window.location.hash.substring(1); // Remove the '#' symbol
               console.log('Hash detected:', hash);
 
-              setTimeout(() => {
-                  const targetElement = document.getElementById(hash);
-                  console.log('Target element:', targetElement);
+              const targetElement = document.getElementById(hash);
+              console.log('Target element:', targetElement);
 
-                  if (targetElement) {
-                      targetElement.scrollIntoView({ behavior: 'smooth' });
-                      targetElement.style.transition = 'background-color 0.5s ease';
-                      targetElement.style.backgroundColor = '#ffff99';
-
-                      setTimeout(() => {
-                          targetElement.style.backgroundColor = '';
-                      }, 2000);
-                  } else {
-                      console.warn('No element found for hash:', hash);
-                  }
-              }, 200); // Adjust the delay as needed
+              if (targetElement) {
+                  targetElement.scrollIntoView({ behavior: 'smooth' });
+                  targetElement.classList.add('highlight');
+              } else {
+                  console.warn('No element found for hash:', hash);
+              }
           }
+      });
+    </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const highlightElements = document.querySelectorAll('.highlight');
+
+        highlightElements.forEach(element => {
+          element.addEventListener('transitionend', () => {
+            element.classList.add('transition-end');
+          });
+        });
       });
     </script>
   </head>

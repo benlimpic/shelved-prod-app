@@ -9,11 +9,6 @@ import com.authentication.demo.Model.ReplyModel;
 
 @Repository
 public interface ReplyRepository extends JpaRepository<ReplyModel, Long> {
-
   List<ReplyModel> findByCommentIdOrderByCreatedAtAsc(Long commentId);
-
-  ReplyModel findTopByOrderByIdDesc();
-
-
-
+    ReplyModel findTopByOrderByIdDesc();
 }

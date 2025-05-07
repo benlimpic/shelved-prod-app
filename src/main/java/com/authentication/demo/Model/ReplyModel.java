@@ -15,23 +15,21 @@ import jakarta.persistence.Transient;
 @Entity
 @Table(name = "replies")
 public class ReplyModel {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private UserModel user;
-
-    @ManyToOne
     @JoinColumn(name = "comment_id", nullable = false)
     private CommentModel comment;
 
-    @Column(name = "content", nullable = false)
+    @Column(nullable = false)
+    private Long userId;
+
+    @Column(nullable = false, length = 500)
     private String content;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(nullable = false)
     private Timestamp createdAt;
 
     @Transient
@@ -44,8 +42,8 @@ public class ReplyModel {
     public ReplyModel() {
     }
 
-    public ReplyModel(UserModel user, CommentModel comment, String content, Timestamp createdAt, Integer likeCount, Boolean isLiked) {
-        this.user = user;
+    public ReplyModel(Long userId, CommentModel comment, String content, Timestamp createdAt, Integer likeCount, Boolean isLiked) {
+        this.userId = userId;
         this.comment = comment;
         this.content = content;
         this.createdAt = createdAt;
@@ -60,12 +58,12 @@ public class ReplyModel {
         this.id = id;
     }
 
-    public UserModel getUser() {
-        return user;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUser(UserModel user) {
-        this.user = user;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public CommentModel getComment() {

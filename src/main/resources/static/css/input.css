@@ -68,6 +68,10 @@
     @apply flex flex-row p-3 justify-between items-center w-full bg-white shadow-md;
   }
 
+  .replyNav {
+    @apply flex flex-row p-3 justify-between items-center w-full bg-white shadow-md;
+  }
+
   .profileNavbar {
     @apply flex flex-row p-3 justify-between items-center w-full bg-slate-100 text-white;
   }
@@ -217,6 +221,16 @@
 
   .fade-out {
     animation: fadeOut 0.5s ease-out forwards;
+    animation-delay: 1.5s;
+  }
+
+  .highlight {
+    background-color: #ffff99;
+    transition: background-color 2s ease;
+  }
+
+  .highlight.transition-end {
+    background-color: transparent;
   }
 
 

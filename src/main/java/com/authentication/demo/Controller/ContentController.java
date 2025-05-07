@@ -26,6 +26,7 @@ import com.authentication.demo.Service.CollectionService;
 import com.authentication.demo.Service.FollowService;
 import com.authentication.demo.Service.ItemService;
 import com.authentication.demo.Service.LikeService;
+import com.authentication.demo.Service.ReplyService;
 import com.authentication.demo.Service.UserService;
 
 @Controller
@@ -39,16 +40,20 @@ public class ContentController {
     private final LikeService likeService;
     private final LikeRepository likeRepository;
 
+    private final ReplyService replyService;
+
+
     public ContentController(UserRepository repository, UserService userService, CollectionService collectionService,
             ItemService itemService, FollowService followService, LikeService likeService,
-            LikeRepository likeRepository) {
-        this.repository = repository;
-        this.userService = userService;
-        this.collectionService = collectionService;
-        this.itemService = itemService;
-        this.followService = followService;
-        this.likeService = likeService;
-        this.likeRepository = likeRepository;
+            LikeRepository likeRepository, ReplyService replyService) {
+                this.repository = repository;
+                this.userService = userService;
+                this.collectionService = collectionService;
+                this.itemService = itemService;
+                this.followService = followService;
+                this.likeService = likeService;
+                this.likeRepository = likeRepository;
+                this.replyService = replyService;
     }
 
     @GetMapping("/login")
@@ -65,10 +70,11 @@ public class ContentController {
     public String index(Model model) {
 
         // Fetch current user
-        UserModel currentUser = userService.getCurrentUser().orElse(null);
-        if (currentUser == null) {
+        Optional<UserModel> currentUserOptional = userService.getCurrentUser();
+        if (currentUserOptional.isEmpty()) {
             return "redirect:/login"; // Redirect to login if user is not authenticated
         }
+        UserModel currentUser = currentUserOptional.get();
 
         // Fetch Users
         Map<Long, UserModel> users = userService.getUsersMappedById();
@@ -91,10 +97,9 @@ public class ContentController {
             Integer likeCount = likeService.countLikes(collection.getId());
             collection.setLikeCount(likeCount);
 
-            //NUMBER OF COMMENTS
+            // NUMBER OF COMMENTS
             Integer commentCount = collectionService.countComments(collection.getId());
             collection.setCommentCount(commentCount);
-
 
             // REVERSE ORDER COMMENTS
             List<CommentModel> comments = collectionService.getCommentsByCollectionIdDesc(collection.getId());
@@ -115,18 +120,16 @@ public class ContentController {
                 comment.setLikeCount(commentLikeCount);
                 // Fetch the isLiked status for the comment
                 List<LikeModel> commentLikes = likeRepository.findAllByCommentId(comment.getId());
-                boolean isCommentLiked = commentLikes.stream().anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
+                boolean isCommentLiked = commentLikes.stream()
+                        .anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
                 comment.setIsLiked(isCommentLiked);
             }
-
 
             // Fetch items for each collection
             List<ItemModel> items = itemService.getAllItemsByCollectionId(collection.getId());
             List<List<ItemModel>> partitionedItems = items != null ? ListUtils.partition(items, 3) : new ArrayList<>();
             partitionedItemsByCollection.put(collection.getId(), partitionedItems);
         }
-
-        
 
         // Add data to the model
         model.addAttribute("collections", collections);
@@ -279,12 +282,12 @@ public class ContentController {
 
         // Fetch the number of likes for the collection
         Integer likeCount = likeService.countLikes(collectionId);
-        
+
         // Fetch the isLiked status for the collection
 
         List<LikeModel> likes = likeRepository.findAllByCollectionId(collectionId);
         boolean isLiked = likes.stream().anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
-        
+
         collection.setComments(collectionService.getCommentsByCollectionIdDesc(collectionId));
 
         for (CommentModel comment : collection.getComments()) {
@@ -297,13 +300,13 @@ public class ContentController {
             comment.setLikeCount(commentLikeCount);
             // Fetch the isLiked status for the comment
             List<LikeModel> commentLikes = likeRepository.findAllByCommentId(comment.getId());
-            boolean isCommentLiked = commentLikes.stream().anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
+            boolean isCommentLiked = commentLikes.stream()
+                    .anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
             comment.setIsLiked(isCommentLiked);
         }
 
         Integer commentCount = collectionService.countComments(collectionId);
         collection.setCommentCount(commentCount);
-
 
         // Add data to the model
         model.addAttribute("likeCount", likeCount);
@@ -320,10 +323,11 @@ public class ContentController {
     public String collectionComment(@PathVariable("id") Long collectionId, Model model) {
 
         // Fetch current user
-        UserModel currentUser = userService.getCurrentUser().orElse(null);
-        if (currentUser == null) {
+        Optional<UserModel> currentUserOptional = userService.getCurrentUser();
+        if (currentUserOptional.isEmpty()) {
             return "redirect:/login"; // Redirect to login if user is not authenticated
         }
+        UserModel currentUser = currentUserOptional.get();
 
         // Fetch the collection by ID
         CollectionModel collection = collectionService.getCollectionById(collectionId);
@@ -348,12 +352,12 @@ public class ContentController {
 
         // Fetch the number of likes for the collection
         Integer likeCount = likeService.countLikes(collectionId);
-        
+
         // Fetch the isLiked status for the collection
 
         List<LikeModel> likes = likeRepository.findAllByCollectionId(collectionId);
         boolean isLiked = likes.stream().anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
-        
+
         collection.setComments(collectionService.getCommentsByCollectionIdAsc(collectionId));
 
         int replyCount = 0;
@@ -368,37 +372,41 @@ public class ContentController {
             comment.setLikeCount(commentLikeCount);
             // Fetch the isLiked status for the comment
             List<LikeModel> commentLikes = likeRepository.findAllByCommentId(comment.getId());
-            boolean isCommentLiked = commentLikes.stream().anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
+            boolean isCommentLiked = commentLikes.stream()
+                    .anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
             comment.setIsLiked(isCommentLiked);
             System.out.println("Comment: " + comment.getId());
-            if (comment.getReplies() != null) {
-                for (ReplyModel reply : comment.getReplies()) {
-                    replyCount++;
-                    UserModel replyOwner = userService.getUserById(reply.getUser().getId());
-                    if (replyOwner != null) {
-                        reply.setUser(replyOwner); // Set the owner in the reply
-                    }
-                    // Fetch the number of likes for the reply
-                    Integer replyLikeCount = likeService.countLikesReply(reply.getId());
-                    reply.setLikeCount(replyLikeCount);
-                    // Fetch the isLiked status for the reply
-                    List<LikeModel> replyLikes = likeRepository.findAllByReplyId(reply.getId());
-                    boolean isReplyLiked = replyLikes.stream().anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
-                    reply.setIsLiked(isReplyLiked);
-                    System.out.println("Reply: " + reply.getId());
+
+            // Fetch replies for the comment
+            List<ReplyModel> replies = replyService.getRepliesByCommentId(comment.getId());
+            comment.setReplies(replies);
+            for (ReplyModel reply : comment.getReplies()) {
+                UserModel replyOwner = userService.getUserById(reply.getUserId());
+                if (replyOwner != null) {
+                    reply.setUserId(replyOwner.getId()); // Set the owner in the reply
                 }
+                // Fetch the number of likes for the reply
+                Integer replyLikeCount = likeService.countLikesReply(reply.getId());
+                reply.setLikeCount(replyLikeCount);
+                // Fetch the isLiked status for the reply
+                List<LikeModel> replyLikes = likeRepository.findAllByReplyId(reply.getId());
+                boolean isReplyLiked = replyLikes.stream()
+                        .anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
+                reply.setIsLiked(isReplyLiked);
             }
+            replyCount += replies.size();
+
         }
 
         Integer commentCount = collectionService.countComments(collectionId);
         collection.setCommentCount(commentCount + replyCount);
-
 
         // Add data to the model
         model.addAttribute("likeCount", likeCount);
         model.addAttribute("isLiked", isLiked);
         model.addAttribute("isOwner", isOwner);
         model.addAttribute("userProfile", userProfile);
+        model.addAttribute("user", currentUser);
         model.addAttribute("collection", collection);
         model.addAttribute("partitionedItems", partitionedItems);
 
@@ -444,7 +452,7 @@ public class ContentController {
 
         // Fetch the number of likes for the collection
         Integer likeCount = likeService.countLikesItem(itemId);
-        
+
         // Fetch the isLiked status for the collection
 
         List<LikeModel> likes = likeRepository.findAllByItemId(itemId);
@@ -462,7 +470,8 @@ public class ContentController {
             comment.setLikeCount(commentLikeCount);
             // Fetch the isLiked status for the comment
             List<LikeModel> commentLikes = likeRepository.findAllByCommentId(comment.getId());
-            boolean isCommentLiked = commentLikes.stream().anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
+            boolean isCommentLiked = commentLikes.stream()
+                    .anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
             comment.setIsLiked(isCommentLiked);
         }
 
@@ -513,7 +522,7 @@ public class ContentController {
 
         // Fetch the number of likes for the collection
         Integer likeCount = likeService.countLikesItem(itemId);
-        
+
         // Fetch the isLiked status for the collection
 
         List<LikeModel> likes = likeRepository.findAllByItemId(itemId);
@@ -531,7 +540,8 @@ public class ContentController {
             comment.setLikeCount(commentLikeCount);
             // Fetch the isLiked status for the comment
             List<LikeModel> commentLikes = likeRepository.findAllByCommentId(comment.getId());
-            boolean isCommentLiked = commentLikes.stream().anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
+            boolean isCommentLiked = commentLikes.stream()
+                    .anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
             comment.setIsLiked(isCommentLiked);
         }
 
@@ -549,7 +559,6 @@ public class ContentController {
 
         return handleAuthentication(model, "itemComment");
     }
-
 
     @GetMapping("/update-item/{id}")
     public String updateItem(@PathVariable("id") Long itemId, Model model) {

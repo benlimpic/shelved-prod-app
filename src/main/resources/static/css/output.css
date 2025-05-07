@@ -966,6 +966,20 @@ footer {
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
+.replyNav {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
+  padding: 0.75rem;
+  --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
 .profileNavbar {
   display: flex;
   width: 100%;
@@ -2207,6 +2221,16 @@ footer {
 
 .fade-out {
   animation: fadeOut 0.5s ease-out forwards;
+  animation-delay: 1.5s;
+}
+
+.highlight {
+  background-color: #ffff99;
+  transition: background-color 2s ease;
+}
+
+.highlight.transition-end {
+  background-color: transparent;
 }
 
 #commentBox {

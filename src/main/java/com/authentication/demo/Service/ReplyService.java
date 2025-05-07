@@ -2,27 +2,28 @@ package com.authentication.demo.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Map;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.authentication.demo.Model.CommentModel;
 import com.authentication.demo.Model.ReplyModel;
-import com.authentication.demo.Repository.LikeRepository; // Ensure this path matches the actual location of ReplyModel
-import com.authentication.demo.Repository.ReplyRepository; // Ensure this path matches the actual location of CommentModel
+import com.authentication.demo.Repository.LikeRepository;
+import com.authentication.demo.Repository.ReplyRepository;
 
 
 @Service
 public class ReplyService {
   private final ReplyRepository replyRepository;
   private final CommentService commentService;
-  private final UserService userService;
+
   private final LikeRepository likeRepository;
 
-  public ReplyService(ReplyRepository replyRepository, CommentService commentService, UserService userService, LikeRepository likeRepository) {
+  public ReplyService(ReplyRepository replyRepository, CommentService commentService,  LikeRepository likeRepository) {
     this.replyRepository = replyRepository;
     this.commentService = commentService;
-    this.userService = userService;
+
     this.likeRepository = likeRepository;
   }
   
@@ -32,35 +33,36 @@ public class ReplyService {
     return replyRepository.findByCommentIdOrderByCreatedAtAsc(commentId);
   }
 
-  // CREATE REPLY
-  public Map<String, String> createReply(Map<String, String> params) {
 
-    // Validate input parameters
-    if (params.get("content") == null || params.get("content").isEmpty()) {
-      throw new RuntimeException("Reply content is required");
-    }
-
-    if (params.get("commentId") == null) {
-      throw new RuntimeException("Comment ID is required");
-    }
-
-    Long commentId = Long.valueOf(params.get("commentId"));
-    CommentModel comment = commentService.getCommentById(commentId);
-
-    // Create reply
-    ReplyModel reply = new ReplyModel();
-    reply.setComment(comment);
-    reply.setContent(params.get("content"));
-    reply.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-    reply.setUser(userService.getCurrentUser().orElseThrow(() -> new RuntimeException("User not found")));
-    replyRepository.save(reply);
-
-    return Map.of("message", "Reply created successfully");
+  @Transactional
+  public void createReply(Long commentId, String content) {
+      System.out.println("Fetching comment with ID: " + commentId);
+      CommentModel comment = commentService.getCommentById(commentId);
+      if (comment == null) {
+          throw new RuntimeException("Comment not found with ID: " + commentId);
+      }
+  
+      Long userId = Long.valueOf(SecurityContextHolder.getContext().getAuthentication().getName());
+  
+      ReplyModel reply = new ReplyModel();
+      reply.setComment(comment);
+      reply.setContent(content);
+      reply.setUserId(userId);
+      reply.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+  
+      System.out.println("Saving reply: " + reply);
+      replyRepository.save(reply);
+      System.out.println("Reply saved successfully");
   }
 
+
   // GET LATEST REPLY URL
-  public Long getLatestReplyUrl() {
-    return replyRepository.findTopByOrderByIdDesc().getId();
+  public Long getLatestReplyId() {
+    ReplyModel latestReply = replyRepository.findTopByOrderByIdDesc();
+    if (latestReply == null) {
+      throw new RuntimeException("No replies found");
+    }
+    return latestReply.getId();
   }
 
   // GET REPLIES BY REPLY ID
@@ -73,5 +75,7 @@ public class ReplyService {
   public Integer countReplyLikes(Long replyId) {
     return likeRepository.countByReplyId(replyId);
   }
+
+  // Removed duplicate and erroneous method definition
 
 }

@@ -42,55 +42,79 @@
       <script>
         const searchInput = document.getElementById('search-input');
         const searchResults = document.getElementById('search-results');
-
+      
         searchInput.addEventListener('input', () => {
           const query = searchInput.value;
-
+      
           if (query.length > 0) {
             fetch(`/search-live?query=${encodeURIComponent(query)}`)
               .then((response) => response.json())
               .then((data) => {
                 // Clear previous results
-                searchResults.innerHTML = '';
-
+                searchResults.removeChild(searchResults.firstChild);
+      
                 // Display users
                 if (data.users.length > 0) {
                   const userSection = document.createElement('div');
-                  userSection.innerHTML =
-                    "<h3 class='font-bold text-lg mb-2'>Users</h3>";
+      
+                  const userSectionTitle = document.createElement('h3');
+                  userSectionTitle.className = 'font-bold text-lg mb-2';
+                  userSectionTitle.textContent = 'Users';
+                  userSection.appendChild(userSectionTitle);
+      
                   const userList = document.createElement('ul');
                   userList.className = 'space-y-2';
-
+      
                   data.users.forEach((user) => {
                     const userItem = document.createElement('li');
-                    userItem.innerHTML = `
-                      <ul class="flex justify-start items-center w-full p-2 h-12 bg-slate-100 shadow-sm">
-                        <li class="pr-2">
-                          <a href="/profile/${user.id}">
-                            <img
-                              class="h-7 w-7 rounded-full bg-white"
-                              src="${user.profilePictureUrl || '/images/default-profile-photo.png'}"
-                              alt="Profile Picture"
-                            />
-                          </a>
-                        </li>
-                        <li class="ml-2">
-                          <a href="/profile/${user.id}">
-                            <span class="text-sm font-semibold">${user.username}</span>
-                          </a>
-                        </li>
-                      </ul>
-                    `;
+      
+                    const userContainer = document.createElement('ul');
+                    userContainer.className =
+                      'flex justify-start items-center w-full p-2 h-12 bg-slate-100 shadow-sm';
+      
+                    const profilePictureContainer = document.createElement('li');
+                    profilePictureContainer.className = 'pr-2';
+      
+                    const profilePictureLink = document.createElement('a');
+                    profilePictureLink.href = `/profile/${user.id}`;
+      
+                    const profilePicture = document.createElement('img');
+                    profilePicture.className = 'h-7 w-7 rounded-full bg-white';
+                    profilePicture.src =
+                      user.profilePictureUrl || '/images/default-profile-photo.png';
+                    profilePicture.alt = 'Profile Picture';
+      
+                    profilePictureLink.appendChild(profilePicture);
+                    profilePictureContainer.appendChild(profilePictureLink);
+      
+                    const usernameContainer = document.createElement('li');
+                    usernameContainer.className = 'ml-2';
+      
+                    const usernameLink = document.createElement('a');
+                    usernameLink.href = `/profile/${user.id}`;
+      
+                    const usernameSpan = document.createElement('span');
+                    usernameSpan.className = 'text-sm font-semibold';
+                    usernameSpan.textContent = user.username;
+      
+                    usernameLink.appendChild(usernameSpan);
+                    usernameContainer.appendChild(usernameLink);
+      
+                    userContainer.appendChild(profilePictureContainer);
+                    userContainer.appendChild(usernameContainer);
+                    userItem.appendChild(userContainer);
                     userList.appendChild(userItem);
                   });
-
+      
                   userSection.appendChild(userList);
                   searchResults.appendChild(userSection);
                 }
-
               });
           } else {
-            searchResults.innerHTML = ''; // Clear results if input is empty
+            // Clear results if input is empty
+            while (searchResults.firstChild) {
+              searchResults.removeChild(searchResults.firstChild);
+            }
           }
         });
       </script>

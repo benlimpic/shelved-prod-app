@@ -3,6 +3,7 @@ package com.authentication.demo.Model;
 import java.sql.Timestamp;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,10 +35,10 @@ public class CommentModel {
     @JoinColumn(name = "item_id")
     private ItemModel item;
 
-    @OneToMany(mappedBy = "comment", cascade = { jakarta.persistence.CascadeType.ALL }, orphanRemoval = true)
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReplyModel> replies;
 
-    @Column(name = "content", nullable = false)
+    @Column(name = "content", nullable = false, length = 500)
     private String content;
 
     @Column(name = "created_at", nullable = false, updatable = false)
