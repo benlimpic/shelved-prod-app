@@ -1,9 +1,8 @@
 package com.authentication.demo.Controller;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import java.security.Principal;
+
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -25,49 +24,24 @@ public class ReplyController {
     this.replyService = replyService;
   }
 
+  @PostMapping("/collections/{collectionId}/replies")
+  public String postReply(@RequestParam Long commentId, String content, Principal principal) {
+    String username = principal.getName();
 
-
-
-  // POST REPLY
-  @PostMapping("/comments/{commentId}/replies")
-  public String createReply(
-      @PathVariable Long commentId,
-      @RequestParam String content
-  ) {
-
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    if (authentication == null || !authentication.isAuthenticated()) {
-        System.out.println("User is not authenticated");
-        throw new RuntimeException("User is not authenticated");
-    } else {
-        System.out.println("Authenticated user: " + authentication.getName());
+    if (userService.getUserByUsername(username).isEmpty()) {
+      throw new RuntimeException("User not found with username: " + username);
     }
-  
 
-      System.out.println("Received POST request to create reply");
-      System.out.println("Comment ID: " + commentId);
-      System.out.println("Content: " + content);
-  
-      // Redirect to the desired page after saving the reply
+    CommentModel comment = commentService.getCommentById(commentId);
+    if (comment == null) {
+      throw new RuntimeException("Comment not found with id: " + commentId);
+    }
 
-      CommentModel comment = commentService.getCommentById(commentId);
+    replyService.createReply(commentId, content, username);
+    Long latestReplyId = replyService.getLatestReplyId();
+    String replyId = latestReplyId != null ? String.valueOf(latestReplyId) : "unknown";
+    String collectionId = String.valueOf(comment.getCollection().getId());
 
-      replyService.createReply(commentId, content);
-
-      Long replyId = replyService.getLatestReplyId();
-
-      if (replyId == null) {
-        throw new RuntimeException("Failed to retrieve the latest reply ID");
-      }
-
-      if (comment.getCollection() != null) {
-        return "redirect:/collection/" + comment.getCollection().getId() + "/comments#reply-" + replyId;
-
-      } else if (comment.getItem() != null) {
-        return "redirect:/item/" + comment.getItem().getId() + "/comments#reply-" + replyId;
-
-      }
-
-      return "redirect:/index";
+    return "redirect:/collection/" + collectionId + "/comments#reply-" + replyId;
   }
 }

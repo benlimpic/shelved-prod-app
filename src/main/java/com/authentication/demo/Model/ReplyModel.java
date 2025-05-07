@@ -20,16 +20,17 @@ public class ReplyModel {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserModel user;
+
+    @ManyToOne
     @JoinColumn(name = "comment_id", nullable = false)
     private CommentModel comment;
 
-    @Column(nullable = false)
-    private Long userId;
-
-    @Column(nullable = false, length = 500)
+    @Column(name= "content", nullable = false, length = 500)
     private String content;
 
-    @Column(nullable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private Timestamp createdAt;
 
     @Transient
@@ -38,18 +39,20 @@ public class ReplyModel {
     @Transient
     private Boolean isLiked;
 
-    // Constructors
+    @Transient
+    private Boolean isOwner;
+
+
     public ReplyModel() {
     }
 
-    public ReplyModel(Long userId, CommentModel comment, String content, Timestamp createdAt, Integer likeCount, Boolean isLiked) {
-        this.userId = userId;
+    public ReplyModel(UserModel user, CommentModel comment, String content, Timestamp createdAt) {
+        this.user = user;
         this.comment = comment;
         this.content = content;
         this.createdAt = createdAt;
     }
 
-    // Getters and setters
     public Long getId() {
         return id;
     }
@@ -58,12 +61,12 @@ public class ReplyModel {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public UserModel getUser() {
+        return user;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUser(UserModel user) {
+        this.user = user;
     }
 
     public CommentModel getComment() {
@@ -106,5 +109,11 @@ public class ReplyModel {
         this.isLiked = isLiked;
     }
 
+    public Boolean getIsOwner() {
+        return isOwner;
+    }
 
+    public void setIsOwner(Boolean isOwner) {
+        this.isOwner = isOwner;
+    }
 }

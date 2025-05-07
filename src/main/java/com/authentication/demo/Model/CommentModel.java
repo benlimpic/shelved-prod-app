@@ -50,6 +50,9 @@ public class CommentModel {
     @Transient
     private Boolean isLiked;
 
+    @Transient
+    private Boolean isOwner;
+
 
 
     // Getters and setters
@@ -125,5 +128,12 @@ public class CommentModel {
         this.isLiked = isLiked;
     }
 
+    public Boolean getIsOwner() {
+        return isOwner;
+    }
+
+    public void setIsOwner(Boolean isOwner) {
+        this.isOwner = isOwner;
+    }
 
 }

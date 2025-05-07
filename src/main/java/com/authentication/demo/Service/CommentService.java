@@ -1,6 +1,7 @@
 package com.authentication.demo.Service;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -133,6 +134,9 @@ public class CommentService {
             .orElseThrow(() -> new RuntimeException("Comment not found"));
   }
 
+  public List<CommentModel> getCommentsByItemId(Long itemId) {
+    return commentRepository.findByItemIdOrderByCreatedAtDesc(itemId);
+  }
   
 
 }

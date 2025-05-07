@@ -22,7 +22,7 @@
             </a>
           </li>
           <li class="flex items-center">
-            <div th:if="${isOwner != null && isOwner}">
+            <div th:if="${item.isOwner != null && item.isOwner}">
               <a
                 class="bg-blue-500 hover:bg-blue-700 text-white text-xs px-1 py-0.5 rounded"
                 id="redirectUpdateItemDetails"
@@ -164,10 +164,10 @@
                           class="likeButton"
                           th:if="${item.userId != user.id}"
                         >
-                          <span class="pr-2 font-medium" th:if="${isLiked}">
+                          <span class="pr-2 font-medium" th:if="${item.isLiked}">
                             &#9829;
                           </span>
-                          <span class="pr-2 font-medium" th:if="${!isLiked}">
+                          <span class="pr-2 font-medium" th:if="${!item.isLiked}">
                             &#9825;
                           </span>
                         </button>
@@ -182,7 +182,7 @@
                       </form>
                     </div>
                     <div class="flex justify-start items-center">
-                      <p class="font-thin" th:text="${likeCount}"></p>
+                      <p class="font-thin" th:text="${item.likeCount}"></p>
                     </div>
                   </li>
                   <li class="flex flex-row justify-start items-center pr-2">
@@ -242,7 +242,7 @@
     </main>
     <footer>
       <div id="footerNavContent" class="footerNav w-full">
-        <div th:if="${isOwner != null && isOwner}" class="w-full">
+        <div th:if="${item.isOwner != null && item.isOwner}" class="w-full">
           <!-- Footer for owner -->
           <ul
             class="flex justify-between items-center w-full"
@@ -276,7 +276,7 @@
           </ul>
         </div>
 
-        <div th:if="${isOwner != null && !isOwner}" class="w-full">
+        <div th:if="${item.isOwner != null && !item.isOwner}" class="w-full">
           <!-- Footer for non-owner -->
           <ul
             class="flex justify-between items-center w-full"

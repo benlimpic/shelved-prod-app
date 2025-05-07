@@ -3,11 +3,8 @@ package com.authentication.demo.Service;
 import java.sql.Timestamp;
 import java.util.List;
 
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.authentication.demo.Model.CommentModel;
 import com.authentication.demo.Model.ReplyModel;
 import com.authentication.demo.Repository.LikeRepository;
 import com.authentication.demo.Repository.ReplyRepository;
@@ -17,15 +14,16 @@ import com.authentication.demo.Repository.ReplyRepository;
 public class ReplyService {
   private final ReplyRepository replyRepository;
   private final CommentService commentService;
-
   private final LikeRepository likeRepository;
+  private final UserService userService;
 
-  public ReplyService(ReplyRepository replyRepository, CommentService commentService,  LikeRepository likeRepository) {
+  public ReplyService(ReplyRepository replyRepository, CommentService commentService, LikeRepository likeRepository, UserService userService) {
     this.replyRepository = replyRepository;
     this.commentService = commentService;
-
     this.likeRepository = likeRepository;
+    this.userService = userService;
   }
+
   
 
   // GET REPLIES BY COMMENT ID
@@ -34,25 +32,15 @@ public class ReplyService {
   }
 
 
-  @Transactional
-  public void createReply(Long commentId, String content) {
-      System.out.println("Fetching comment with ID: " + commentId);
-      CommentModel comment = commentService.getCommentById(commentId);
-      if (comment == null) {
-          throw new RuntimeException("Comment not found with ID: " + commentId);
-      }
-  
-      Long userId = Long.valueOf(SecurityContextHolder.getContext().getAuthentication().getName());
-  
-      ReplyModel reply = new ReplyModel();
-      reply.setComment(comment);
-      reply.setContent(content);
-      reply.setUserId(userId);
-      reply.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-  
-      System.out.println("Saving reply: " + reply);
-      replyRepository.save(reply);
-      System.out.println("Reply saved successfully");
+  //CREATE REPLY
+  public ReplyModel createReply(Long commentId, String content, String username) {
+    ReplyModel reply = new ReplyModel();
+
+    reply.setContent(content);
+    reply.setComment(commentService.getCommentById(commentId));
+    reply.setUser(userService.getUserByUsername(username).orElseThrow(() -> new RuntimeException("User not found with username: " + username)));
+    reply.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+    return replyRepository.save(reply);
   }
 
 
@@ -76,6 +64,6 @@ public class ReplyService {
     return likeRepository.countByReplyId(replyId);
   }
 
-  // Removed duplicate and erroneous method definition
+
 
 }

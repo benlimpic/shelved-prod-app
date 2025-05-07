@@ -58,13 +58,16 @@ public class CollectionModel {
   @Transient
   private Integer commentCount;
 
+  @Transient
+  private Boolean isOwner;
+
   public CollectionModel() {
 
   }
 
   public CollectionModel(
       Long id,
-      UserModel user, // Change from Long userId to UserModel user
+      UserModel user,
       String title,
       String caption,
       String description,
@@ -74,7 +77,7 @@ public class CollectionModel {
       List<ItemModel> items) {
 
     this.id = id;
-    this.user = user; // Update to use the user object
+    this.user = user;
     this.title = title;
     this.caption = caption;
     this.description = description;
@@ -88,11 +91,11 @@ public class CollectionModel {
     return id;
   }
 
-  public UserModel getUser() { // Change from getUserId to getUser
+  public UserModel getUser() {
     return user;
   }
 
-  public void setUser(UserModel user) { // Change from setUserId to setUser
+  public void setUser(UserModel user) {
     this.user = user;
   }
 
@@ -192,5 +195,13 @@ public class CollectionModel {
 
   public void setCommentCount(Integer commentCount) {
     this.commentCount = commentCount;
+  }
+
+  public Boolean getIsOwner() {
+    return isOwner;
+  }
+
+  public void setIsOwner(Boolean isOwner) {
+    this.isOwner = isOwner;
   }
 }

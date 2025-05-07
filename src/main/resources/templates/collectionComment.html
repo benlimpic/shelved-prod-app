@@ -133,10 +133,10 @@
                         class="likeButton"
                         th:if="${collection.user.id != user.id}"
                       >
-                        <span class="pr-2 font-medium" th:if="${isLiked}">
+                        <span class="pr-2 font-medium" th:if="${collection.isLiked}">
                           &#9829;
                         </span>
-                        <span class="pr-2 font-medium" th:if="${!isLiked}">
+                        <span class="pr-2 font-medium" th:if="${!collection.isLiked}">
                           &#9825;
                         </span>
                       </button>
@@ -164,7 +164,7 @@
                   </a>
                   <span
                     class="font-thin"
-                    th:text="${collection.commentCount}"
+                    th:text="${collection.commentCount != null ? collection.commentCount : '0'}"
                   ></span>
                 </li>
               </ul>
@@ -555,9 +555,9 @@
       <div id="commentReplyActivity" class="commentNav hidden">
         <div id="commentInputContainer" class="w-full">
           <form
-            th:id="commentReplyForm"
+            id="commentReplyForm"
             method="POST"
-            action=""
+            th:action="@{/collections/{collectionId}/replies (collectionId=${collection.id})}"
             class="flex flex-row w-full items-center justify-center px-2 bg-white"
           >
             <a href="/profile" class="w-10">

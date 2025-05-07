@@ -62,6 +62,9 @@ public class ItemModel {
   @Transient
   private Integer commentCount;
 
+  @Transient
+  private Boolean isOwner;
+
   public ItemModel() {
 
   }
@@ -83,6 +86,10 @@ public class ItemModel {
 
   public Long getId() {
     return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
   }
 
   public CollectionModel getCollection() {
@@ -183,5 +190,13 @@ public class ItemModel {
 
   public void setCommentCount(Integer commentCount) {
     this.commentCount = commentCount;
+  }
+
+  public Boolean getIsOwner() {
+    return isOwner;
+  }
+
+  public void setIsOwner(Boolean isOwner) {
+    this.isOwner = isOwner;
   }
 }
