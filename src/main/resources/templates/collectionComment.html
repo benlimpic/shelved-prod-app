@@ -151,7 +151,7 @@
                     </form>
                   </div>
                   <div class="flex justify-start items-center">
-                    <p class="font-thin" th:text="${likeCount}"></p>
+                    <p class="font-thin" th:text="${collection.likeCount}"></p>
                   </div>
                 </li>
                 <li class="flex flex-row justify-start items-center pr-2">
@@ -164,7 +164,8 @@
                   </a>
                   <span
                     class="font-thin"
-                    th:text="${collection.commentCount != null ? collection.commentCount : '0'}"
+                    th:if="${collection.commentCount != null}"
+                    th:text="${collection.commentCount}"
                   ></span>
                 </li>
               </ul>
@@ -362,23 +363,27 @@
                         >
                           <button><span class="leading-[1.2]">Reply</span></button>
 
+
+
                           <!-- REPLY TO REPLY LOGIC -->
                         </div>
                       </div>
                       <!-- Like Box -->
                       <div
+                        th:if="${reply.id != null}"
                         th:id="'likeBox-' + ${reply.id}"
                         class="flex flex-col justify-start items-center"
                       >
                         <div class="flex flex-row justify-center items-center">
                           <form
-                            th:if="${reply?.id != null}"
+                            th:if="${reply.id != null}"
                             th:action="@{/replies/{id}/like(id=${reply?.id})}"
                             method="post"
                           >
                             <input
                               type="hidden"
                               name="replyId"
+                              th:if="${reply.id != null}"
                               th:value="${reply.id}"
                             />
                             <input
@@ -429,6 +434,7 @@
                         </div>
                         <div class="flex flex-row justify-center items-center">
                           <p
+                            th:if="${reply.id != null}"
                             th:id="'likeCount-' + ${reply.id}"
                             style="font-size: 10px; line-height: 1"
                             class="font-thin text-xs"
@@ -444,18 +450,20 @@
               </div>
               <!-- Like Box -->
               <div
+                th:if="${comment.id != null}"
                 th:id="'likeBox-' + ${comment.id}"
                 class="flex flex-col justify-start items-center"
               >
                 <div class="flex flex-row justify-center items-center">
                   <form
-                    th:if="${comment?.id != null}"
-                    th:action="@{/comments/{id}/like(id=${comment?.id})}"
+                    th:if="${comment.id != null}"
+                    th:action="@{/replies/{id}/like(id=${comment.id})}"
                     method="post"
                   >
                     <input
                       type="hidden"
                       name="commentId"
+                      th:if="${comment.id != null}"
                       th:value="${comment.id}"
                     />
                     <input type="hidden" name="userId" th:value="${user.id}" />
@@ -502,6 +510,7 @@
                 </div>
                 <div class="flex flex-row justify-center items-center">
                   <p
+                    th:if="${comment.id != null}"
                     th:id="'likeCount-' + ${comment.id}"
                     style="font-size: 10px; line-height: 1"
                     class="font-thin text-xs"

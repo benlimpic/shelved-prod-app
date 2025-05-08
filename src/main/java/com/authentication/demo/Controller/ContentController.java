@@ -94,9 +94,16 @@ public class ContentController {
             // Fetch the number of likes for the collection
             collection.setLikeCount(likeService.countLikes(collection.getId()));
 
-            // NUMBER OF COMMENTS
-            collection.setCommentCount(collectionService.countComments(collection.getId()));
+            // NUMBER OF COMMENTS AND REPLIES
+            List<CommentModel> comments = collectionService.getCommentsByCollectionIdAsc(collection.getId());
+            int commentReplyCount = 0;
+            for (CommentModel comment : comments) {
+                List<ReplyModel> replies = comment.getReplies();
+                commentReplyCount += replies.size() + 1;
+            }
 
+            collection.setCommentCount(commentReplyCount);
+            
             // Fetch the isLiked status for the collection
             List<LikeModel> likes = likeRepository.findAllByCollectionId(collection.getId());
             collection.setIsLiked(likes.stream().anyMatch(like -> like.getUser().getId().equals(currentUser.getId())));
@@ -352,6 +359,7 @@ public class ContentController {
 
         collection.setComments(collectionService.getCommentsByCollectionIdAsc(collectionId));
 
+        int commentReplyCount = 0;
 
         for (CommentModel comment : collection.getComments()) {
 
@@ -378,11 +386,16 @@ public class ContentController {
 
             System.out.println("Comment: " + comment.getId());
 
-
             // Fetch replies for the comment
             List<ReplyModel> replies = comment.getReplies();
-            int commentReplyCount = replies.size() + 1;
+            comment.setReplies(replies);
+            
+            // COMMENT AND REPLY COUNT
+            commentReplyCount += comment.getReplies().size() + 1;
 
+
+            
+            // Fetch replies for the comment
             for (ReplyModel reply : replies) {
                 UserModel replyOwner = reply.getUser();
                 if (replyOwner != null) {
@@ -402,19 +415,6 @@ public class ContentController {
                 reply.setIsLiked(isReplyLiked);
             }
 
-            collection.setCommentCount(commentReplyCount);
-
-        }
-
-        List<CommentModel> comments = collection.getComments();
-        int commentReplyCount = 0;
-
-        for (CommentModel comment : comments) {
-
-            commentReplyCount += 1;
-
-            List<ReplyModel> replies = comment.getReplies();
-            commentReplyCount += replies.size();
         }
 
         collection.setCommentCount(commentReplyCount);

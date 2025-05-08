@@ -1,5 +1,6 @@
 package com.authentication.demo.Service;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import com.authentication.demo.Repository.CollectionRepository;
 import com.authentication.demo.Repository.CommentRepository;
 import com.authentication.demo.Repository.ItemRepository;
 import com.authentication.demo.Repository.LikeRepository;
+import com.authentication.demo.Repository.ReplyRepository;
 import com.authentication.demo.Repository.UserRepository;
 
 @Service
@@ -20,15 +22,21 @@ public class LikeService {
   private final UserRepository userRepository;
   private final ItemRepository itemRepository;
   private final CommentRepository commentRepository;
+  private final ReplyRepository replyRepository;
 
-  public LikeService(LikeRepository likeRepository, CollectionRepository collectionRepository, 
-                     UserRepository userRepository, ItemRepository itemRepository, 
-                     CommentRepository commentRepository) {
+  public LikeService(
+    LikeRepository likeRepository,
+    CollectionRepository collectionRepository,
+    UserRepository userRepository,
+    ItemRepository itemRepository,
+    CommentRepository commentRepository,
+    ReplyRepository replyRepository) {
     this.likeRepository = likeRepository;
     this.collectionRepository = collectionRepository;
     this.userRepository = userRepository;
     this.itemRepository = itemRepository;
     this.commentRepository = commentRepository;
+    this.replyRepository = replyRepository;
   }
 
   public void toggleLike(Long userId, Long collectionId) {
@@ -136,6 +144,32 @@ public class LikeService {
       newLike.setUser(currentUser);
       newLike.setComment(commentRepository.findById(commentId)
           .orElseThrow(() -> new RuntimeException("Comment not found")));
+      likeRepository.save(newLike);
+    }
+
+  }
+
+  public void toggleLikeReply(Principal principal, Long replyId) {
+    
+    String username = principal.getName();
+    UserModel currentUser = userRepository.findByUsername(username)
+        .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
+    List<LikeModel> existingLikes = likeRepository.findAllByReplyId(replyId);
+    boolean alreadyLiked = existingLikes.stream()
+        .anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
+    if (alreadyLiked) {
+      // If the user already liked the reply, remove the like
+      LikeModel existingLike = existingLikes.stream()
+          .filter(like -> like.getUser().getId().equals(currentUser.getId()))
+          .findFirst()
+          .orElseThrow(() -> new RuntimeException("Like not found"));
+      likeRepository.delete(existingLike);
+    } else {
+      // If the user has not liked the reply, add a new like
+      LikeModel newLike = new LikeModel();
+      newLike.setUser(currentUser);
+      newLike.setReply(replyRepository.findById(replyId)
+          .orElseThrow(() -> new RuntimeException("Reply not found")));
       likeRepository.save(newLike);
     }
 
