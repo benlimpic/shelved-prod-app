@@ -335,8 +335,8 @@
                               <span
                                 style="font-size: 10px; line-height: 1"
                                 class="font-semibold leading-[1]"
-                                th:if="${reply.user?.username != null}"
-                                th:text="${reply.user?.username}"
+                                th:if="${reply.user.username != null}"
+                                th:text="${reply.user.username}"
                               ></span>
                             </a>
                           </div>
@@ -361,7 +361,13 @@
                           style="font-size: 8px; line-height: 1"
                           class="replyReplyBox w-full flex flex-col justify-center items-start pt-1 pr-2 text-slate-500 font-semibold"
                         >
-                          <button><span class="leading-[1.2]">Reply</span></button>
+                          <button
+                          class="commentReplyReplyButton"
+                          th:attr="data-comment-id=${comment.id}, data-reply-username=${reply.user.username}"
+                          onclick="triggerReplyId(this)"
+                          >
+                            <span class="leading-[1.2]">Reply</span>
+                          </button>
 
 
 
@@ -545,6 +551,7 @@
               th:value="${collection.id}"
             />
             <input
+              id="commentContentInput"
               type="text"
               name="content"
               placeholder="Leave a comment..."
@@ -584,9 +591,11 @@
             />
 
             <input
+              id="replyContentInput"
               type="text"
               name="content"
               placeholder="Leave a reply..."
+              value=""
               class="w-full border-none outline-none focus:ring-0 text-sm font-thin bg-slate-100 rounded-md px-2 py-1 mx-2"
             />
 
