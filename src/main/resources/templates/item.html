@@ -16,7 +16,7 @@
       <nav class="navbar">
         <ul class="flex justify-between w-full">
           <li class="flex items-center">
-            <a id="backButton" href="/collection/${item.collectionId}">
+            <a id="backButton" th:href="@{|/collection/${item.collection.id}|}">
               <span>&#8592;</span>
             </a>
           </li>

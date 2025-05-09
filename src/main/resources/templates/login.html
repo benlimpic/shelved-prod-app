@@ -6,24 +6,6 @@
     <link rel="stylesheet" href="/css/output.css" />
 
     <script th:src="@{/js/fadeAnimations.js}" defer></script>
-
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        // Clear the visitedUrls array in sessionStorage when the login page loads
-        sessionStorage.setItem("visitedUrls", JSON.stringify([]));
-        console.log("Visited URLs reset to empty on login page load.");
-
-        const loginForm = document.querySelector('form[action="/login"]');
-
-        if (loginForm) {
-          loginForm.addEventListener("submit", function () {
-            // Clear the visitedUrls array again on form submission (optional redundancy)
-            sessionStorage.setItem("visitedUrls", JSON.stringify([]));
-            console.log("Visited URLs reset to empty on login form submission.");
-          });
-        }
-      });
-    </script>
     
   </head>
   <body>
