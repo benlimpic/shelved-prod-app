@@ -212,16 +212,18 @@
             </div>
           </div>
         </div>
-        <!-- Comment Box -->
+
+
+        <!-- COMMENT BOX -->
         <div
           id="commentBox"
-          class="flex-grow h-56 w-full bg-slate-100 overflow-y-auto"
+          class="flex-grow pb-6 h-60 w-full bg-slate-100 overflow-y-auto"
           th:value="${collection.id}"
         >
           <!-- Comment Template -->
           <div
             th:id="'comment-' + ${comment.id}"
-            class="px-3 pt-1 pb-2"
+            class="pt-3 px-3"
             th:each="comment : ${collection.comments}"
           >
             <div
@@ -278,7 +280,6 @@
                   style="font-size: 8px; line-height: 1"
                   class="commentReplyBox w-full flex flex-col justify-center items-start pt-1 pr-2 text-slate-500 font-semibold"
                 >
-                  <!-- REPLY TO COMMENT LOGIC -->
                   
                   <button
                     class="commentReplyButton"
@@ -288,21 +289,20 @@
                     <span class="leading-[1.2]">Reply</span>
                   </button>
 
-                  <!-- REPLY TO COMMENT LOGIC -->
                 
                 </div>
 
-                <!-- REPLY BOX GOES HERE -->
+                <!-- REPLY BOX -->
 
                 <div
                   id="replyBox"
                   class="flex-grow w-full bg-slate-100 overflow-y-auto"
                   th:value="${collection.id}"
                 >
-                  <!-- Comment Template -->
+                  <!-- Reply Template -->
                   <div
                     th:id="'reply-' + ${reply.id}"
-                    class="px-3 pt-1 pb-2"
+                    class="pt-3 px-3"
                     th:each="reply : ${comment.replies}"
                   >
                     <div
@@ -449,9 +449,8 @@
                   </div>
                 </div>
 
-                <!-- REPLY BOX GOES HERE -->
               </div>
-              <!-- Like Box -->
+              <!-- COMMENT LIKE BOX -->
               <div
                 th:if="${comment.id != null}"
                 th:id="'likeBox-' + ${comment.id}"

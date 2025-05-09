@@ -132,7 +132,9 @@
             </div>
           </div>
         </div>
-        <div id="itemGrid" class="flex-grow h-56 w-full bg-white overflow-y-auto">
+        <div id="itemGrid"
+          class="flex-grow pb-6 h-60 w-full bg-slate-100 overflow-y-auto"
+        >
           <div class="grid bg-white">
             <div th:each="row : ${partitionedItems}" class="grid grid-cols-3 bg-white">
               <div th:each="item : ${row}" class="flex flex-col items-center bg-white">

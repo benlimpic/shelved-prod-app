@@ -25,7 +25,7 @@ public class ReplyController {
   }
 
   @PostMapping("/collections/{collectionId}/replies")
-  public String postReply(@RequestParam Long commentId, String content, Principal principal) {
+  public String collectionReply(@RequestParam Long commentId, String content, Principal principal) {
     String username = principal.getName();
 
     if (userService.getUserByUsername(username).isEmpty()) {
@@ -43,5 +43,26 @@ public class ReplyController {
     String collectionId = String.valueOf(comment.getCollection().getId());
 
     return "redirect:/collection/" + collectionId + "/comments#reply-" + replyId;
+  }
+
+    @PostMapping("/items/{itemId}/replies")
+  public String itemReply(@RequestParam Long commentId, String content, Principal principal) {
+    String username = principal.getName();
+
+    if (userService.getUserByUsername(username).isEmpty()) {
+      throw new RuntimeException("User not found with username: " + username);
+    }
+
+    CommentModel comment = commentService.getCommentById(commentId);
+    if (comment == null) {
+      throw new RuntimeException("Comment not found with id: " + commentId);
+    }
+
+    replyService.createReply(commentId, content, username);
+    Long latestReplyId = replyService.getLatestReplyId();
+    String replyId = latestReplyId != null ? String.valueOf(latestReplyId) : "unknown";
+    String itemId = String.valueOf(comment.getItem().getId());
+
+    return "redirect:/item/" + itemId + "/comments#reply-" + replyId;
   }
 }
