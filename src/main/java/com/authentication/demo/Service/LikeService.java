@@ -117,7 +117,6 @@ public class LikeService {
           .orElseThrow(() -> new RuntimeException("Collection not found")));
       likeRepository.save(newLike);
     }
-
   }
 
   public Integer countLikesComment(Long commentId) {

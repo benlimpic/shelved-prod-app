@@ -16,26 +16,9 @@
       src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
     ></script>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        // Retrieve the visitedUrls stack from sessionStorage
-        let visitedUrls =
-          JSON.parse(sessionStorage.getItem('visitedUrls')) || [];
-
-        // Add the current URL to the stack
-        if (!visitedUrls.includes(window.location.href)) {
-          visitedUrls.push(window.location.href);
-        }
-
-        // Save the updated stack back to sessionStorage
-        sessionStorage.setItem('visitedUrls', JSON.stringify(visitedUrls));
-      });
-    </script>
-
     <script src="/js/visitedPages.js" defer></script>
     <script src="/js/toggleTruncate.js" defer></script>
     <script src="/js/toggleItemsIndex.js" defer></script>
-    <script src="/js/BackButton/visitedPages.js" defer></script>
   </head>
 
   <body>

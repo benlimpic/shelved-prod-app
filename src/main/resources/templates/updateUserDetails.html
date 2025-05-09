@@ -9,8 +9,6 @@
     <script th:src="@{/js/toggleProfilePhoto.js}" defer></script>
     <script th:src="@{/js/fadeAnimations.js}" defer></script>
     <script th:src="@{/js/updateChanges.js}" defer></script>
-    
-    <script src="/js/BackButton/visitedPages.js" defer></script>
 
   </head>
   <body>
@@ -18,7 +16,7 @@
       <nav class="navbar">
         <ul class="flex justify-between items-center w-full">
           <li class="flex">
-            <a id="backButton">
+            <a id="backButton" th:href="${user != null} ? '/profile/' + ${user.id} : '/profile'">
               <span>&#8592;</span>
             </a>
           </li>

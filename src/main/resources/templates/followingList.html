@@ -5,15 +5,13 @@
     <title>User Following</title>
     <link rel="stylesheet" href="/css/output.css" />
 
-    <script src="/js/BackButton/visitedPages.js" defer></script>
-
   </head>
   <body>
     <header>
       <nav class="navbar">
         <ul class="flex justify-between w-full">
           <li class="flex items-center">
-            <a id="backButton">
+            <a id="backButton" th:href="@{/profile/{id}(id=${userProfile.id})}">
               <span>&#8592;</span>
             </a>
           </li>

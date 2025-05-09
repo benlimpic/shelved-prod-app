@@ -9,8 +9,7 @@
     <script src="/js/toggleOverlay.js" defer></script>
     <script src="/js/windowOpen.js" defer></script>
     <script src="/js/toggleReply.js" defer></script>
-    <script src="/js/BackButton/visitedPages.js" defer></script>
-        <script src="/js/passIdToComment.js" defer></script>
+    <script src="/js/passIdToComment.js" defer></script>
     <script defer>
       document.addEventListener('DOMContentLoaded', function () {
           console.log('Page loaded. Checking for hash...');
@@ -48,7 +47,7 @@
       <nav class="navbar">
         <ul class="flex justify-between w-full">
           <li class="flex items-center">
-            <a id="backButton">
+            <a id="backButton" href="/collection/${item.collectionId}">
               <span>&#8592;</span>
             </a>
           </li>

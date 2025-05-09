@@ -70,37 +70,8 @@ public class LikeController {
     }
 
     // Redirect back to the index page with the hash
-    return "redirect:/index";
+    return "redirect:/index#collection-" + collectionId;
   }
-
-  @PostMapping("/collections/{collectionId}/like-comment-open")
-  public String toggleLikeCommentOpen(@PathVariable Long collectionId, @RequestParam long userId) {
-    UserModel currentUser = userRepository.findById(userId)
-        .orElseThrow(() -> new RuntimeException("User not found"));
-    CollectionModel collection = collectionRepository.findById(collectionId)
-        .orElseThrow(() -> new RuntimeException("Collection not found"));
-    List<LikeModel> existingLikes = likeRepository.findAllByCollectionId(collectionId);
-    boolean alreadyLiked = existingLikes.stream()
-        .anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
-    if (alreadyLiked) {
-      // If the user already liked the collection, remove the like
-      LikeModel existingLike = existingLikes.stream()
-          .filter(like -> like.getUser().getId().equals(currentUser.getId()))
-          .findFirst()
-          .orElseThrow(() -> new RuntimeException("Like not found"));
-      likeRepository.delete(existingLike);
-    } else {
-      // If the user has not liked the collection, add a new like
-      LikeModel newLike = new LikeModel();
-      newLike.setUser(currentUser);
-      newLike.setCollection(collection);
-      likeRepository.save(newLike);
-    }
-
-    return "redirect:/collection/" + collectionId + "/comments";
-  }
-
-
 
   @PostMapping("/collections/{collectionId}/like")
   public String toggleLike(@PathVariable Long collectionId, long userId) {

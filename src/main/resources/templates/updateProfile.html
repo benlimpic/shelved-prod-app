@@ -11,15 +11,13 @@
     <script th:src="@{/js/updateChanges.js}" defer></script>
     <script th:src="@{/js/previewFile.js}" defer></script>
 
-    <script src="/js/BackButton/visitedPages.js" defer></script>
-    
   </head>
   <body>
     <header>
       <nav class="navbar">
         <ul class="flex justify-between w-full">
           <li class="flex items-center">
-            <a id="backButton">
+            <a id="backButton" th:href="${user != null} ? '/profile/' + ${user.id} : '/profile'">
               <span>&#8592;</span>
             </a>
           </li>

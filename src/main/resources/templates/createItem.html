@@ -5,19 +5,17 @@
     <meta charset="UTF-8" />
 
     <title>Login</title>
+    <link rel="stylesheet" href="/css/output.css" />
 
     <script th:src="@{/js/previewFile.js}" defer></script>
 
-    <script src="/js/BackButton/visitedPages.js" defer></script>
-
-    <link rel="stylesheet" href="/css/output.css" />
   </head>
   <body id="scrollablePage">
     <header>
       <nav class="navbar">
         <ul class="flex justify-between items-center w-full">
           <li class="flex items-center">
-            <a id="backButton">
+            <a id="backButton" th:href="@{/collection/{id}(id=${collectionId})}">
               <span>&#8592;</span>
             </a>
           </li>
