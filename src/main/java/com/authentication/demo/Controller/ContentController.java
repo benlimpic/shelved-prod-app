@@ -405,14 +405,16 @@ public class ContentController {
                         reply.setIsOwner(false);
                     }
                 }
-                // Fetch the number of likes for the reply
-                Integer replyLikeCount = likeService.countLikesReply(reply.getId());
-                reply.setLikeCount(replyLikeCount);
-                // Fetch the isLiked status for the reply
+
+                // Fetch the isLiked status for the comment
                 List<LikeModel> replyLikes = likeRepository.findAllByReplyId(reply.getId());
                 boolean isReplyLiked = replyLikes.stream()
                         .anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
                 reply.setIsLiked(isReplyLiked);
+
+                // Fetch the number of likes for the reply
+                Integer replyLikeCount = likeService.countLikesReply(reply.getId());
+                reply.setLikeCount(replyLikeCount);
             }
 
         }

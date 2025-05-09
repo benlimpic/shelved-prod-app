@@ -369,9 +369,6 @@
                             <span class="leading-[1.2]">Reply</span>
                           </button>
 
-
-
-                          <!-- REPLY TO REPLY LOGIC -->
                         </div>
                       </div>
                       <!-- Like Box -->
@@ -383,7 +380,7 @@
                         <div class="flex flex-row justify-center items-center">
                           <form
                             th:if="${reply.id != null}"
-                            th:action="@{/replies/{id}/like(id=${reply?.id})}"
+                            th:action="@{/replies/{id}/like(id=${reply.id})}"
                             method="post"
                           >
                             <input
@@ -463,7 +460,7 @@
                 <div class="flex flex-row justify-center items-center">
                   <form
                     th:if="${comment.id != null}"
-                    th:action="@{/replies/{id}/like(id=${comment.id})}"
+                    th:action="@{/comments/{id}/like(id=${comment.id})}"
                     method="post"
                   >
                     <input

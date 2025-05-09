@@ -196,18 +196,18 @@ public class LikeController {
     UserModel currentUser = userRepository.findByUsername(username)
         .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
 
-    List<LikeModel> existingLikes = likeRepository.findAllByCommentId(replyId);
+    List<LikeModel> existingLikes = likeRepository.findAllByReplyId(replyId);
     boolean alreadyLiked = existingLikes.stream()
         .anyMatch(like -> like.getUser().getId().equals(currentUser.getId()));
     if (alreadyLiked) {
-      // If the user already liked the collection, remove the like
+      // If the user already liked the reply, remove the like
       LikeModel existingLike = existingLikes.stream()
           .filter(like -> like.getUser().getId().equals(currentUser.getId()))
           .findFirst()
           .orElseThrow(() -> new RuntimeException("Like not found"));
       likeRepository.delete(existingLike);
     } else {
-      // If the user has not liked the collection, add a new like
+      // If the user has not liked the reply, add a new like
       LikeModel newLike = new LikeModel();
       newLike.setUser(currentUser);
       newLike.setReply(replyRepository.findById(replyId)
