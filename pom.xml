@@ -119,6 +119,26 @@
         <artifactId>commons-collections4</artifactId>
         <version>4.4</version>
     </dependency>
+
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>RELEASE</version>
+        <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>RELEASE</version>
+    </dependency>
+
+    <dependency>
+        <groupId>com.amazonaws</groupId>
+        <artifactId>aws-java-sdk-s3</artifactId>
+        <version>RELEASE</version>
+    </dependency>
+
 </dependencies>
 
     <build>
