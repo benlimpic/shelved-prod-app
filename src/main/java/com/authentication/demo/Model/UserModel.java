@@ -58,7 +58,7 @@ public class UserModel implements UserDetails {
     @Column(name = "biography")
     private String biography;
 
-    @Column(name = "profile_picture")
+    @Column(name = "profile_picture", length = 1024)
     private String profilePictureUrl;
 
     @ElementCollection(fetch = FetchType.EAGER)

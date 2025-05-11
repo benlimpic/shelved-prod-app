@@ -1,65 +1,62 @@
 package com.authentication.demo.Service;
 
-import java.io.File;
-import java.util.ArrayList;
+import java.io.InputStream;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import lombok.SneakyThrows;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.Bucket;
-import com.amazonaws.services.s3.model.ListObjectsV2Result;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
+import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.S3Object;
 
 @Service
 public class S3Service {
+        private final S3Client s3Client;
 
-  @Autowired
-  AmazonS3 s3;
+        public S3Service() {
+                this.s3Client = S3Client.builder()
+                                .region(Region.US_WEST_1) // Change to your region
+                                .build();
+        }
 
-  public Bucket createBucket(String bucketName) {
-    return listS3Buckets().stream().filter(s -> s.getName().equals(bucketName)).findFirst()
-        .orElseGet(() -> s3.createBucket(bucketName));
-  }
+        public void createBucket(String bucketName) {
+                if (!s3Client.listBuckets().buckets().stream()
+                                .anyMatch(bucket -> bucket.name().equals(bucketName))) {
+                        s3Client.createBucket(CreateBucketRequest.builder()
+                                        .bucket(bucketName)
+                                        .build());
+                }
+        }
 
-  public List<Bucket> listS3Buckets() {
-    return s3.listBuckets();
-  }
+        public void uploadFile(String bucketName, String key, InputStream inputStream, String contentType) {
+                try {
+                        s3Client.putObject(PutObjectRequest.builder()
+                                        .bucket(bucketName)
+                                        .key(key)
+                                        .contentType(contentType)
+                                        .build(),
+                                        software.amazon.awssdk.core.sync.RequestBody.fromInputStream(inputStream,
+                                                        inputStream.available()));
+                } catch (Exception e) {
+                        throw new RuntimeException("Failed to upload file to S3", e);
+                }
+        }
 
-  public void removeS3Bucket(String bucketName) {
-    s3.listObjects(bucketName).getObjectSummaries().stream().filter(e -> e != null)
-        .forEach(e -> s3.deleteObject(bucketName, e.getKey()));
-    s3.deleteBucket(bucketName);
-  }
+        public List<String> listFiles(String bucketName) {
+                return s3Client.listObjectsV2(ListObjectsV2Request.builder()
+                                .bucket(bucketName)
+                                .build())
+                                .contents()
+                                .stream()
+                                .map(S3Object::key)
+                                .collect(Collectors.toList());
+        }
 
-  public void uploadFile(String bucketName, String fileName, String filePath) {
-    s3.putObject(bucketName, fileName, filePath);
-  }
-
-  public List<String> listFiles(String bucketName) {
-    ListObjectsV2Result result = s3.listObjectsV2(bucketName);
-    List<String> files = new ArrayList<>();
-    for (S3ObjectSummary summary : result.getObjectSummaries()) {
-      files.add(summary.getKey());
-    }
-    return files;
-  }
-
-  public String deleteFile(String bucketName, String fileName) {
-    s3.deleteObject(bucketName, fileName);
-    return fileName + " deleted successfully";
-  }
-
-  @SneakyThrows
-  public void downloadFile(String bucketName, String fileName, String downloadPath) {
-    S3Object object = s3.getObject(bucketName, fileName);
-    S3ObjectInputStream inputStream = object.getObjectContent();
-    org.apache.commons.io.FileUtils.copyInputStreamToFile(inputStream, new File(downloadPath));
-
-  }
+        public String generatePresignedUrl(String bucketName, String key) {
+                return "https://" + bucketName + ".s3." + Region.US_WEST_1.id() + ".amazonaws.com/" + key;
+        }
 }

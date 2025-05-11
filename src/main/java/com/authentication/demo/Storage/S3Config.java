@@ -1,20 +1,20 @@
-
 package com.authentication.demo.Storage;
+
 import org.springframework.context.annotation.Bean;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.regions.Regions;
-import lombok.extern.slf4j.Slf4j;
-
-
 import org.springframework.context.annotation.Configuration;
+
+import lombok.extern.slf4j.Slf4j;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
 
 @Slf4j
 @Configuration
 public class S3Config {
 
   @Bean
-  public AmazonS3 s3() {
-    return AmazonS3ClientBuilder.standard().withRegion(Regions.US_WEST_1).build();
+  public S3Client s3Client() {
+    return S3Client.builder()
+                   .region(Region.US_WEST_1) // Replace with your desired region
+                   .build();
   }
 }

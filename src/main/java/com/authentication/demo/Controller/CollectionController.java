@@ -1,5 +1,6 @@
 package com.authentication.demo.Controller;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,21 +35,9 @@ public class CollectionController {
     @PostMapping("/create_collection")
     public String postCollection(@RequestParam Map<String, String> collectionDetails,
             @RequestParam MultipartFile collectionImage,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes) throws IOException {
         collectionService.createCollection(collectionDetails, collectionImage);
         redirectAttributes.addFlashAttribute("message", "Collection created successfully");
-        return "redirect:/profile";
-    }
-
-    @PostMapping("/delete-collection/{id}")
-    public String deleteCollection(@PathVariable("id") Long collectionId, RedirectAttributes redirectAttributes) {
-        try {
-            collectionService.deleteCollection(collectionId);
-            redirectAttributes.addFlashAttribute("message", "Collection deleted successfully.");
-        } catch (CollectionCreationException e) {
-            redirectAttributes.addFlashAttribute("error", "Failed to delete collection: " + e.getMessage());
-            return "redirect:/update-collection/" + collectionId;
-        }
         return "redirect:/profile";
     }
 
@@ -58,12 +47,9 @@ public class CollectionController {
             @PathVariable("id") Long collectionId,
             @RequestParam Map<String, String> params,
             @RequestParam(required = false) MultipartFile collectionImage,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes) throws IOException {
         try {
-            // Add the collection ID to the params map
             params.put("id", String.valueOf(collectionId));
-
-            // Call the service to update the collection
             collectionService.updateCollection(params, collectionImage);
             redirectAttributes.addFlashAttribute("message", "Collection updated successfully");
         } catch (CollectionCreationException e) {
@@ -72,6 +58,7 @@ public class CollectionController {
         }
         return "redirect:/collection/" + collectionId;
     }
+
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> searchCollections(@RequestParam("query") String query) {

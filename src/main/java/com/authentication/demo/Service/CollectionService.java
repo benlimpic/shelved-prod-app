@@ -1,7 +1,9 @@
 package com.authentication.demo.Service;
 
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
@@ -24,15 +26,17 @@ public class CollectionService {
   private final ItemService itemService;
   private final CommentRepository commentRepository;
   private final UserService userService;
+  private final S3Service s3Service;
 
-  public CollectionService(CollectionRepository repository, ItemService itemService, 
-                           CommentRepository commentRepository, UserService userService) {
+  public CollectionService(CollectionRepository repository, ItemService itemService,
+      CommentRepository commentRepository, UserService userService,
+      S3Service s3Service) {
     this.repository = repository;
     this.itemService = itemService;
     this.commentRepository = commentRepository;
     this.userService = userService;
+    this.s3Service = s3Service;
   }
-  
 
   // GET COLLECTION BY COLLECTION ID
   public CollectionModel getCollectionById(Long id) {
@@ -54,7 +58,9 @@ public class CollectionService {
   }
 
   // CREATE COLLECTION
-  public Map<String, String> createCollection(Map<String, String> params, MultipartFile collectionImage) {
+  public Map<String, String> createCollection(Map<String, String> params, MultipartFile collectionImage)
+      throws IOException {
+
     try {
       // Validate input parameters
       if (collectionImage == null || collectionImage.isEmpty()) {
@@ -88,33 +94,38 @@ public class CollectionService {
     }
   }
 
-  // SAVE PROFILE PICTURE
-  public String saveCollectionImage(MultipartFile collectionImage) {
-    // Create the directory if it doesn't exist
-    File directory = new File("collection-images");
-    if (!directory.exists()) {
-      directory.mkdirs();
-    }
-
-    // Ensure the directory for collection images exists
-    File collectionImageDir = new File("collection-images");
-    if (!collectionImageDir.exists()) {
-      collectionImageDir.mkdirs();
-    }
-
-    // GENERATE A UNIQUE FILENAME
+  // SAVE COLLECTION IMAGE
+  public String saveCollectionImage(MultipartFile collectionImage) throws IOException {
+    String bucketName = "shelved-collection-images-benlimpic";
     String filename = UUID.randomUUID().toString() + "-" + collectionImage.getOriginalFilename();
-    File file = new File(directory, filename);
 
-    // Save the file to the directory
-    try (FileOutputStream fos = new FileOutputStream(file)) {
-      fos.write(collectionImage.getBytes());
-    } catch (Exception e) {
-      throw new RuntimeException("Failed to save collection image", e);
+    // Validate the file
+    if (collectionImage == null || collectionImage.isEmpty()) {
+      throw new IllegalArgumentException("Collection image file is empty or null");
     }
 
-    // RETURN IMAGE URL
-    return "/collection-images/" + filename;
+    // Upload the file to S3
+    try {
+      System.out.println("Starting file upload to S3...");
+      File tempFile = File.createTempFile("upload-", collectionImage.getOriginalFilename());
+      collectionImage.transferTo(tempFile);
+      try (InputStream inputStream = new FileInputStream(tempFile)) {
+        String contentType = collectionImage.getContentType(); // Get content type from MultipartFile
+        s3Service.uploadFile(bucketName, filename, inputStream, contentType);
+      }
+      tempFile.deleteOnExit();
+      System.out.println("File uploaded to S3 successfully.");
+
+      // Generate a presigned URL
+      String fileUrl = s3Service.generatePresignedUrl(bucketName, filename);
+      System.out.println("Generated S3 URL: " + fileUrl);
+
+      return fileUrl;
+    } catch (Exception e) {
+      System.err.println("Error in saveCollectionImage: " + e.getMessage());
+      e.printStackTrace();
+      throw new RuntimeException("Failed to upload collection image to S3", e);
+    }
   }
 
   // GET COLLECTIONS FOR CURRENT USER
@@ -167,7 +178,8 @@ public class CollectionService {
   }
 
   // UPDATE COLLECTION
-  public Map<String, String> updateCollection(Map<String, String> params, MultipartFile collectionImage) {
+  public Map<String, String> updateCollection(Map<String, String> params, MultipartFile collectionImage)
+      throws IOException {
     try {
       // Validate input parameters
       if (params.get("id") == null || params.get("id").isEmpty()) {

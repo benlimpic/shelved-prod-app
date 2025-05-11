@@ -1,8 +1,9 @@
 package com.authentication.demo.Service;
 
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -37,14 +38,17 @@ public class UserService implements UserDetailsService {
   private final UserRepository repository;
   private final PasswordEncoder passwordEncoder;
   private final UserDetailsService userDetailsService;
+  private final S3Service s3Service;
 
   public UserService(
       UserRepository repository,
       PasswordEncoder passwordEncoder,
-      @Lazy UserDetailsService userDetailsService) {
+      @Lazy UserDetailsService userDetailsService,
+      S3Service s3Service) {
     this.passwordEncoder = passwordEncoder;
     this.userDetailsService = userDetailsService;
     this.repository = repository;
+    this.s3Service = s3Service;
   }
 
   @Override
@@ -224,54 +228,83 @@ public class UserService implements UserDetailsService {
   // UPDATE USER PROFILE
   public String updateProfile(Map<String, String> userDetails, MultipartFile profilePicture,
       RedirectAttributes redirectAttributes) {
-    try {
-      // Fetch the current user
-      Optional<UserModel> user = getCurrentUser();
-      if (user.isPresent()) {
-        UserModel userModel = user.get();
 
-        // Update profile picture if provided
-        if (profilePicture != null && !profilePicture.isEmpty()) {
-          String profilePictureUrl = saveProfilePicture(profilePicture);
-          userModel.setProfilePictureUrl(profilePictureUrl);
+    // Fetch the current user
+    Optional<UserModel> user = getCurrentUser();
+    if (user.isPresent()) {
+      UserModel userModel = user.get();
+
+      // Update profile picture if provided
+      if (profilePicture != null && !profilePicture.isEmpty()) {
+        try {
+          String fileUrl = this.saveProfilePicture(profilePicture);
+          System.out.println("Profile photo uploaded successfully. File URL: " + fileUrl);
+          userModel.setProfilePictureUrl(fileUrl);
+        } catch (Exception e) {
+          System.err.println("Error while uploading profile photo: " + e.getMessage());
+          e.printStackTrace();
+          throw new RuntimeException("Failed to upload profile photo", e);
         }
-
-        // Update other user details
-        userModel.setLocation(userDetails.get("location"));
-        userModel.setWebsite(userDetails.get("website"));
-        userModel.setBiography(userDetails.get("biography"));
-
-        // Save the updated user back to the database
-        repository.save(userModel);
-
-        return "User profile updated successfully";
-      } else {
-        return "User not found";
       }
-    } catch (IOException e) {
-      throw new RuntimeException("Failed to update profile", e);
+
+      // Update other user details
+      userModel.setLocation(userDetails.get("location"));
+      userModel.setWebsite(userDetails.get("website"));
+      userModel.setBiography(userDetails.get("biography"));
+
+      // Save the updated user back to the database
+      repository.save(userModel);
+
+      return "User profile updated successfully";
+    } else {
+      return "User not found";
     }
   }
 
   // SAVE PROFILE PICTURE
   public String saveProfilePicture(MultipartFile profilePicture) throws IOException {
-    // Create the directory if it doesn't exist
-    File directory = new File("profile-pictures");
-    if (!directory.exists()) {
-      directory.mkdirs();
-    }
+      String bucketName = "shelved-profile-pictures-benlimpic";
+      String filename = UUID.randomUUID().toString() + "-" + profilePicture.getOriginalFilename();
 
-    // Generate a unique filename
-    String filename = UUID.randomUUID().toString() + "-" + profilePicture.getOriginalFilename();
-    File file = new File(directory, filename);
+      // Validate the file
+      if (profilePicture == null || profilePicture.isEmpty()) {
+          throw new IllegalArgumentException("Profile picture file is empty or null");
+      }
 
-    // Save the file
-    try (FileOutputStream fos = new FileOutputStream(file)) {
-      fos.write(profilePicture.getBytes());
-    }
+      // Upload the file to S3
+      try {
+          System.out.println("Starting file upload to S3...");
+          File tempFile = File.createTempFile("upload-", profilePicture.getOriginalFilename());
+          profilePicture.transferTo(tempFile);
+          try (InputStream inputStream = new FileInputStream(tempFile)) {
+              String contentType = profilePicture.getContentType(); // Get content type from MultipartFile
+              s3Service.uploadFile(bucketName, filename, inputStream, contentType);
+          }
+          tempFile.deleteOnExit();
+          System.out.println("File uploaded to S3 successfully.");
 
-    // Return the file URL
-    return "/profile-pictures/" + filename;
+          // Generate a presigned URL
+          String fileUrl = s3Service.generatePresignedUrl(bucketName, filename);
+          System.out.println("Generated S3 URL: " + fileUrl);
+
+          // Save the file URL to the user's profile
+          Optional<UserModel> userOptional = repository
+                  .findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+          if (userOptional.isPresent()) {
+              UserModel user = userOptional.get();
+              user.setProfilePictureUrl(fileUrl);
+              repository.save(user);
+              System.out.println("Profile picture URL saved to database.");
+          } else {
+              throw new UsernameNotFoundException("User not found");
+          }
+
+          return fileUrl;
+      } catch (Exception e) {
+          System.err.println("Error in saveProfilePicture: " + e.getMessage());
+          e.printStackTrace();
+          throw new RuntimeException("Failed to upload profile picture to S3", e);
+      }
   }
 
   // CREATE NEW USER
