@@ -5,11 +5,11 @@
 @layer base {
   
   body {
-    @apply flex flex-col h-screen w-full;
+    @apply flex flex-col h-screen w-full items-center justify-center  bg-slate-100;
   }
   
   main {
-    @apply flex flex-col flex-grow h-auto top-12 bottom-12 mt-12 mb-12 bg-slate-200;
+    @apply flex flex-col flex-grow h-auto top-12 bottom-12 mt-12 mb-12 w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto;
   }
 
   nav {
@@ -21,11 +21,11 @@
   }
  
   header {
-    @apply fixed top-0 h-12 w-full flex-shrink-0;
+    @apply fixed top-0 flex-shrink-0 bg-blue-500 w-full;
   }
   
   footer {
-    @apply fixed bottom-0 h-12 w-full flex-shrink-0
+    @apply fixed bottom-0 h-12 flex-shrink-0 bg-slate-300 w-full;
   }
 
 }
@@ -50,19 +50,17 @@
     @apply flex flex-col items-center justify-center h-screen overscroll-none w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto pb-12 bg-slate-100;
   }
 
-
-
   .formContainer {
     @apply flex flex-col w-full items-center justify-center px-4 mt-1;
   }
 
   .navbar {
-    @apply flex flex-row p-3 justify-between items-center w-full bg-blue-500 text-white shadow-md;
+    @apply flex flex-row px-3 justify-between items-center bg-blue-500 text-white w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto;
   }
 
-  .footerNav {
-    @apply flex flex-row p-3 justify-between items-center w-full bg-slate-300 text-white shadow-md;
-  }
+.footerNav {
+    @apply flex flex-row px-3 justify-between items-center bg-slate-300 text-white w-full h-12;
+}
 
   .commentNav {
     @apply flex flex-row p-3 justify-between items-center w-full bg-white shadow-md;

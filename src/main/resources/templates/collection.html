@@ -62,7 +62,7 @@
           <!-- COLLECTION PICTURE -->
           <a>
             <img
-              class="aspect-square w-full bg-white"
+              style="aspect-ratio: 1 / 1; width: 100%; background-color: white;"
               id="previewImage"
               th:src="${collection != null && collection.imageUrl != null ? collection.imageUrl : '/images/collection_image.png'}"
               alt="Profile Picture"
@@ -151,7 +151,7 @@
       </div>
     </main>
     <footer>
-      <div class="h-12 w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto flex items-center">
+      <div class="footer">
 
         <div id="footerNavContent" class="footerNav w-full">
           <div th:if="${collection.isOwner != null && collection.isOwner}" class="w-full">

@@ -34,21 +34,23 @@ import com.authentication.demo.Repository.UserRepository;
 
 @Service
 public class UserService implements UserDetailsService {
-
   private final UserRepository repository;
   private final PasswordEncoder passwordEncoder;
   private final UserDetailsService userDetailsService;
   private final S3Service s3Service;
+  private final ImageService imageService;
 
   public UserService(
       UserRepository repository,
       PasswordEncoder passwordEncoder,
       @Lazy UserDetailsService userDetailsService,
-      S3Service s3Service) {
+      S3Service s3Service,
+      ImageService imageService) {
+    this.repository = repository;
     this.passwordEncoder = passwordEncoder;
     this.userDetailsService = userDetailsService;
-    this.repository = repository;
     this.s3Service = s3Service;
+    this.imageService = imageService;
   }
 
   @Override
@@ -226,7 +228,7 @@ public class UserService implements UserDetailsService {
   }
 
   // UPDATE USER PROFILE
-  public String updateProfile(Map<String, String> userDetails, MultipartFile profilePicture,
+  public void updateProfile(Map<String, String> userDetails, MultipartFile profilePicture,
       RedirectAttributes redirectAttributes) {
 
     // Fetch the current user
@@ -234,16 +236,26 @@ public class UserService implements UserDetailsService {
     if (user.isPresent()) {
       UserModel userModel = user.get();
 
-      // Update profile picture if provided
+      // update profile picture if it is provided
       if (profilePicture != null && !profilePicture.isEmpty()) {
         try {
-          String fileUrl = this.saveProfilePicture(profilePicture);
-          System.out.println("Profile photo uploaded successfully. File URL: " + fileUrl);
-          userModel.setProfilePictureUrl(fileUrl);
-        } catch (Exception e) {
-          System.err.println("Error while uploading profile photo: " + e.getMessage());
-          e.printStackTrace();
-          throw new RuntimeException("Failed to upload profile photo", e);
+          // Validate file size
+          final long MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5 MB
+          if (profilePicture.getSize() > MAX_IMAGE_SIZE) {
+            redirectAttributes.addFlashAttribute("error", "File size exceeds the maximum limit of 5 MB.");
+          }
+
+          // Process the image
+          MultipartFile processedFile = imageService.processImage(profilePicture);
+
+          // Save the profile photo
+          userModel.setProfilePictureUrl(saveProfilePicture(processedFile));
+
+        } catch (IOException e) {
+          redirectAttributes.addFlashAttribute("error", "Failed to process the image.");
+        } catch (IllegalArgumentException e) {
+          redirectAttributes.addFlashAttribute("error", e.getMessage());
+          
         }
       }
 
@@ -255,56 +267,47 @@ public class UserService implements UserDetailsService {
       // Save the updated user back to the database
       repository.save(userModel);
 
-      return "User profile updated successfully";
+
+        // Add success message
+
+        redirectAttributes.addFlashAttribute("message", "User profile updated successfully.");
     } else {
-      return "User not found";
+        redirectAttributes.addFlashAttribute("error", "User not found.");
     }
   }
 
   // SAVE PROFILE PICTURE
   public String saveProfilePicture(MultipartFile profilePicture) throws IOException {
-      String bucketName = "shelved-profile-pictures-benlimpic";
-      String filename = UUID.randomUUID().toString() + "-" + profilePicture.getOriginalFilename();
+    String bucketName = "shelved-profile-pictures-benlimpic";
+    String filename = UUID.randomUUID().toString() + "-" + profilePicture.getOriginalFilename();
 
-      // Validate the file
-      if (profilePicture == null || profilePicture.isEmpty()) {
-          throw new IllegalArgumentException("Profile picture file is empty or null");
+    // Validate the file
+    if (profilePicture.isEmpty()) {
+      throw new IllegalArgumentException("Profile picture file is empty");
+    }
+
+    // Upload the file to S3
+    try {
+      System.out.println("Starting file upload to S3...");
+      File tempFile = File.createTempFile("upload-", profilePicture.getOriginalFilename());
+      profilePicture.transferTo(tempFile);
+      try (InputStream inputStream = new FileInputStream(tempFile)) {
+        String contentType = profilePicture.getContentType(); // Get content type from MultipartFile
+        s3Service.uploadFile(bucketName, filename, inputStream, contentType);
       }
+      tempFile.deleteOnExit();
+      System.out.println("File uploaded to S3 successfully.");
 
-      // Upload the file to S3
-      try {
-          System.out.println("Starting file upload to S3...");
-          File tempFile = File.createTempFile("upload-", profilePicture.getOriginalFilename());
-          profilePicture.transferTo(tempFile);
-          try (InputStream inputStream = new FileInputStream(tempFile)) {
-              String contentType = profilePicture.getContentType(); // Get content type from MultipartFile
-              s3Service.uploadFile(bucketName, filename, inputStream, contentType);
-          }
-          tempFile.deleteOnExit();
-          System.out.println("File uploaded to S3 successfully.");
+      // Generate a presigned URL
+      String fileUrl = s3Service.generatePresignedUrl(bucketName, filename);
+      System.out.println("Generated S3 URL: " + fileUrl);
 
-          // Generate a presigned URL
-          String fileUrl = s3Service.generatePresignedUrl(bucketName, filename);
-          System.out.println("Generated S3 URL: " + fileUrl);
-
-          // Save the file URL to the user's profile
-          Optional<UserModel> userOptional = repository
-                  .findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-          if (userOptional.isPresent()) {
-              UserModel user = userOptional.get();
-              user.setProfilePictureUrl(fileUrl);
-              repository.save(user);
-              System.out.println("Profile picture URL saved to database.");
-          } else {
-              throw new UsernameNotFoundException("User not found");
-          }
-
-          return fileUrl;
-      } catch (Exception e) {
-          System.err.println("Error in saveProfilePicture: " + e.getMessage());
-          e.printStackTrace();
-          throw new RuntimeException("Failed to upload profile picture to S3", e);
-      }
+      return fileUrl;
+    } catch (Exception e) {
+      System.err.println("Error in saveProfilePicture: " + e.getMessage());
+      e.printStackTrace();
+      throw new RuntimeException("Failed to upload profile picture to S3", e);
+    }
   }
 
   // CREATE NEW USER

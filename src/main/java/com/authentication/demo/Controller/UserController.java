@@ -2,9 +2,6 @@ package com.authentication.demo.Controller;
 
 import java.util.Map;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,13 +16,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.authentication.demo.Service.CollectionService;
 import com.authentication.demo.Service.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 @Controller
 public class UserController {
 
   private final AuthenticationManager authenticationManager;
   private final UserService userService;
 
-  public UserController(@Lazy UserService userService, AuthenticationManager authenticationManager, CollectionService collectionService) {
+  public UserController(@Lazy UserService userService, AuthenticationManager authenticationManager,
+      CollectionService collectionService) {
     this.userService = userService;
     this.authenticationManager = authenticationManager;
   }
@@ -88,18 +89,16 @@ public class UserController {
 
   // UPDATE USER PROFILE DETAILS
   @PostMapping("/update_profile")
-  public String updateProfile(@RequestParam Map<String, String> userDetails,
+  public String updateProfile(
+      @RequestParam Map<String, String> userDetails,
       @RequestParam MultipartFile profilePicture,
       RedirectAttributes redirectAttributes) {
     try {
-      String result = userService.updateProfile(userDetails, profilePicture, redirectAttributes);
-      if ("User profile updated successfully".equals(result)) {
-        redirectAttributes.addFlashAttribute("message", result);
-        return "redirect:/profile"; // Correctly redirect to the profile page
-      } else {
-        redirectAttributes.addFlashAttribute("error", result);
-        return "redirect:/update-profile"; // Redirect back to the update profile page on error
-      }
+      // Delegate the logic to the UserService
+      userService.updateProfile(userDetails, profilePicture, redirectAttributes);
+
+      // Assuming the method sets flash attributes directly, redirect to the profile page
+      return "redirect:/profile";
     } catch (Exception e) {
       redirectAttributes.addFlashAttribute("error", "An unexpected error occurred while updating the profile.");
       return "redirect:/update-profile";
@@ -110,14 +109,14 @@ public class UserController {
   @PostMapping("/signup")
   public String createUser(@RequestParam Map<String, String> userDetails,
       RedirectAttributes redirectAttributes) {
-  
+
     Map<String, String> result = userService.postUser(userDetails);
-  
+
     if ("error".equals(result.get("status"))) {
       redirectAttributes.addFlashAttribute("error", result.get("message"));
       return "redirect:/signup";
     }
-  
+
     redirectAttributes.addFlashAttribute("message", result.get("message"));
     return "redirect:/login";
   }

@@ -27,15 +27,17 @@ public class CollectionService {
   private final CommentRepository commentRepository;
   private final UserService userService;
   private final S3Service s3Service;
+  private final ImageService imageService;
 
   public CollectionService(CollectionRepository repository, ItemService itemService,
-      CommentRepository commentRepository, UserService userService,
-      S3Service s3Service) {
+        CommentRepository commentRepository, UserService userService, 
+        S3Service s3Service, ImageService imageService) {
     this.repository = repository;
     this.itemService = itemService;
     this.commentRepository = commentRepository;
     this.userService = userService;
     this.s3Service = s3Service;
+    this.imageService = imageService;
   }
 
   // GET COLLECTION BY COLLECTION ID
@@ -72,7 +74,8 @@ public class CollectionService {
       }
 
       // Save collection logic
-      String imageUrl = saveCollectionImage(collectionImage);
+      MultipartFile processedFile = imageService.processImage(collectionImage);
+
       Long userId = userService.getCurrentUserId();
       Timestamp createdAt = new Timestamp(System.currentTimeMillis());
       Timestamp updatedAt = new Timestamp(System.currentTimeMillis());
@@ -81,7 +84,7 @@ public class CollectionService {
       newCollection.setUser(userService.getUserById(userId));
       newCollection.setTitle(params.get("title"));
       newCollection.setCaption(params.get("caption"));
-      newCollection.setImageUrl(imageUrl);
+      newCollection.setImageUrl(saveCollectionImage(processedFile));
       newCollection.setCreatedAt(createdAt);
       newCollection.setUpdatedAt(updatedAt);
 
@@ -100,8 +103,8 @@ public class CollectionService {
     String filename = UUID.randomUUID().toString() + "-" + collectionImage.getOriginalFilename();
 
     // Validate the file
-    if (collectionImage == null || collectionImage.isEmpty()) {
-      throw new IllegalArgumentException("Collection image file is empty or null");
+    if (collectionImage.isEmpty()) {
+      throw new IllegalArgumentException("Profile picture file is empty");
     }
 
     // Upload the file to S3
@@ -122,9 +125,9 @@ public class CollectionService {
 
       return fileUrl;
     } catch (Exception e) {
-      System.err.println("Error in saveCollectionImage: " + e.getMessage());
+      System.err.println("Error in saveProfilePicture: " + e.getMessage());
       e.printStackTrace();
-      throw new RuntimeException("Failed to upload collection image to S3", e);
+      throw new RuntimeException("Failed to upload profile picture to S3", e);
     }
   }
 
@@ -200,7 +203,8 @@ public class CollectionService {
         collection.setCaption(params.get("caption"));
       }
       if (collectionImage != null && !collectionImage.isEmpty()) {
-        String imageUrl = saveCollectionImage(collectionImage);
+        MultipartFile processedFile = imageService.processImage(collectionImage);
+        String imageUrl = saveCollectionImage(processedFile);
         collection.setImageUrl(imageUrl);
       }
       collection.setUpdatedAt(new Timestamp(System.currentTimeMillis()));

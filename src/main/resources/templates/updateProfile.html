@@ -58,14 +58,14 @@
               <!-- SUCCESS MESSAGE -->
               <div
                 id="successMessageDiv"
-                th:if="${message}"
+                th:if="${message != null and message != ''}"
                 th:text="${message}"
                 class="success"
               ></div>
               <!-- ERROR MESSAGE -->
               <div
                 id="errorMessageDiv"
-                th:if="${error}"
+                th:if="${error != null and error != ''}"
                 th:text="${error}"
                 class="failure"
               ></div>
@@ -102,6 +102,7 @@
                   name="location"
                   th:value="${user?.location ?: ''}"
                   placeholder="Location"
+                  type="text"
                 />
               </div>
 
@@ -118,6 +119,7 @@
                   name="website"
                   th:value="${user?.website ?: ''}"
                   placeholder="Website"
+                  type="text"
                 />
               </div>
 
