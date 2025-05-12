@@ -1,7 +1,9 @@
 package com.authentication.demo.Service;
 
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
@@ -24,18 +26,20 @@ public class ItemService {
   private final UserService userService;
   private final CollectionRepository collectionRepository;
   private final CommentRepository commentRepository;
+  private final S3Service s3Service;
 
   public ItemService(
       ItemRepository itemRepository,
       UserService userService,
       CollectionRepository collectionRepository,
-      CommentRepository commentRepository) {
+      CommentRepository commentRepository,
+      S3Service s3Service) {
     this.itemRepository = itemRepository;
     this.userService = userService;
     this.collectionRepository = collectionRepository;
     this.commentRepository = commentRepository;
+    this.s3Service = s3Service;
   }
-
 
   // GET ITEM BY ITEM ID
   public ItemModel getItemById(Long id) {
@@ -47,10 +51,10 @@ public class ItemService {
   }
 
   // CREATE ITEM
-  public Map<String, String> createItem(Map<String, String> params, MultipartFile collectionImage) {
+  public Map<String, String> createItem(Map<String, String> params, MultipartFile itemImage) throws IOException {
     // VALIDATE INPUT PARAMETERS
 
-    if (collectionImage == null || collectionImage.isEmpty()) {
+    if (itemImage == null || itemImage.isEmpty()) {
       throw new ItemCreationException("Item image is required");
     }
 
@@ -58,7 +62,7 @@ public class ItemService {
     Long userId = userService.getCurrentUserId();
 
     // SAVE ITEM IMAGE
-    String imageUrl = saveItemImage(collectionImage);
+    String imageUrl = saveItemImage(itemImage); // This method may throw IOException
 
     // GET COLLECTION
     Long collectionId = Long.valueOf(params.get("collectionId"));
@@ -88,32 +92,38 @@ public class ItemService {
     return Map.of("message", "Item created successfully", "itemId", item.getId().toString());
   }
 
-  // SAVE PROFILE PICTURE
-  public String saveItemImage(MultipartFile itemImage) {
-    // CREATE ITEM IMAGE DIRECTORY
-    File directory = new File("item-images");
-    if (!directory.exists()) {
-      directory.mkdirs();
-    }
-
-    // ITEM FILE DIRECTORY EXISTS?
-    File itemImageDir = new File("item-images");
-    if (!itemImageDir.exists()) {
-      itemImageDir.mkdirs();
-    }
-
-    // GENERATE A UNIQUE FILENAME
+  // SAVE ITEM IMAGE
+  public String saveItemImage(MultipartFile itemImage) throws IOException {
+    String bucketName = "shelved-item-images-benlimpic";
     String filename = UUID.randomUUID().toString() + "-" + itemImage.getOriginalFilename();
-    File file = new File(directory, filename);
 
-    // SAVE ITEM IMAGE
-    try (FileOutputStream fos = new FileOutputStream(file)) {
-      fos.write(itemImage.getBytes());
-    } catch (Exception e) {
-      throw new RuntimeException("Failed to save item image", e);
+    // Validate the file
+    if (itemImage == null || itemImage.isEmpty()) {
+      throw new IllegalArgumentException("Collection image file is empty or null");
     }
-    // RETURN IMAGE URL
-    return "/item-images/" + filename;
+
+    // Upload the file to S3
+    try {
+      System.out.println("Starting file upload to S3...");
+      File tempFile = File.createTempFile("upload-", itemImage.getOriginalFilename());
+      itemImage.transferTo(tempFile);
+      try (InputStream inputStream = new FileInputStream(tempFile)) {
+        String contentType = itemImage.getContentType(); // Get content type from MultipartFile
+        s3Service.uploadFile(bucketName, filename, inputStream, contentType);
+      }
+      tempFile.deleteOnExit();
+      System.out.println("File uploaded to S3 successfully.");
+
+      // Generate a presigned URL
+      String fileUrl = s3Service.generatePresignedUrl(bucketName, filename);
+      System.out.println("Generated S3 URL: " + fileUrl);
+
+      return fileUrl;
+    } catch (Exception e) {
+      System.err.println("Error in saveCollectionImage: " + e.getMessage());
+      e.printStackTrace();
+      throw new RuntimeException("Failed to upload collection image to S3", e);
+    }
   }
 
   public List<ItemModel> getAllItemsByCollectionId(Long collectionId) {
@@ -139,37 +149,41 @@ public class ItemService {
   }
 
   // UPDATE ITEM
-  public Map<String, String> updateItem(Map<String, String> params, MultipartFile itemImage) {
+public Map<String, String> updateItem(Map<String, String> params, MultipartFile itemImage) {
     // Validate input parameters
     if (params.get("itemId") == null || params.get("itemId").isEmpty()) {
-      throw new ItemCreationException("Item ID is required");
+        throw new ItemCreationException("Item ID is required");
     }
 
     // Get item by ID
     Long itemId;
     try {
-      itemId = Long.valueOf(params.get("itemId"));
+        itemId = Long.valueOf(params.get("itemId"));
     } catch (NumberFormatException e) {
-      throw new ItemCreationException("Invalid Item ID format");
+        throw new ItemCreationException("Invalid Item ID format");
     }
     ItemModel item = getItemById(itemId);
 
     // Update item fields
     if (params.get("title") != null && !params.get("title").isEmpty()) {
-      item.setTitle(params.get("title"));
+        item.setTitle(params.get("title"));
     }
     if (params.get("description") != null && !params.get("description").isEmpty()) {
-      item.setDescription(params.get("description"));
+        item.setDescription(params.get("description"));
     }
     if (params.get("itemLink") != null && !params.get("itemLink").isEmpty()) {
-      item.setItemLink(params.get("itemLink"));
+        item.setItemLink(params.get("itemLink"));
     }
     if (params.get("caption") != null && !params.get("caption").isEmpty()) {
-      item.setCaption(params.get("caption"));
+        item.setCaption(params.get("caption"));
     }
     if (itemImage != null && !itemImage.isEmpty()) {
-      String imageUrl = saveItemImage(itemImage);
-      item.setImageUrl(imageUrl);
+        try {
+            String imageUrl = saveItemImage(itemImage);
+            item.setImageUrl(imageUrl);
+        } catch (IOException e) {
+            throw new ItemCreationException("Failed to save item image: " + e.getMessage());
+        }
     }
 
     // Save the updated item

@@ -1,6 +1,7 @@
 
 package com.authentication.demo.Controller;
 
+import java.io.IOException;
 import java.util.Map;
 
 import org.springframework.context.annotation.Lazy;
@@ -28,10 +29,15 @@ public class ItemController {
     public String createItem(
             @PathVariable Long collectionId,
             @RequestParam Map<String, String> params,
-            @RequestParam("itemImage") MultipartFile itemImage,
+            MultipartFile itemImage,
             RedirectAttributes redirectAttributes) {
-        itemService.createItem(params, itemImage);
-        redirectAttributes.addFlashAttribute("message", "Item created successfully");
+        try {
+            itemService.createItem(params, itemImage);
+            redirectAttributes.addFlashAttribute("message", "Item created successfully");
+        } catch (IOException e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to create item: " + e.getMessage());
+            return "redirect:/collection/" + collectionId;
+        }
         return "redirect:/collection/" + collectionId;
     }
 
@@ -61,19 +67,17 @@ public class ItemController {
             @PathVariable("id") Long itemId,
             @RequestParam Map<String, String> params,
             @RequestParam(required = false) MultipartFile itemImage,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes) throws IOException {
         try {
-            // Add the item ID to the params map
             params.put("itemId", String.valueOf(itemId));
-
-            // Call the service to update the item
             itemService.updateItem(params, itemImage);
             redirectAttributes.addFlashAttribute("message", "Item updated successfully");
         } catch (ItemCreationException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Failed to update item: " + e.getMessage());
             return "redirect:/update-item/" + itemId;
         }
         return "redirect:/item/" + itemId;
     }
+
 
 }
