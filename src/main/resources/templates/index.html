@@ -53,9 +53,9 @@
         <div class="flex flex-col items-center justify-center w-full bg-white">
           <!-- COLLECTION CONTAINER -->
           <div
-          th:each="collection : ${collections}"
-          th:id="'collection-' + ${collection.id}"
-          class="collectionContainer"
+            th:each="collection : ${collections}"
+            th:id="'collection-' + ${collection.id}"
+            class="collectionContainer"
           >
             <!-- COLLECTION NAVBAR -->
             <div class="collectionContainerNavbar collectionNavbar shadow-sm">
@@ -278,42 +278,36 @@
       </div>
     </main>
     <footer>
-      <div
-        class="footerNav"
-      >
-        <div id="footerNavContent" class="footerNav">
-          <ul class="flex justify-between items-center w-full">
-            <li>
-              <div
-                id="homeButton"
-                class="h-4 w-4 flex items-center justify-center"
-              >
-                <a class="text-2xl font-bold" href="/index">&#8962;</a>
-              </div>
-            </li>
-            <li>
-              <div class="h-4 w-4 flex items-center justify-center">
-                <a class="text-2xl font-bold" href="/popular">&#10066;</a>
-              </div>
-            </li>
-            <li>
-              <div class="h-4 w-4 flex items-center justify-center">
-                <a class="text-2xl font-bold" href="/create-collection">
-                  &#43;
-                </a>
-              </div>
-            </li>
-            <li>
-              <a href="/profile">
-                <img
-                  class="h-7 w-7 rounded-full bg-white"
-                  th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}"
-                  alt="Profile Picture"
-                />
-              </a>
-            </li>
-          </ul>
-        </div>
+      <div id="footerNavContent" class="footerNav">
+        <ul class="flex justify-between items-center w-full">
+          <li>
+            <div
+              id="homeButton"
+              class="h-4 w-4 flex items-center justify-center"
+            >
+              <a class="text-2xl font-bold" href="/index">&#8962;</a>
+            </div>
+          </li>
+          <li>
+            <div class="h-4 w-4 flex items-center justify-center">
+              <a class="text-2xl font-bold" href="/popular">&#10066;</a>
+            </div>
+          </li>
+          <li>
+            <div class="h-4 w-4 flex items-center justify-center">
+              <a class="text-2xl font-bold" href="/create-collection">&#43;</a>
+            </div>
+          </li>
+          <li>
+            <a href="/profile">
+              <img
+                class="h-7 w-7 rounded-full bg-white"
+                th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}"
+                alt="Profile Picture"
+              />
+            </a>
+          </li>
+        </ul>
       </div>
     </footer>
   </body>
