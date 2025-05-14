@@ -13,14 +13,14 @@
 
   <body>
     <header>
-      <nav class="navbar">
-        <ul class="flex justify-between w-full">
-          <li class="flex items-center">
+      <nav>
+        <ul>
+          <li>
             <a id="backButton" th:href="@{|/collection/${item.collection.id}|}">
               <span>&#8592;</span>
             </a>
           </li>
-          <li class="flex items-center">
+          <li>
             <div th:if="${item.isOwner != null && item.isOwner}">
               <a
                 class="bg-blue-500 hover:bg-blue-700 text-white text-xs px-1 py-0.5 rounded"
@@ -34,239 +34,216 @@
         </ul>
       </nav>
     </header>
-    <main class="overflow-auto">
-      <div
-        th:if="${item != null && item.imageUrl == null}"
-        class="flex justify-center items-center w-full h-12 bg-slate-100 shadow-sm"
-      >
-        <span class="text-sm font-semibold">No image available</span>
-      </div>
-      <div
-        th:id="'item-' + ${item.id}"
-        class="profileContainerScroll bg-slate-200"
-      >
-        <div class="h-auto w-full bg-white">
-          <div class="collectionNavbar shadow-sm">
-            <div class="flex justify-between items-center w-full">
-              <ul class="flex justify-start items-center w-full">
-                <li class="pr-2">
-                  <a
-                    th:href="@{/collection/{collectionId}(collectionId=${collection?.id})}"
-                  >
-                    <img
-                      class="h-7 w-7 rounded-full bg-white"
-                      th:src="${collection?.imageUrl ?: '/item_image.png'}"
-                      alt="Profile Picture"
-                    />
-                  </a>
+
+
+    <!-- ITEM CONTENT -->
+    <main th:id="'collection-' + ${collection.id}">
+      <div class="container">
+        <div class="box">
+          <nav>
+            <ul>
+              <li class="pr-2">
+                <a
+                  th:href="@{/collection/{collectionId}(collectionId=${collection?.id})}"
+                >
+                  <img
+                    class="round-image"
+                    th:src="${collection?.imageUrl ?: '/item_image.png'}"
+                    alt="Profile Picture"
+                  />
+                </a>
+              </li>
+              <li>
+                <a
+                  th:href="@{/collection/{collectionId}(collectionId=${collection?.id})}"
+                >
+                <span
+                  class="text-sm font-semibold text-black"
+                  th:if="${collection?.title!= null}"
+                  th:text="${collection?.title}"
+                ></span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+          <div class="square-index">
+            <!-- ITEM PICTURE -->
+            <img
+              class="square-index"
+              id="previewImage"
+              th:src="${item != null && item.imageUrl != null ? item.imageUrl : '/images/item_image.png'}"
+              alt="Item Image"
+            />
+            <!-- Overlay -->
+            <div
+              id="itemOverlay"
+              class="overlay absolute bottom-0 left-0 w-full h-full bg-black bg-opacity-70 text-white text-sm p-2 hidden"
+            >
+              <div class="flex flex-col justify-start items-between">
+                <div>
+                  <span class="font-semibold" th:text="${item?.title}"></span>
+                </div>
+                <div>
+                  <span
+                    class="text-xs font-thin"
+                    th:text="${item?.description}"
+                  ></span>
+                </div>
+              </div>
+              <div>
+                <button
+                  class="absolute bottom-2 left-2 bg-blue-500 hover:bg-blue-700 text-xs px-2 py-1 rounded"
+                  id="openLinkButton"
+                  th:href="${item?.itemLink}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Item Link
+                </button>
+              </div>
+            </div>
+            <!-- Toggle Button -->
+            <button
+              id="toggleButtonShowInfo"
+              class="toggle-overlay absolute bottom-2 right-2 bg-white text-black text-xs px-2 py-1 rounded z-20"
+            >
+              Show Info
+            </button>
+            <button
+              id="toggleButtonHideInfo"
+              class="toggle-overlay absolute bottom-2 right-2 bg-white text-black text-xs px-2 py-1 rounded z-20 hidden"
+            >
+              Hide Info
+            </button>
+          </div>
+          <div class="caption-container">
+            <div
+              class="like-comment-container"
+            >
+              <ul>
+                <li>
+                  <div class="element">
+                    <form
+                      th:if="${item?.id != null}"
+                      th:action="@{/items/{id}/like(id=${item?.id})}"
+                      method="post"
+                    >
+                      <input
+                        type="hidden"
+                        name="itemId"
+                        th:value="${item.id}"
+                      />
+                      <input
+                        type="hidden"
+                        name="userId"
+                        th:value="${user.id}"
+                      />
+                      <input
+                        type="hidden"
+                        name="liked"
+                        th:value="${item.isLiked}"
+                      />
+                      <button
+                        type="submit"
+                        class="likeButton"
+                        th:if="${item.userId != user.id}"
+                      >
+                        <span
+                          class="pr-2 font-medium"
+                          th:if="${item.isLiked}"
+                        >
+                          &#9829;
+                        </span>
+                        <span
+                          class="pr-2 font-medium"
+                          th:if="${!item.isLiked}"
+                        >
+                          &#9825;
+                        </span>
+                      </button>
+                      <button
+                        type="button"
+                        class="likeButton"
+                        th:if="${item.userId == user.id}"
+                        disabled
+                      >
+                        <span class="pr-2 font-medium">&#9829;</span>
+                      </button>
+                    </form>
+                  </div>
+                  <div class="element">
+                    <p class="font-thin" th:text="${item.likeCount}"></p>
+                  </div>
                 </li>
                 <li>
-                  <a
-                    th:href="@{/collection/{collectionId}(collectionId=${collection?.id})}"
-                  >
-                    <span
-                      class="text-sm font-semibold"
-                      th:if="${collection?.title!= null}"
-                      th:text="${collection?.title}"
-                    ></span>
+                  <a th:href="@{/item/{id}/comments(id=${item?.id})}">
+                    <span class="pr-2 font-medium">comment</span>
                   </a>
+                  <span
+                    class="font-thin"
+                    th:text="${item.commentCount}"
+                  ></span>
                 </li>
               </ul>
             </div>
-          </div>
-          <!-- ITEM CONTENT -->
-          <div class="flex flex-col justify-center items-center border-size-0">
-            <div class="image-container relative bg-white">
-              <!-- ITEM PICTURE -->
-              <a>
-                <img
-                  style="aspect-ratio: 1 / 1; width: 100%; background-color: white;"
-                  id="previewImage"
-                  th:src="${item != null && item.imageUrl != null ? item.imageUrl : '/images/item_image.png'}"
-                  alt="Item Image"
-                />
-              </a>
-
-              <!-- Overlay -->
-              <div
-                id="itemOverlay"
-                class="overlay absolute bottom-0 left-0 w-full h-full bg-black bg-opacity-70 text-white text-sm p-2 hidden"
+            <div class="caption">
+              <!-- CAPTION -->
+              <p
+                id="toggle_truncate"
+                class="truncate-multiline leading-[1rem]"
+                onclick="toggleTruncate(this)"
               >
-                <div class="flex flex-col justify-start items-between">
-                  <div>
-                    <span class="font-semibold" th:text="${item?.title}"></span>
-                  </div>
-                  <div>
-                    <span
-                      class="text-xs font-thin"
-                      th:text="${item?.description}"
-                    ></span>
-                  </div>
-                </div>
-                <div>
-                  <button
-                    class="absolute bottom-2 left-2 bg-blue-500 hover:bg-blue-700 text-xs px-2 py-1 rounded"
-                    id="openLinkButton"
-                    th:href="${item?.itemLink}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Item Link
-                  </button>
-                </div>
-              </div>
-
-              <!-- Toggle Button -->
-              <button
-                id="toggleButtonShowInfo"
-                class="toggle-overlay absolute bottom-2 right-2 bg-white text-black text-xs px-2 py-1 rounded z-20"
-              >
-                Show Info
-              </button>
-              <button
-                id="toggleButtonHideInfo"
-                class="toggle-overlay absolute bottom-2 right-2 bg-white text-black text-xs px-2 py-1 rounded z-20 hidden"
-              >
-                Hide Info
-              </button>
-            </div>
-
-            <div class="w-full px-2 bg-white">
-              <div
-                class="flex flex-row justify-between w-full h-auto py-1 text-sm"
-              >
-                <ul class="flex flex-row justify-start items-center pr-2">
-                  <li class="flex flex-row justify-start items-center pr-2">
-                    <div class="flex justify-start items-center">
-                      <form
-                        th:if="${item?.id != null}"
-                        th:action="@{/items/{id}/like(id=${item?.id})}"
-                        method="post"
-                      >
-                        <input
-                          type="hidden"
-                          name="itemId"
-                          th:value="${item.id}"
-                        />
-                        <input
-                          type="hidden"
-                          name="userId"
-                          th:value="${user.id}"
-                        />
-                        <input
-                          type="hidden"
-                          name="liked"
-                          th:value="${item.isLiked}"
-                        />
-                        <button
-                          type="submit"
-                          class="likeButton"
-                          th:if="${item.userId != user.id}"
-                        >
-                          <span class="pr-2 font-medium" th:if="${item.isLiked}">
-                            &#9829;
-                          </span>
-                          <span class="pr-2 font-medium" th:if="${!item.isLiked}">
-                            &#9825;
-                          </span>
-                        </button>
-                        <button
-                          type="button"
-                          class="likeButton"
-                          th:if="${item.userId == user.id}"
-                          disabled
-                        >
-                          <span class="pr-2 font-medium">&#9829;</span>
-                        </button>
-                      </form>
-                    </div>
-                    <div class="flex justify-start items-center">
-                      <p class="font-thin" th:text="${item.likeCount}"></p>
-                    </div>
-                  </li>
-                  <li class="flex flex-row justify-start items-center pr-2">
-                    <a th:href="@{/item/{id}/comments(id=${item?.id})}">
-                      <span class="pr-2 font-medium">comment</span>
-                    </a>
-                    <span
-                      class="font-thin"
-                      th:text="${item.commentCount}"
-                    ></span>
-                  </li>
-                </ul>
-              </div>
-              <div
-                class="w-full h-auto flex justify-start items-center text-sm"
-              >
-                <!-- CAPTION -->
-                <p
-                  id="toggle_truncate"
-                  class="truncate-multiline leading-[1rem]"
-                  onclick="toggleTruncate(this)"
-                >
-                  <a th:href="@{/profile/{id}(id=${userProfile?.id})}">
-                    <span
-                      class="font-semibold"
-                      th:if="${userProfile?.username != null}"
-                      th:text="${userProfile?.username}"
-                    ></span>
-                  </a>
+                <a th:href="@{/profile/{id}(id=${userProfile?.id})}">
                   <span
-                    th:if="${item?.caption != null}"
-                    th:text="${item?.caption}"
+                    class="font-semibold"
+                    th:if="${userProfile?.username != null}"
+                    th:text="${userProfile?.username}"
                   ></span>
-                </p>
-              </div>
-              <div class="w-full flex justify-between items-center py-1">
-                <!-- MONTH YEAR -->
-                <div
-                  class="w-full flex flex-col justify-center items-start pt-1"
-                >
-                  <span
-                    style="font-size: 9px"
-                    class="font-extralight"
-                    th:if="${item?.updatedAt != null}"
-                    th:text="${#dates.format(item?.updatedAt, 'MMMM-YYYY')}"
-                  ></span>
-                </div>
-              </div>
+                </a>
+                <span
+                  th:if="${item?.caption != null}"
+                  th:text="${item?.caption}"
+                ></span>
+              </p>
             </div>
-          </div>
-          <div class="relative scroll-none">
-            <!-- Items Grid -->
-            <div id="itemGrid" class="w-full min-h-fit overflow-hidden"></div>
+            <div class="small-date">
+            <!-- MONTH YEAR -->
+              <span
+                style="font-size: 9px"
+                class="font-extralight"
+                th:if="${item?.updatedAt != null}"
+                th:text="${#dates.format(item?.updatedAt, 'MMMM-YYYY')}"
+              ></span>
+            </div>
           </div>
         </div>
       </div>
     </main>
     <footer>
-      <div id="footerNavContent" class="footerNav w-full">
+      <nav>
         <div th:if="${item.isOwner != null && item.isOwner}" class="w-full">
           <!-- Footer for owner -->
-          <ul
-            class="flex justify-between items-center w-full"
-            id="footerNavOwner"
-          >
+          <ul id="footerNavOwner">
             <li>
               <div
                 id="homeButton"
-                class="h-4 w-4 flex items-center justify-center"
+                class="icon"
               >
                 <a class="text-2xl font-bold" href="/index">&#8962;</a>
               </div>
             </li>
             <li>
-              <div class="h-4 w-4 flex items-center justify-center">
+              <div class="icon">
                 <a class="text-2xl font-bold" href="/popular">&#10066;</a>
               </div>
             </li>
             <li>
-              <div class="h-4 w-4 flex items-center justify-center"></div>
+              <div class="icon"></div>
             </li>
             <li>
               <a href="/profile">
                 <img
-                  class="h-7 w-7 rounded-full bg-white"
+                  class="round-image"
                   th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}"
                   alt="Profile Picture"
                 />
@@ -277,19 +254,16 @@
 
         <div th:if="${item.isOwner != null && !item.isOwner}" class="w-full">
           <!-- Footer for non-owner -->
-          <ul
-            class="flex justify-between items-center w-full"
-            id="footerNavUser"
-          >
+          <ul id="footerNavUser">
             <li>
-              <div class="h-4 w-4 flex items-center justify-center">
+              <div class="icon">
                 <a class="text-2xl font-bold" href="/index">&#8962;</a>
               </div>
             </li>
             <li>
               <a href="/profile">
                 <img
-                  class="h-7 w-7 rounded-full bg-white"
+                  class="round-image"
                   th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}"
                   alt="Profile Picture"
                 />
@@ -297,7 +271,7 @@
             </li>
           </ul>
         </div>
-      </div>
+      </nav>
     </footer>
   </body>
 </html>

@@ -41,10 +41,10 @@ public class ContentController {
     private final LikeRepository likeRepository;
     private final CommentService commentService;
 
-
     public ContentController(UserRepository repository, UserService userService, CollectionService collectionService,
-            ItemService itemService, FollowService followService, LikeService likeService, LikeRepository likeRepository,
-             CommentService commentService) {
+            ItemService itemService, FollowService followService, LikeService likeService,
+            LikeRepository likeRepository,
+            CommentService commentService) {
         this.repository = repository;
         this.userService = userService;
         this.collectionService = collectionService;
@@ -103,7 +103,7 @@ public class ContentController {
             }
 
             collection.setCommentCount(commentReplyCount);
-            
+
             // Fetch the isLiked status for the collection
             List<LikeModel> likes = likeRepository.findAllByCollectionId(collection.getId());
             collection.setIsLiked(likes.stream().anyMatch(like -> like.getUser().getId().equals(currentUser.getId())));
@@ -236,7 +236,6 @@ public class ContentController {
     @GetMapping("/collection/{id}")
     public String collection(@PathVariable("id") Long collectionId, Model model) {
 
-
         // Fetch current user
         Optional<UserModel> currentUserOptional = userService.getCurrentUser();
         if (currentUserOptional.isEmpty()) {
@@ -269,7 +268,6 @@ public class ContentController {
             collection.setIsOwner(false);
         }
 
-
         // Fetch the number of likes for the collection
         Integer likeCount = likeService.countLikes(collectionId);
         collection.setLikeCount(likeCount);
@@ -284,7 +282,6 @@ public class ContentController {
 
         collection.setComments(collectionService.getCommentsByCollectionIdAsc(collectionId));
 
-        
         List<CommentModel> comments = collection.getComments();
         int commentReplyCount = 0;
 
@@ -298,8 +295,6 @@ public class ContentController {
 
         collection.setCommentCount(commentReplyCount);
 
-
-        
         // Add data to the model
         model.addAttribute("userProfile", userProfile);
         model.addAttribute("user", currentUser);
@@ -344,7 +339,6 @@ public class ContentController {
             collection.setIsOwner(false);
         }
 
-
         // Fetch the number of likes for the collection
         Integer likeCount = likeService.countLikes(collectionId);
         collection.setLikeCount(likeCount);
@@ -373,7 +367,6 @@ public class ContentController {
                 }
             }
 
-
             // Fetch the number of likes for the comment
             Integer commentLikeCount = likeService.countLikesComment(comment.getId());
             comment.setLikeCount(commentLikeCount);
@@ -389,12 +382,10 @@ public class ContentController {
             // Fetch replies for the comment
             List<ReplyModel> replies = comment.getReplies();
             comment.setReplies(replies);
-            
+
             // COMMENT AND REPLY COUNT
             commentReplyCount += comment.getReplies().size() + 1;
 
-
-            
             // Fetch replies for the comment
             for (ReplyModel reply : replies) {
                 UserModel replyOwner = reply.getUser();
@@ -454,7 +445,7 @@ public class ContentController {
         }
 
         // Fetch the collection associated with the item
-        CollectionModel collection = item.getCollection();
+        CollectionModel collection = collectionService.getCollectionById(item.getCollection().getId());
         if (collection == null) {
             return "redirect:/profile"; // Redirect if the collection is not found
         }
@@ -487,7 +478,6 @@ public class ContentController {
             item.setIsLiked(false);
         }
 
-
         List<CommentModel> comments = commentService.getCommentsByItemId(itemId);
         int commentReplyCount = 0;
 
@@ -498,7 +488,6 @@ public class ContentController {
         }
 
         item.setCommentCount(commentReplyCount);
-
 
         model.addAttribute("user", currentUser);
         model.addAttribute("userProfile", userProfile);
@@ -560,7 +549,6 @@ public class ContentController {
 
         item.setComments(commentService.getCommentsByItemId(itemId));
 
-
         for (CommentModel comment : item.getComments()) {
 
             // isOwner
@@ -573,7 +561,6 @@ public class ContentController {
                 }
             }
 
-
             // Fetch the number of likes for the comment
             Integer commentLikeCount = likeService.countLikesComment(comment.getId());
             comment.setLikeCount(commentLikeCount);
@@ -585,7 +572,6 @@ public class ContentController {
             comment.setIsLiked(isCommentLiked);
 
             System.out.println("Comment: " + comment.getId());
-
 
             // Fetch replies for the comment
             List<ReplyModel> replies = comment.getReplies();

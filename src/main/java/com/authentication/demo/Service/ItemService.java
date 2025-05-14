@@ -56,7 +56,6 @@ public class ItemService {
   // CREATE ITEM
   public Map<String, String> createItem(Map<String, String> params, MultipartFile itemImage) throws IOException {
     // VALIDATE INPUT PARAMETERS
-
     if (itemImage == null || itemImage.isEmpty()) {
       throw new ItemCreationException("Item image is required");
     }
@@ -64,17 +63,21 @@ public class ItemService {
     // GET USER ID
     Long userId = userService.getCurrentUserId();
 
+    // PROCESS ITEM IMAGE
+    MultipartFile processedFile;
+    try {
+      processedFile = imageService.processImage(itemImage);
+    } catch (IOException e) {
+      throw new ItemCreationException("Failed to process the item image", e);
+    }
+
     // SAVE ITEM IMAGE
-    MultipartFile processedFile = imageService.processImage(itemImage);
     String imageUrl = saveItemImage(processedFile);
 
     // GET COLLECTION
     Long collectionId = Long.valueOf(params.get("collectionId"));
     CollectionModel collection = collectionRepository.findById(collectionId)
         .orElseThrow(() -> new ItemCreationException("Collection not found"));
-    if (collection == null) {
-      throw new ItemCreationException("Collection not found");
-    }
 
     // CREATE ITEM
     ItemModel item = new ItemModel(
@@ -183,8 +186,8 @@ public class ItemService {
     }
     if (itemImage != null && !itemImage.isEmpty()) {
       try {
-      MultipartFile processedFile = imageService.processImage(itemImage);
-      String imageUrl = saveItemImage(processedFile);
+        MultipartFile processedFile = imageService.processImage(itemImage);
+        String imageUrl = saveItemImage(processedFile);
         item.setImageUrl(imageUrl);
       } catch (IOException e) {
         throw new ItemCreationException("Failed to save item image: " + e.getMessage());

@@ -25,20 +25,27 @@ public class ItemController {
     }
 
     // CREATE NEW ITEM
-    @PostMapping("/create_item/{collectionId}")
+    @PostMapping("/create-item/{collectionId}")
     public String createItem(
             @PathVariable Long collectionId,
             @RequestParam Map<String, String> params,
-            MultipartFile itemImage,
+            @RequestParam("itemImage") MultipartFile itemImage,
             RedirectAttributes redirectAttributes) {
         try {
-            itemService.createItem(params, itemImage);
-            redirectAttributes.addFlashAttribute("message", "Item created successfully");
-        } catch (IOException e) {
-            redirectAttributes.addFlashAttribute("error", "Failed to create item: " + e.getMessage());
+            // Add the collectionId to the params map
+            params.put("collectionId", collectionId.toString());
+
+            // Call the service to create the item
+            Map<String, String> result = itemService.createItem(params, itemImage);
+            redirectAttributes.addFlashAttribute("message", result.get("message"));
             return "redirect:/collection/" + collectionId;
+        } catch (ItemCreationException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/create-item/" + collectionId;
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/create-item/" + collectionId;
         }
-        return "redirect:/collection/" + collectionId;
     }
 
     @PostMapping("/delete-item/{id}")
@@ -78,6 +85,5 @@ public class ItemController {
         }
         return "redirect:/item/" + itemId;
     }
-
 
 }

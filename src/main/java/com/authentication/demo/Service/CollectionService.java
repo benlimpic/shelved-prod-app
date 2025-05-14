@@ -30,8 +30,8 @@ public class CollectionService {
   private final ImageService imageService;
 
   public CollectionService(CollectionRepository repository, ItemService itemService,
-        CommentRepository commentRepository, UserService userService, 
-        S3Service s3Service, ImageService imageService) {
+      CommentRepository commentRepository, UserService userService,
+      S3Service s3Service, ImageService imageService) {
     this.repository = repository;
     this.itemService = itemService;
     this.commentRepository = commentRepository;
@@ -65,8 +65,11 @@ public class CollectionService {
 
     try {
       // Validate input parameters
-      if (collectionImage == null || collectionImage.isEmpty()) {
-        throw new CollectionCreationException("Collection image is required");
+      if (collectionImage == null) {
+        throw new CollectionCreationException("Collection image cannot be null");
+      }
+      if (collectionImage.isEmpty()) {
+        throw new CollectionCreationException("Collection image cannot be empty");
       }
 
       if (params.get("title") == null || params.get("title").isEmpty()) {
@@ -90,10 +93,13 @@ public class CollectionService {
 
       repository.save(newCollection);
       return Map.of("message", "Collection created successfully");
-    } catch (IllegalArgumentException | NullPointerException e) {
-      throw new CollectionCreationException("Invalid input parameters", e);
+    } catch (CollectionCreationException e) {
+      throw new CollectionCreationException(e.getMessage(), e);
+    }
+    catch (IOException e) {
+      throw new CollectionCreationException(e.getMessage(), e);
     } catch (RuntimeException e) {
-      throw new CollectionCreationException("Unexpected error occurred while creating collection", e);
+      throw new CollectionCreationException(e.getMessage(), e);
     }
   }
 

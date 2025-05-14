@@ -8,14 +8,16 @@
     <link rel="stylesheet" href="/css/output.css" />
 
     <script th:src="@{/js/previewFile.js}" defer></script>
-
   </head>
   <body id="scrollablePage">
     <header>
       <nav class="navbar">
         <ul class="flex justify-between items-center w-full">
           <li class="flex items-center">
-            <a id="backButton" th:href="@{/collection/{id}(id=${collectionId})}">
+            <a
+              id="backButton"
+              th:href="@{/collection/{id}(id=${collectionId})}"
+            >
               <span>&#8592;</span>
             </a>
           </li>
@@ -52,29 +54,28 @@
         <!-- ERROR / SUCCESS -->
         <div class="errorBox">
           <!-- SUCCESS MESSAGE -->
-          <div
-            id="successMessageDiv"
-            th:if="${message}"
-            th:text="${message}"
-            style="color: green"
-          ></div>
+          <div th:if="${message != null}" class="success" style="color: green; font-weight: bold;">
+            <p th:text="${message}"></p>
+          </div>
+
           <!-- ERROR MESSAGE -->
-          <div
-            id="errorMessageDiv"
-            th:if="${error}"
-            th:text="${error}"
-            style="color: red"
-          ></div>
+          <div th:if="${error != null}" class="error" style="color: red; font-weight: bold;">
+            <p th:text="${error}"></p>
+          </div>
         </div>
 
         <div class="scrollable-container h-100vh">
           <form
-            class="flex flex-col w-full items-center justify-center px-2"
-            th:action="@{/create_item/{collectionId}(collectionId=${collectionId})}"
+            th:action="@{/create-item/{collectionId}(collectionId=${collectionId})}"
             method="post"
             enctype="multipart/form-data"
           >
-            <input type="hidden" name="collectionId" th:value="${collectionId}" />
+            <input
+              type="hidden"
+              name="collectionId"
+              th:value="${collectionId}"
+            />
+
             <input type="hidden" name="_csrf" th:value="${_csrf?.token}" />
             <!-- File Upload Field -->
 
@@ -88,7 +89,9 @@
             />
 
             <!-- Title Field -->
-            <div class="flex flex-col w-full h-auto justify-center items-between">
+            <div
+              class="flex flex-col w-full h-auto justify-center items-between"
+            >
               <div class="labelInputBox w-full">
                 <label class="label" for="title">Title:</label>
                 <input
@@ -102,7 +105,9 @@
             </div>
 
             <!-- Description Field -->
-            <div class="flex flex-col w-full h-auto justify-center items-between">
+            <div
+              class="flex flex-col w-full h-auto justify-center items-between"
+            >
               <div class="labelInputBox w-full">
                 <label class="label" for="description">Description:</label>
                 <textarea
@@ -118,7 +123,9 @@
             </div>
 
             <!-- Item Link Field -->
-            <div class="flex flex-col w-full h-auto justify-center items-between">
+            <div
+              class="flex flex-col w-full h-auto justify-center items-between"
+            >
               <div class="labelInputBox w-full">
                 <label class="label" for="itemLink">Item Link:</label>
                 <input
@@ -132,7 +139,9 @@
             </div>
 
             <!-- Caption Field -->
-            <div class="flex flex-col w-full h-auto justify-center items-between">
+            <div
+              class="flex flex-col w-full h-auto justify-center items-between"
+            >
               <div class="labelInputBox w-full">
                 <label class="label" for="caption">Caption:</label>
                 <input

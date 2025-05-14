@@ -36,7 +36,11 @@ public class ImageService {
         // Read the original image
         BufferedImage originalImage = ImageIO.read(file.getInputStream());
         if (originalImage == null) {
-            throw new IllegalArgumentException("Failed to read the image. The file may not be a valid image.");
+            throw new IllegalArgumentException("Failed to read the image.");
+        }
+
+        if (originalImage.getWidth() < MIN_WIDTH || originalImage.getHeight() < MIN_HEIGHT) {
+            throw new IllegalArgumentException("Image dimensions are too small.");
         }
 
         // Crop the image to a square
