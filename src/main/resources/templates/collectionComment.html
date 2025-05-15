@@ -39,16 +39,16 @@
       });
     </script>
   </head>
-  <body class="flex flex-col h-screen w-full bg-slate-100">
+  <body>
     <header>
-      <nav class="navbar">
-        <ul class="flex justify-between w-full">
-          <li class="flex items-center">
+      <nav>
+        <ul>
+          <li>
             <a id="backButton" th:href="@{|index#collection-${collection.id}|}">
               <span>&#8592;</span>
             </a>
           </li>
-          <li class="flex items-center">
+          <li>
             <div th:if="${isOwner != null && isOwner}">
               <a
                 class="bg-blue-500 hover:bg-blue-700 text-white text-xs px-1 py-0.5 rounded"
@@ -62,51 +62,60 @@
         </ul>
       </nav>
     </header>
+
+    <!-- COLLECTION CONTENT -->
     <main th:id="'collection-' + ${collection.id}">
-      <!-- COLLECTION NAV -->
-      <div class="h-auto w-full bg-slate-100">
-        <div class="collectionNavbar shadow-sm">
-          <div class="flex justify-between items-center w-full">
-            <ul class="flex justify-start items-center w-full">
-              <li class="pr-2">
-                <a th:href="@{/profile/{id}(id=${userProfile?.id})}">
-                  <img
-                    class="h-7 w-7 rounded-full bg-white"
-                    th:src="${userProfile?.profilePictureUrl ?: '/images/default-profile-photo.png'}"
-                    alt="Profile Picture"
-                  />
-                </a>
-              </li>
-              <li>
-                <a th:href="@{/profile/{id}(id=${userProfile?.id})}">
-                  <span
-                    class="text-sm font-semibold"
-                    th:if="${userProfile?.username != null}"
-                    th:text="${userProfile?.username}"
-                  ></span>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <!-- COLLECTION CONTENT -->
-        <div class="flex flex-col justify-center items-center">
+      <div class="container">
+        <div class="box">
+          <nav>
+            <div class="flex justify-between items-center w-full pr-2">
+              <div>
+                <ul>
+                  <li class="pr-2">
+                    <a th:href="@{/profile/{id}(id=${userProfile?.id})}">
+                      <img
+                        class="round-image"
+                        th:src="${userProfile?.profilePictureUrl ?: '/images/default-profile-photo.png'}"
+                        alt="Profile Picture"
+                      />
+                    </a>
+                  </li>
+                  <li>
+                    <a th:href="@{/profile/{id}(id=${userProfile?.id})}">
+                      <span
+                        class="text-sm font-semibold"
+                        th:if="${userProfile?.username != null}"
+                        th:text="${userProfile?.username}"
+                      ></span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <li class="right-0" style="list-style-type: none">
+                  <a>
+                    <span
+                      class="text-sm font-semibold"
+                      th:if="${collection?.title != null}"
+                      th:text="${collection?.title}"
+                    ></span>
+                  </a>
+                </li>
+              </div>
+            </div>
+          </nav>
           <!-- COLLECTION PICTURE -->
-          <a>
-            <img
-              class="aspect-square w-full bg-white"
-              id="previewImage"
-              th:src="${collection != null && collection.imageUrl != null ? collection.imageUrl : '/images/collection_image.png'}"
-              alt="Profile Picture"
-            />
-          </a>
-          <div class="w-full px-2 border-2 bd-slate-100 bg-slate-50">
-            <div
-              class="flex flex-row justify-between w-full h-auto py-1 text-sm"
-            >
-              <ul class="flex flex-row justify-start items-center pr-2">
-                <li class="flex flex-row justify-start items-center pr-2">
-                  <div class="flex justify-start items-center">
+          <img
+            class="square"
+            id="previewImage"
+            th:src="${collection != null && collection.imageUrl != null ? collection.imageUrl : '/images/collection_image.png'}"
+            alt="Profile Picture"
+          />
+          <div class="caption-container">
+            <div class="like-comment-container">
+              <ul>
+                <li>
+                  <div class="element">
                     <form
                       th:if="${collection?.id != null}"
                       th:action="@{/collections/{collectionId}/like-comment-open(collectionId=${collection.id})}"
@@ -132,10 +141,16 @@
                         class="likeButton"
                         th:if="${collection.user.id != user.id}"
                       >
-                        <span class="pr-2 font-medium" th:if="${collection.isLiked}">
+                        <span
+                          class="pr-2 font-medium"
+                          th:if="${collection.isLiked}"
+                        >
                           &#9829;
                         </span>
-                        <span class="pr-2 font-medium" th:if="${!collection.isLiked}">
+                        <span
+                          class="pr-2 font-medium"
+                          th:if="${!collection.isLiked}"
+                        >
                           &#9825;
                         </span>
                       </button>
@@ -149,7 +164,7 @@
                       </button>
                     </form>
                   </div>
-                  <div class="flex justify-start items-center">
+                  <div class="element">
                     <p class="font-thin" th:text="${collection.likeCount}"></p>
                   </div>
                 </li>
@@ -172,13 +187,13 @@
               <div>
                 <a
                   th:href="@{/collection/{id}(id=${collection.id})}"
-                  class="collectionCommentBoxExit flex-row justify-end items-center pr-2"
+                  class="flex-row justify-end items-center pr-2"
                 >
                   <span class="font-semibold">X</span>
                 </a>
               </div>
             </div>
-            <div class="w-full h-auto flex justify-start items-center text-sm">
+            <div class="caption">
               <!-- CAPTION -->
               <p
                 id="toggle_truncate"
@@ -198,9 +213,8 @@
                 ></span>
               </p>
             </div>
-            <div class="w-full flex justify-between items-center py-1">
+            <div class="small-date">
               <!-- MONTH YEAR -->
-              <div class="w-full flex flex-col justify-center items-start pt-1">
                 <span
                   style="font-size: 9px"
                   class="font-extralight"
@@ -211,12 +225,10 @@
             </div>
           </div>
         </div>
-
-
         <!-- COMMENT BOX -->
         <div
           id="commentBox"
-          class="flex-grow pb-6 h-60 w-full bg-slate-100 overflow-y-auto"
+          class="flex-grow pb-6 h-auto w-full overflow-y-auto"
           th:value="${collection.id}"
         >
           <!-- Comment Template -->
@@ -279,7 +291,6 @@
                   style="font-size: 8px; line-height: 1"
                   class="commentReplyBox w-full flex flex-col justify-center items-start pt-1 pr-2 text-slate-500 font-semibold"
                 >
-                  
                   <button
                     class="commentReplyButton"
                     th:attr="data-comment-id=${comment.id}"
@@ -287,15 +298,13 @@
                   >
                     <span class="leading-[1.2]">Reply</span>
                   </button>
-
-                
                 </div>
 
                 <!-- REPLY BOX -->
 
                 <div
                   id="replyBox"
-                  class="flex-grow w-full bg-slate-100 overflow-y-auto"
+                  class="flex-grow w-full overflow-y-auto"
                   th:value="${collection.id}"
                 >
                   <!-- Reply Template -->
@@ -361,13 +370,12 @@
                           class="replyReplyBox w-full flex flex-col justify-center items-start pt-1 pr-2 text-slate-500 font-semibold"
                         >
                           <button
-                          class="commentReplyReplyButton"
-                          th:attr="data-comment-id=${comment.id}, data-reply-username=${reply.user.username}"
-                          onclick="triggerReplyId(this)"
+                            class="commentReplyReplyButton"
+                            th:attr="data-comment-id=${comment.id}, data-reply-username=${reply.user.username}"
+                            onclick="triggerReplyId(this)"
                           >
                             <span class="leading-[1.2]">Reply</span>
                           </button>
-
                         </div>
                       </div>
                       <!-- Like Box -->
@@ -447,7 +455,6 @@
                     </div>
                   </div>
                 </div>
-
               </div>
               <!-- COMMENT LIKE BOX -->
               <div
@@ -525,17 +532,16 @@
       </div>
     </main>
     <footer>
-
-      <div id="commentActivity" class="commentNav">
+      <nav id="commentActivity">
         <div id="commentInputContainer" class="w-full">
           <form
             th:action="@{/collections/{collectionId}/comments (collectionId=${collection.id})}"
             method="post"
-            class="flex flex-row w-full items-center justify-center px-2 bg-white"
+            class="flex flex-row w-full items-center justify-center px-2"
           >
             <a href="/profile" class="w-10">
               <img
-                class="h-7 w-7 rounded-full bg-white"
+                class="round-image"
                 th:src="${user?.profilePictureUrl ?: '/images/default-profile-photo.png'}"
                 alt="Profile Picture"
               />
@@ -550,30 +556,30 @@
               type="text"
               name="content"
               placeholder="Leave a comment..."
-              class="w-full border-none outline-none focus:ring-0 text-sm font-thin bg-slate-100 rounded-md px-2 py-1 mx-2"
+              class="h-8 mx-2 px-2"
             />
             <button
               id="commentButton"
               type="submit"
-              class="text-sm bg-blue-500 text-white font-semibold text-center h-full w-7"
+              class="text-sm bg-blue-500 text-white font-semibold text-center h-full w-7 ml-2"
             >
               <span>C</span>
             </button>
           </form>
         </div>
-      </div>
+      </nav>
 
-      <div id="commentReplyActivity" class="commentNav hidden">
-        <div id="commentInputContainer" class="w-full">
+      <nav id="commentReplyActivity" class="hidden">
+        <div id="commentInputContainer">
           <form
             id="commentReplyForm"
             method="POST"
             th:action="@{/collections/{collectionId}/replies (collectionId=${collection.id})}"
-            class="flex flex-row w-full items-center justify-center px-2 bg-white"
+            class="flex flex-row w-full items-center justify-center"
           >
-            <a href="/profile" class="w-10">
+            <a href="/profile" class="">
               <img
-                class="h-7 w-7 rounded-full bg-white"
+                class="round-image"
                 th:src="${user?.profilePictureUrl ?: '/images/default-profile-photo.png'}"
                 alt="Profile Picture"
               />
@@ -591,31 +597,22 @@
               name="content"
               placeholder="Leave a reply..."
               value=""
-              class="w-full border-none outline-none focus:ring-0 text-sm font-thin bg-slate-100 rounded-md px-2 py-1 mx-2"
             />
 
-            <input
-              type="hidden"
-              name="_csrf"
-              th:value="${_csrf?.token}"
-            />
+            <input type="hidden" name="_csrf" th:value="${_csrf?.token}" />
 
-            <input
-              type="hidden"
-              name="currentUser"
-              th:value="${user.id}"
-            />
+            <input type="hidden" name="currentUser" th:value="${user.id}" />
 
             <button
               id="commentReplyButton"
               type="submit"
-              class="text-sm bg-red-500 text-white font-semibold text-center h-full w-7"
+              class=" icon text-sm bg-red-500 text-white"
             >
               <span>R</span>
             </button>
           </form>
         </div>
-      </div>
+      </nav>
     </footer>
   </body>
 </html>

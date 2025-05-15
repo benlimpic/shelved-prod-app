@@ -87,7 +87,7 @@
           <!-- Username -->
           <div>
             <p
-              class="text-xs font-medium"
+              class="text-sm font-bold"
               th:if="${user?.username != null}"
               th:text="${user?.username}"
             ></p>
@@ -97,7 +97,7 @@
           <div>
             <!-- Display Location if it exists -->
             <p
-              class="text-xs font-extralight"
+              class="text-xs font-normal"
               th:if="${user?.location != null}"
               th:text="${user?.location}"
             ></p>
@@ -116,7 +116,7 @@
           <div>
             <!-- Display Website if it exists -->
             <p
-              class="text-xs font-thin"
+              class="text-xs font-normal italic text-blue-500"
               th:if="${user?.website != null}"
               th:text="${user?.website}"
             ></p>
@@ -151,16 +151,16 @@
           </div>
         </div>
         <!-- LOWER PROFILE BUTTONS -->
-        <div class="grid grid-cols-4 w-full">
+        <div class="flex justify-center items-center w-full px-2 pb-2">
           <a
-            class="deleteButton bg-slate-400 hover:bg-slate-400 flex item-center justify-center col-span-2"
+            class="profile-button bg-slate-500 hover:bg-slate-700 w-40 px-5 mr-2"
             id="redirectUpdateUserDetails"
             href="/update-profile"
           >
             Edit Profile
           </a>
           <a
-            class="deleteButton bg-slate-400 hover:bg-slate-400 flex item-center justify-center col-span-2"
+            class="profile-button bg-slate-500 hover:bg-slate-700 w-40 px-5 ml-2"
             id="redirectShareProfile"
             href="#"
           >
@@ -192,24 +192,21 @@
     </div>
     </main>
     <footer>
-      <div
-        class="h-12 w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto flex items-center"
-      >
-        <div class="footerNav">
-          <ul class="flex justify-between items-center w-full">
+      <nav>
+          <ul>
             <li>
-              <div id="homeButton" class="h-4 w-4 flex items-center justify-center">
-                <a class="text-2xl font-bold" href="/index">&#8962;</a>
+              <div id="homeButton" class="icon">
+                <a class="icon-style" href="/index">&#8962;</a>
               </div>
             </li>
             <li>
-              <div class="h-4 w-4 flex items-center justify-center">
-                <a class="text-2xl font-bold" href="/popular">&#10066;</a>
+              <div class="icon">
+                <a class="icon-style" href="/popular">&#10066;</a>
               </div>
             </li>
             <li>
-              <div class="h-4 w-4 flex items-center justify-center">
-                <a class="text-2xl font-bold" href="/create-collection">
+              <div class="icon">
+                <a class="icon-style" href="/create-collection">
                   &#43;
                 </a>
               </div>
@@ -217,7 +214,7 @@
             <li>
               <a href="/profile">
                 <img
-                  class="h-7 w-7 rounded-full bg-white"
+                  class="round-image"
                   th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}"
                   alt="Profile Picture"
                 />

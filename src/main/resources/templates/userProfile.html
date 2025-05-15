@@ -77,7 +77,7 @@
           <!-- Username -->
           <div>
             <p
-              class="text-xs font-medium"
+              class="text-sm font-bold"
               th:if="${userProfile?.username != null}"
               th:text="${userProfile?.username}"
             ></p>
@@ -87,7 +87,7 @@
           <div>
             <!-- Display Location if it exists -->
             <p
-              class="text-xs font-extralight"
+              class="text-xs font-normal"
               th:if="${userProfile?.location != null}"
               th:text="${userProfile?.location}"
             ></p>
@@ -97,7 +97,7 @@
           <div>
             <!-- Display Website if it exists -->
             <p
-              class="text-xs font-thin"
+              class="text-xs font-normal italic text-blue-500"
               th:if="${userProfile?.website != null}"
               th:text="${userProfile?.website}"
             ></p>
@@ -114,11 +114,11 @@
           </div>
         </div>
 
-        <div>
+        <div class="flex justify-center items-center w-full px-2 pb-2">
           <div th:if="${!isFollowing}">
             <form
               th:action="@{/follow/{id}(id=${userProfile?.id})}"
-              class="deleteButton bg-slate-400 hover:bg-slate-400 flex item-center justify-center col-span-2"
+              class="profile-button bg-slate-500 hover:bg-slate-700 w-40 px-5 mr-2"
               method="post"
             >
               <button type="submit">Follow</button>
@@ -128,12 +128,20 @@
           <div th:if="${isFollowing}">
             <form
               th:action="@{/unfollow/{id}(id=${userProfile?.id})}"
-              class="deleteButton bg-blue-500 hover:bg-blue-700 flex item-center justify-center col-span-2"
+              class="profile-button bg-blue-500 hover:bg-blue-700 w-40 px-5 mr-2"
               method="post"
             >
               <button type="submit">Following</button>
             </form>
           </div>
+                    </a>
+          <a
+            class="profile-button bg-slate-500 hover:bg-slate-700 w-40 px-5 ml-2"
+            id="redirectShareProfile"
+            href="#"
+          >
+            Message
+          </a>
         </div>
       </div>
       <div class="w-full min-h-fit overflow-y-auto">
@@ -159,40 +167,30 @@
       </div>
     </main>
     <footer>
-      <div
-        class="h-12 w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto flex items-center"
-      >
-        <div class="footerNav">
-          <ul class="flex justify-between items-center w-full">
+      <nav>
+          <ul>
             <li>
-              <div id="homeButton" class="h-4 w-4 flex items-center justify-center">
-                <a class="text-2xl font-bold" href="/index">&#8962;</a>
+              <div id="homeButton" class="icon">
+                <a class="icon-style" href="/index">&#8962;</a>
               </div>
             </li>
             <li>
-              <div class="h-4 w-4 flex items-center justify-center">
-                <a class="text-2xl font-bold" href="/popular">&#10066;</a>
+              <div class="icon">
+                <a class="icon-style" href="/popular">&#10066;</a>
               </div>
             </li>
-            <li>
-              <div class="h-4 w-4 flex items-center justify-center">
-                <a class="text-2xl font-bold" href="/create-collection">
-                  &#43;
-                </a>
-              </div>
-            </li>
+            <li></li>
             <li>
               <a href="/profile">
                 <img
-                  class="h-7 w-7 rounded-full bg-white"
+                  class="round-image"
                   th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}"
                   alt="Profile Picture"
                 />
               </a>
             </li>
           </ul>
-        </div>
-      </div>
+        </nav>
     </footer>
   </body>
 </html>

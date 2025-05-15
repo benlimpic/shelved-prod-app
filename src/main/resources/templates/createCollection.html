@@ -127,5 +127,67 @@
         </div>
       </div>
     </main>
+        <footer>
+      <div
+        th:if="${collection != null && collection.isOwner != null && collection.isOwner}"
+      >
+        <nav>
+          <!-- Footer for owner -->
+          <ul id="footerNavOwner">
+            <li>
+              <div id="homeButton" class="icon">
+                <a class="text-2xl font-bold" href="/index">&#8962;</a>
+              </div>
+            </li>
+            <li>
+              <div class="icon">
+                <a class="text-2xl font-bold" href="/popular">&#10066;</a>
+              </div>
+            </li>
+            <li>
+              <div class="icon">
+                <a
+                  class="text-2xl font-bold"
+                  th:href="@{/create-item/{collectionId}(collectionId=${collection?.id})}"
+                >
+                  &#43;
+                </a>
+              </div>
+            </li>
+            <li>
+              <a href="/profile">
+                <img
+                  class="round-image"
+                  th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}"
+                  alt="Profile Picture"
+                />
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <div th:if="${collection.isOwner != null && !collection.isOwner}">
+        <nav>
+          <!-- Footer for non-owner -->
+          <ul id="footerNavUser">
+            <li>
+              <div class="icon">
+                <a class="text-2xl font-bold" href="/index">&#8962;</a>
+              </div>
+            </li>
+            <li>
+              <a href="/profile">
+                <img
+                  class="round-image"
+                  th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}"
+                  alt="Profile Picture"
+                />
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </footer>
   </body>
 </html>
