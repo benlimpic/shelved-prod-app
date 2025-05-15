@@ -19,8 +19,8 @@ fileInput.addEventListener('change', function () {
 
                 // Set canvas dimensions (e.g., crop to a square or resize)
                 const size = Math.min(img.width, img.height); // Crop to the smallest dimension
-                canvas.width = 300; // Resize to 300x300 pixels
-                canvas.height = 300;
+                canvas.width = 500; // Resize to 300x300 pixels
+                canvas.height = 500;
 
                 // Draw the cropped and resized image onto the canvas
                 ctx.drawImage(

@@ -28,12 +28,32 @@ public class SearchController {
   }
 
   @GetMapping
-  public ResponseEntity<Map<String, Object>> liveSearch(@RequestParam("query") String query) {
-    // Search for users by username
-    List<UserModel> users = userService.searchUsersByUsername(query);
+  public ResponseEntity<Map<String, Object>> liveSearch(@RequestParam(required = false) String query) {
+    List<UserModel> users;
+    List<CollectionModel> collections;
 
-    // Search for collections by title
-    List<CollectionModel> collections = collectionService.searchCollectionsByTitle(query);
+    if (query == null || query.trim().isEmpty()) {
+      // If no query is provided, return empty lists
+      users = new java.util.ArrayList<>();
+      collections = new java.util.ArrayList<>();
+    } else if (query.startsWith("@")) {
+      // Search for users by username
+      String username = query.substring(1);
+      users = userService.searchUsersByUsername(username);
+      // Search for collections by title
+      collections = collectionService.searchCollectionsByTitle(username);
+    } else if (query.startsWith("#")) {
+      // Search for collections by title
+      String title = query.substring(1);
+      collections = collectionService.searchCollectionsByTitle(title);
+      // Search for users by username
+      users = userService.searchUsersByUsername(title);
+    } else {
+      // Search for users by username
+      users = userService.searchUsersByUsername(query);
+      // Search for collections by title
+      collections = collectionService.searchCollectionsByTitle(query);
+    }
 
     // Prepare the response
     Map<String, Object> response = new HashMap<>();

@@ -14,8 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class ImageService {
 
   int MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5 MB
-  int MIN_WIDTH = 400; // Minimum width in pixels
-  int MIN_HEIGHT = 400; // Minimum height in pixels
+  int MIN_WIDTH = 500; // Minimum width in pixels
+  int MIN_HEIGHT = 500; // Minimum height in pixels
 
 
     public MultipartFile processImage(MultipartFile file) throws IOException, IllegalArgumentException {

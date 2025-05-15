@@ -38,27 +38,43 @@
       <div class="container">
         <div class="box">
           <nav>
-            <ul>
-              <li class="pr-2">
-                <a th:href="@{/profile/{id}(id=${userProfile?.id})}">
-                  <img
-                    class="round-image"
-                    th:src="${userProfile?.profilePictureUrl ?: '/images/default-profile-photo.png'}"
-                    alt="Profile Picture"
-                  />
-                </a>
-              </li>
-              <li>
-                <a th:href="@{/profile/{id}(id=${userProfile?.id})}">
-                  <span
-                    class="text-sm font-semibold"
-                    th:if="${userProfile?.username != null}"
-                    th:text="${userProfile?.username}"
-                  ></span>
-                </a>
-              </li>
-            </ul>
+            <div class="flex justify-between items-center w-full pr-2">
+              <div>
+                <ul>
+                  <li class="pr-2">
+                    <a th:href="@{/profile/{id}(id=${userProfile?.id})}">
+                      <img
+                        class="round-image"
+                        th:src="${userProfile?.profilePictureUrl ?: '/images/default-profile-photo.png'}"
+                        alt="Profile Picture"
+                      />
+                    </a>
+                  </li>
+                  <li>
+                    <a th:href="@{/profile/{id}(id=${userProfile?.id})}">
+                      <span
+                        class="text-sm font-semibold"
+                        th:if="${userProfile?.username != null}"
+                        th:text="${userProfile?.username}"
+                      ></span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <li class="right-0" style="list-style-type: none">
+                  <a>
+                    <span
+                      class="text-sm font-semibold"
+                      th:if="${collection?.title != null}"
+                      th:text="${collection?.title}"
+                    ></span>
+                  </a>
+                </li>
+              </div>
+            </div>
           </nav>
+
           <!-- COLLECTION PICTURE -->
           <img
             class="square"
@@ -192,16 +208,13 @@
     </main>
     <footer>
       <div
-      th:if="${collection != null && collection.isOwner != null && collection.isOwner}"
+        th:if="${collection != null && collection.isOwner != null && collection.isOwner}"
       >
-      <nav>
+        <nav>
           <!-- Footer for owner -->
           <ul id="footerNavOwner">
             <li>
-              <div
-                id="homeButton"
-                class="icon"
-              >
+              <div id="homeButton" class="icon">
                 <a class="text-2xl font-bold" href="/index">&#8962;</a>
               </div>
             </li>
@@ -230,12 +243,10 @@
               </a>
             </li>
           </ul>
-          </nav>
-        </div>
+        </nav>
+      </div>
 
-        <div
-          th:if="${collection.isOwner != null && !collection.isOwner}"
-        >
+      <div th:if="${collection.isOwner != null && !collection.isOwner}">
         <nav>
           <!-- Footer for non-owner -->
           <ul id="footerNavUser">
