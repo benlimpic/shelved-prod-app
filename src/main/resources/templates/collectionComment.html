@@ -536,7 +536,7 @@
         <div id="commentInputContainer" class="w-full">
           <form
             th:action="@{/collections/{collectionId}/comments (collectionId=${collection.id})}"
-            method="post"
+            method="POST"
             class="flex flex-row w-full items-center justify-center px-2"
           >
             <a href="/profile" class="w-10">
@@ -570,14 +570,14 @@
       </nav>
 
       <nav id="commentReplyActivity" class="hidden">
-        <div id="commentInputContainer">
+        <div id="commentInputContainer" class="w-full">
           <form
             id="commentReplyForm"
             method="POST"
             th:action="@{/collections/{collectionId}/replies (collectionId=${collection.id})}"
-            class="flex flex-row w-full items-center justify-center"
+            class="flex flex-row w-full items-center justify-center px-2"
           >
-            <a href="/profile" class="">
+            <a href="/profile" class="w-10">
               <img
                 class="round-image"
                 th:src="${user?.profilePictureUrl ?: '/images/default-profile-photo.png'}"
@@ -585,18 +585,16 @@
               />
             </a>
             <input
-              id="replyCommentIdInput"
               type="hidden"
-              name="commentId"
-              value=""
+              name="collectionId"
+              th:value="${collection.id}"
             />
-
             <input
               id="replyContentInput"
               type="text"
               name="content"
-              placeholder="Leave a reply..."
-              value=""
+              placeholder="Leave a comment..."
+              class="h-8 mx-2 px-2"
             />
 
             <input type="hidden" name="_csrf" th:value="${_csrf?.token}" />
@@ -606,7 +604,7 @@
             <button
               id="commentReplyButton"
               type="submit"
-              class=" icon text-sm bg-red-500 text-white"
+              class="text-sm bg-red-500 text-white font-semibold text-center h-full w-7 ml-2"
             >
               <span>R</span>
             </button>

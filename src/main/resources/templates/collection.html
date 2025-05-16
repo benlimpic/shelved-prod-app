@@ -21,7 +21,7 @@
           <li>
             <div th:if="${collection.isOwner != null && collection.isOwner}">
               <a
-                class="bg-blue-500 hover:bg-blue-700 text-white text-xs px-1 py-0.5 rounded"
+                class=" text-white text-xs px-1 py-0.5 rounded"
                 id="redirectUpdateCollection"
                 th:href="@{/update-collection/{id}(id=${collection.id})}"
               >

@@ -119,20 +119,20 @@
           <div th:if="${!isFollowing}">
             <form
               th:action="@{/follow/{id}(id=${userProfile?.id})}"
-              class="profile-button bg-slate-500 hover:bg-slate-700 w-40 px-5 mr-2"
+              class="px-5 mr-2"
               method="post"
             >
-              <button type="submit">Follow</button>
+              <button class="profile-button bg-slate-500 hover:bg-slate-700 w-40" type="submit">Follow</button>
             </form>
           </div>
 
           <div th:if="${isFollowing}">
             <form
               th:action="@{/unfollow/{id}(id=${userProfile?.id})}"
-              class="profile-button bg-blue-500 hover:bg-blue-700 w-40 px-5 mr-2"
+              class="px-5 mr-2"
               method="post"
             >
-              <button type="submit">Following</button>
+              <button class="profile-button bg-blue-500 hover:bg-blue-700 w-40" type="submit">Following</button>
             </form>
           </div>
           <a

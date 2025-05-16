@@ -10,21 +10,21 @@
   </head>
   <body>
     <header>
-      <nav class="navbar">
-        <ul class="flex justify-between w-full">
-          <li class="flex items-center">
+      <nav>
+        <ul>
+          <li>
             <a id="backButton" href="/index">
               <span>&#8592;</span>
             </a>
           </li>
-          <li class="flex items-center">
+          <li>
             <h2
               class="text-sm font-medium"
               th:if="${user?.username != null}"
               th:text="${user?.username}"
             ></h2>
           </li>
-          <li class="flex items-center">
+          <li>
             <a
               class="text-white text-xs px-1 py-0.5 rounded"
               id="redirectUpdateUserDetails"
@@ -36,6 +36,7 @@
         </ul>
       </nav>
     </header>
+
     <main>
       <div
         class="h-auto w-full border-b-2 border-slate-300 bg-slate-200 shadow-sm pt-3"

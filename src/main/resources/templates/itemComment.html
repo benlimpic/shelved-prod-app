@@ -548,16 +548,16 @@
     </main>
     <footer>
 
-      <div id="commentActivity" class="commentNav">
+      <nav id="commentActivity" class="w-full">
         <div id="commentInputContainer" class="w-full">
           <form
             th:action="@{/items/{itemId}/comments (itemId=${item.id})}"
-            method="post"
-            class="flex flex-row w-full items-center justify-center px-2 bg-white"
+            method="POST"
+            class="flex flex-row w-full items-center justify-center px-2"
           >
             <a href="/profile" class="w-10">
               <img
-                class="h-7 w-7 rounded-full bg-white"
+                class="round-image"
                 th:src="${user?.profilePictureUrl ?: '/images/default-profile-photo.png'}"
                 alt="Profile Picture"
               />
@@ -572,30 +572,30 @@
               type="text"
               name="content"
               placeholder="Leave a comment..."
-              class="w-full border-none outline-none focus:ring-0 text-sm font-thin bg-slate-100 rounded-md px-2 py-1 mx-2"
+              class="h-8 mx-2 px-2"
             />
             <button
               id="commentButton"
               type="submit"
-              class="text-sm bg-blue-500 text-white font-semibold text-center h-full w-7"
+              class="text-sm bg-blue-500 text-white font-semibold text-center h-full w-7 ml-2"
             >
               <span>C</span>
             </button>
           </form>
         </div>
-      </div>
+      </>
 
-      <div id="commentReplyActivity" class="commentNav hidden">
+      <div id="commentReplyActivity" class="hidden">
         <div id="commentInputContainer" class="w-full">
           <form
             id="commentReplyForm"
             method="POST"
             th:action="@{/items/{itemId}/replies (itemId=${item.id})}"
-            class="flex flex-row w-full items-center justify-center px-2 bg-white"
+            class="flex flex-row w-full items-center justify-center px-2"
           >
             <a href="/profile" class="w-10">
               <img
-                class="h-7 w-7 rounded-full bg-white"
+                class="round-image"
                 th:src="${user?.profilePictureUrl ?: '/images/default-profile-photo.png'}"
                 alt="Profile Picture"
               />
@@ -613,7 +613,7 @@
               name="content"
               placeholder="Leave a reply..."
               value=""
-              class="w-full border-none outline-none focus:ring-0 text-sm font-thin bg-slate-100 rounded-md px-2 py-1 mx-2"
+              class="h-8 mx-2 px-2"
             />
 
             <input
@@ -631,7 +631,7 @@
             <button
               id="commentReplyButton"
               type="submit"
-              class="text-sm bg-red-500 text-white font-semibold text-center h-full w-7"
+              class="text-sm bg-red-500 text-white font-semibold text-center h-full w-7 ml-2"
             >
               <span>R</span>
             </button>
