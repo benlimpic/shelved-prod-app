@@ -54,7 +54,7 @@
                 let hasResults = false;
 
                 // Display users
-                if (data.users && data.users.length > 0) {
+                if (data.users.length > 0) {
                   hasResults = true;
                   const userSection = document.createElement('div');
                   userSection.className = 'w-full bg-white shadow-md rounded-md p-2 mt-2';
@@ -82,7 +82,7 @@
                     const profilePictureLink = document.createElement('a');
                     profilePictureLink.href = `/profile/${user.id}`;
                     const profilePicture = document.createElement('img');
-                    profilePicture.className = 'h-7 w-7 rounded-full bg-white';
+                    profilePicture.className = 'round-image';
                     profilePicture.src =
                       user.profilePictureUrl || '/images/default-profile-photo.png';
                     profilePicture.alt = 'Profile Picture';
@@ -110,7 +110,7 @@
                 }
 
                 // Display collections
-                if (data.collections && data.collections.length > 0) {
+                if (data.collections.length > 0) {
                   hasResults = true;
                   const collectionSection = document.createElement('div');
                   collectionSection.className = 'w-full bg-white shadow-md rounded-md p-2 mt-2';
@@ -138,7 +138,7 @@
                     const imageLink = document.createElement('a');
                     imageLink.href = `/collection/${collection.id}`;
                     const image = document.createElement('img');
-                    image.className = 'h-7 w-7 rounded bg-white object-cover';
+                    image.className = 'round-image';
                     image.src =
                       collection.imageUrl || '/images/default-image.png';
                     image.alt = 'Collection Image';
@@ -210,24 +210,21 @@
       </div>
     </main>
     <footer>
-      <dm
-        class="h-12 w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/2 mx-auto flex items-center"
-      >
-        <div class="footerNav">
-          <ul class="flex justify-between items-center w-full">
+      <nav>
+          <ul>
             <li>
-              <div id="homeButton" class="h-4 w-4 flex items-center justify-center">
-                <a class="text-2xl font-bold" href="/index">&#8962;</a>
+              <div id="homeButton" class="icon">
+                <a class="icon-style" href="/index">&#8962;</a>
               </div>
             </li>
             <li>
-              <div class="h-4 w-4 flex items-center justify-center">
-                <a class="text-2xl font-bold" href="/popular">&#10066;</a>
+              <div class="icon">
+                <a class="icon-style" href="/popular">&#10066;</a>
               </div>
             </li>
             <li>
-              <div class="h-4 w-4 flex items-center justify-center">
-                <a class="text-2xl font-bold" href="/create-collection">
+              <div class="icon">
+                <a class="icon-style" href="/create-collection">
                   &#43;
                 </a>
               </div>
@@ -242,8 +239,7 @@
               </a>
             </li>
           </ul>
-        </div>
-      </main>
+        </nav>
     </footer>
   </body>
 </html>

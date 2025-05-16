@@ -2,85 +2,85 @@
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login</title>
+    <title>Sign Up</title>
     <link rel="stylesheet" href="/css/output.css" />
-
     <script th:src="@{/js/fadeAnimations.js}" defer></script>
-    
   </head>
   <body>
-    <header>
-      <nav>
-        <ul class="flex justify-center items-center w-full">
-          <li>
-            <a href="/index">
-              <img
-              class="h-5"
+    <main class="top-0 bottom-0 bg-blue-500">
+      <div class="flex flex-col items-center justify-center h-screen mb-4">
+        <div
+          class="flex flex-col items-center justify-center px-6 py-4 rounded-lg"
+        >
+          <div class="mb-4 mt-2">
+            <img
+              class="h-8"
               src="/images/Shelved_Logo_White.png"
               alt="Shelved Logo"
+            />
+          </div>
+
+          <div class="errorBox">
+            <!-- SUCCESS MESSAGE -->
+            <div
+              id="successMessageDiv"
+              th:if="${message}"
+              th:text="${message}"
+              class="success"
+            ></div>
+            <!-- ERROR MESSAGE -->
+            <div
+              id="errorMessageDiv"
+              th:if="${error}"
+              th:text="${error}"
+              class="failure"
+            ></div>
+          </div>
+
+          <form th:action="@{/login}" method="post">
+            <div class="mt-2 mb-2">
+              <label class="label" for="Username">Username:</label>
+              <input
+                label="Username"
+                type="text"
+                id="username"
+                name="username"
+                placeholder="Username"
+                required
               />
+            </div>
+
+            <div class="mb-2">
+              <label class="label" for="password">Password:</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Password"
+                required
+              />
+            </div>
+
+            <!-- Submit Button -->
+            <div class="flex justify-center items-center w-full p-1 mt-4">
+              <button
+                class="button bg-slate-800 hover:bg-slate-950"
+                type="submit"
+              >
+                Login
+              </button>
+            </div>
+          </form>
+          <div class="p-1">
+            <a
+              class="small-button bg-blue-600 hover:bg-blue-950"
+              href="/signup"
+            >
+              Sign Up
             </a>
-          </li>
-        </ul>
-      </nav>
-    </header>
-    <main class="bg-slate-200">
-      <div class="card">
-        <div class="headerBox">
-          <h1 class="formHeader">Login</h1>
+          </div>
         </div>
-
-        <div class="errorBox">
-          <!-- SUCCESS MESSAGE -->
-          <div
-            id="successMessageDiv"
-            th:if="${param.logout != null}"
-            class="success"
-          >
-            You have been logged out
-          </div>
-          <!-- ERROR MESSAGE -->
-          <div
-            id="errorMessageDiv"
-            th:if="${param.error != null}"
-            class="failure"
-          >
-            Invalid username or password
-          </div>
-          <div th:if="${message}" class="success" th:text="${message}"></div>
-          <div th:if="${error}" class="success" th:text="${error}"></div>
-        </div>
-
-        <form class="formContainer" th:action="@{/login}" method="post">
-          <div class="labelInputBox">
-            <label class="label" for="Username">Username:</label>
-            <input
-              class="input"
-              label="Username"
-              type="text"
-              id="username"
-              name="username"
-              placeholder="Username"
-              required
-            />
-          </div>
-          <div class="labelInputBox">
-            <label class="label" for="password">Password:</label>
-            <input
-              class="input"
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Password"
-              required
-            />
-          </div>
-          <button class="button" type="submit">Login</button>
-          <a class="link" href="/signup">Sign Up</a>
-        </form>
       </div>
     </main>
-    <footer class="bg-slate-100">
-    </footer>
   </body>
 </html>

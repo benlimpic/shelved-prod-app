@@ -34,10 +34,11 @@ public class SecurityConfig {
                     "/create_item",
                     "/create_reply",
                     "/follow/**",
-                    "/unfollow/**")
+                    "/unfollow/**"
+                    )
             )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login", "/signup", "/css/**", "/js/**", "/images/**").permitAll()
+                .requestMatchers("/login", "/signup", "/css/**", "/js/**", "/images/**", "/search-live").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form

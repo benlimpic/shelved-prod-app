@@ -5,17 +5,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Login</title>
+    <title>Create Collection</title>
     <link rel="stylesheet" href="/css/output.css" />
 
     <script th:src="@{/js/previewFile.js}" defer></script>
-
   </head>
-  <body class=" bg-slate-200">
+  <body>
     <header>
-      <nav class="navbar">
-        <ul class="flex justify-between items-center w-full">
-          <li class="flex items-center">
+      <nav>
+        <ul>
+          <li>
             <a id="backButton" href="/index">
               <span>&#8592;</span>
             </a>
@@ -23,7 +22,7 @@
           <li>
             <a href="/profile">
               <img
-                class="h-7 w-7 rounded-full bg-white"
+                class="round-image"
                 th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}"
                 alt="Profile Picture"
               />
@@ -32,162 +31,104 @@
         </ul>
       </nav>
     </header>
-    <main class="overflow-y-auto">
-      <div class="bg-white pb-4">
-        <div class="collectionHeader bg-slate-100">
-          <span class="text-sm font-semibold text-slate-600">Create Collection</span>
-        </div>
+    <main class="bottom-0 overflow-y-auto pb-12">
+      <div class="container">
+        <nav>
+          <span class="w-full text-center text-sm font-semibold text-slate-600">
+            Create Collection
+          </span>
+        </nav>
 
-        <div class="bg-white pb-4">
-          <div class="flex flex-col w-full items-center justify-center">
+        <div
+          class="box pb-3"
+          style="border-bottom: 1px solid rgba(148, 163, 184, 0.25)"
+        >
+          <div class="square">
             <img
-              class="aspect-square w-full bg-white"
+              class="aspect-square w-full"
               id="previewImage"
               th:src="${'/images/collection_image.png'}"
               alt="Default Collection Image"
             />
-            <a href="#" id="triggerUpload" class="mt-2">
-              <span class="text-sm font-semibold text-blue-500"
-                >Update Collection Cover</span
-              >
-            </a>
           </div>
-          <!-- ERROR / SUCCESS -->
-          <div class="errorBox">
-            <!-- SUCCESS MESSAGE -->
-            <div
-              id="successMessageDiv"
-              th:if="${message}"
-              th:text="${message}"
-              style="color: green"
-            ></div>
-            <!-- ERROR MESSAGE -->
-            <div
-              id="errorMessageDiv"
-              th:if="${error}"
-              th:text="${error}"
-              style="color: red"
-            ></div>
-          </div>
-
-          <form
-            class="flex flex-col w-full items-center justify-center px-2 bg-white"
-            action="/create_collection"
-            method="POST"
-            enctype="multipart/form-data"
-          >
-          <input type="hidden" name="_csrf" th:value="${_csrf?.token}" />
-            <!-- File Upload Field -->
-
-            <input
-              type="file"
-              id="hiddenFileInput"
-              name="collectionImage"
-              style="display: none"
-              accept="image/*"
-            />
-
-            <!-- Title Field -->
-            <div class="flex flex-col w-full h-auto justify-center items-between">
-              <div class="labelInputBox w-full">
-                <label class="label" for="title">Title:</label>
-                <input
-                  class="input w-full"
-                  type="text"
-                  id="collectionTitle"
-                  name="title"
-                  placeholder="Title"
-                />
-              </div>
-
-            <!-- Caption Field -->
-            <div class="flex flex-col w-full h-auto justify-center items-between">
-              <div class="labelInputBox w-full">
-                <label class="label" for="caption">Caption:</label>
-                <input
-                  class="input w-full"
-                  type="text"
-                  id="caption"
-                  name="caption"
-                  placeholder="Caption"
-                />
-              </div>
-
-              <!-- Submit Button -->
-              <div class="flex flex-row justify-center items-center">
-                <button
-                  class="deleteButton bg-blue-600 hover:bg-blue-800"
-                  type="submit"
-                >
-                  Create Collection
-                </button>
-              </div>
-            </div>
-          </form>
+          <a href="#" id="triggerUpload" class="mt-2">
+            <span class="text-sm font-semibold text-blue-500">
+              Update Collection Cover
+            </span>
+          </a>
         </div>
+
+        <!-- ERROR / SUCCESS -->
+        <div class="errorBox">
+          <!-- SUCCESS MESSAGE -->
+          <div
+            id="successMessageDiv"
+            th:if="${message}"
+            th:text="${message}"
+            style="color: green"
+          ></div>
+          <!-- ERROR MESSAGE -->
+          <div
+            id="errorMessageDiv"
+            th:if="${error}"
+            th:text="${error}"
+            style="color: red"
+          ></div>
+        </div>
+
+        <form
+          class="flex flex-col w-full items-center justify-center px-4 mt-4"
+          action="/create_collection"
+          method="post"
+          enctype="multipart/form-data"
+        >
+          <input type="hidden" name="_csrf" th:value="${_csrf?.token}" />
+          <!-- File Upload Field -->
+
+          <input
+            type="file"
+            id="hiddenFileInput"
+            name="collectionImage"
+            style="display: none"
+            accept="image/*"
+          />
+
+          <!-- Title Field -->
+          <div class="flex flex-col w-full h-auto justify-center items-between">
+            <div class="labelInputBox w-full">
+              <label class="label" for="title">Title:</label>
+              <input
+                class="input w-full"
+                type="text"
+                id="collectionTitle"
+                name="title"
+                placeholder="Title"
+              />
+            </div>
+          </div>
+
+          <!-- Caption Field -->
+          <div class="flex flex-col w-full h-auto justify-center items-between">
+            <div class="labelInputBox w-full">
+              <label class="label" for="caption">Caption:</label>
+              <input
+                class="input w-full"
+                type="text"
+                id="caption"
+                name="caption"
+                placeholder="Caption"
+              />
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="flex flex-row justify-center items-center mt-4">
+            <button class="button bg-blue-600 hover:bg-blue-800" type="submit">
+              Create Collection
+            </button>
+          </div>
+        </form>
       </div>
     </main>
-        <footer>
-      <div
-        th:if="${collection != null && collection.isOwner != null && collection.isOwner}"
-      >
-        <nav>
-          <!-- Footer for owner -->
-          <ul id="footerNavOwner">
-            <li>
-              <div id="homeButton" class="icon">
-                <a class="text-2xl font-bold" href="/index">&#8962;</a>
-              </div>
-            </li>
-            <li>
-              <div class="icon">
-                <a class="text-2xl font-bold" href="/popular">&#10066;</a>
-              </div>
-            </li>
-            <li>
-              <div class="icon">
-                <a
-                  class="text-2xl font-bold"
-                  th:href="@{/create-item/{collectionId}(collectionId=${collection?.id})}"
-                >
-                  &#43;
-                </a>
-              </div>
-            </li>
-            <li>
-              <a href="/profile">
-                <img
-                  class="round-image"
-                  th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}"
-                  alt="Profile Picture"
-                />
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-
-      <div th:if="${collection.isOwner != null && !collection.isOwner}">
-        <nav>
-          <!-- Footer for non-owner -->
-          <ul id="footerNavUser">
-            <li>
-              <div class="icon">
-                <a class="text-2xl font-bold" href="/index">&#8962;</a>
-              </div>
-            </li>
-            <li>
-              <a href="/profile">
-                <img
-                  class="round-image"
-                  th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}"
-                  alt="Profile Picture"
-                />
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </footer>
   </body>
 </html>

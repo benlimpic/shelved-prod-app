@@ -114,7 +114,8 @@
           </div>
         </div>
 
-        <div class="flex justify-center items-center w-full px-2 pb-2">
+        <!-- LOWER PROFILE BUTTONS -->
+        <div class="flex justify-center items-center w-full px-2 pb-1">
           <div th:if="${!isFollowing}">
             <form
               th:action="@{/follow/{id}(id=${userProfile?.id})}"
@@ -134,7 +135,6 @@
               <button type="submit">Following</button>
             </form>
           </div>
-                    </a>
           <a
             class="profile-button bg-slate-500 hover:bg-slate-700 w-40 px-5 ml-2"
             id="redirectShareProfile"
