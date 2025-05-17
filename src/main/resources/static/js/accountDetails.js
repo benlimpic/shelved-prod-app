@@ -15,6 +15,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // Show the update username form when the button is clicked
   updateUsernameButton.addEventListener('click', () => {
     accountDetailsHeader.textContent = 'Update Username';
+
+    if (accountDetailsHeader.classList.contains('text-red-500')) {
+      accountDetailsHeader.classList.remove('text-red-500');
+      accountDetailsHeader.classList.add('text-blue-500');
+    }
+
     updateBox.classList.remove('hidden');
     updateUsernameForm.classList.remove('hidden');
     updateNameForm.classList.add('hidden');
@@ -45,6 +51,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   updateNameButton.addEventListener('click', () => {
     accountDetailsHeader.textContent = 'Update Name';
+
+    if (accountDetailsHeader.classList.contains('text-red-500')) {
+      accountDetailsHeader.classList.remove('text-red-500');
+      accountDetailsHeader.classList.add('text-blue-500');
+    }
+
     updateBox.classList.remove('hidden');
     updateNameForm.classList.remove('hidden');
     updateUsernameForm.classList.add('hidden');
@@ -74,6 +86,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // Show the update email form when the button is clicked
   updateEmailButton.addEventListener('click', () => {
     accountDetailsHeader.textContent = 'Update Email';
+
+    if (accountDetailsHeader.classList.contains('text-red-500')) {
+      accountDetailsHeader.classList.remove('text-red-500');
+      accountDetailsHeader.classList.add('text-blue-500');
+    }
+    
     updateBox.classList.remove('hidden');
     updateEmailForm.classList.remove('hidden');
     updateUsernameForm.classList.add('hidden');
@@ -103,6 +121,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // Show the update password form when the button is clicked
   updatePasswordButton.addEventListener('click', () => {
     accountDetailsHeader.textContent = 'Update Password';
+
+    if (accountDetailsHeader.classList.contains('text-red-500')) {
+      accountDetailsHeader.classList.remove('text-red-500');
+      accountDetailsHeader.classList.add('text-blue-500');
+    }
+    
     updateBox.classList.remove('hidden');
     updatePasswordForm.classList.remove('hidden');
     updateUsernameForm.classList.add('hidden');
@@ -130,6 +154,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // Show the delete account form when the button is clicked
   deleteAccountButton.addEventListener('click', () => {
     accountDetailsHeader.textContent = 'Delete Account';
+
+    if (accountDetailsHeader.classList.contains('text-blue-500')) {
+      accountDetailsHeader.classList.remove('text-blue-500');
+      accountDetailsHeader.classList.add('text-red-500');
+    }
+    
     updateBox.classList.remove('hidden');
     updateBox.classList.remove('hidden');
     updateUsernameForm.classList.add('hidden');

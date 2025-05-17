@@ -146,8 +146,8 @@
   }
 
   label {
-    font-size: 0.875rem; /* Equivalent to text-sm */
-    color: #374151; /* Equivalent to text-slate-700 */
+    font-size: 0.875rem;
+    color: #374151;
   }
 }
 
