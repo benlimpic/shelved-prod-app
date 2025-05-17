@@ -55,7 +55,7 @@ public class UserModel implements UserDetails {
     @Column(name = "location")
     private String location;
 
-    @Column(name = "biography")
+    @Column(name = "biography", length = 250)
     private String biography;
 
     @Column(name = "profile_picture", length = 1024)

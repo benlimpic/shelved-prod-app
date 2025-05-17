@@ -10,39 +10,38 @@
     <script th:src="@{/js/fadeAnimations.js}" defer></script>
     <script th:src="@{/js/updateChanges.js}" defer></script>
     <script th:src="@{/js/previewFile.js}" defer></script>
-
   </head>
   <body>
     <header>
-      <nav class="navbar">
-        <ul class="flex justify-between w-full">
-          <li class="flex items-center">
-            <a id="backButton" th:href="${user != null} ? '/profile/' + ${user.id} : '/profile'">
-              <span>&#8592;</span>
-            </a>
+      <nav>
+        <ul>
+          <li>
+            <div>
+              <a id="backButton" th:href="${user != null} ? '/profile/' + ${user.id} : '/profile'">
+                <span>&#8592;</span>
+              </a>
+            </div>
           </li>
-          <li class="flex items-center">
-            <button
-              id="saveChangesButton"
-              type="submit"
-              class="bg-blue-500 hover:bg-blue-700 text-white text-xs px-1 py-0.5 rounded"
-            >
-              Save Changes
-            </button>
+          <li>
+            <div>
+              <h2>Update Profile</h2>
+            </div>
+          </li>
+          <li>
           </li>
         </ul>
       </nav>
     </header>
-    <main>
-      <div class="profileContainer">
-        <div class="h-auto w-full">
+    <main class="overflow-auto bottom-0">
+      <div class="container">
+        <div class="box">
           <div class="flex flex-col justify-center items-center mt-8 p-2">
             <!-- PROFILE PICTURE -->
             <a>
               <img
                 class="h-32 w-32 rounded-full bg-white"
                 id="previewImage"
-                th:src="${user?.profilePictureUrl ?: '/images/default-profile-photo.png'}"
+                th:src="${user != null and user.profilePictureUrl != null and user.profilePictureUrl != ''} ? ${user.profilePictureUrl} : '/images/default-profile-photo.png'"
                 alt="Profile Picture"
               />
             </a>
@@ -71,7 +70,7 @@
               ></div>
             </div>
           </div>
-          <div class="flex-col justify-center items-center">
+          <div class="flex-col justify-center items-center w-full p-4">
             <form
               th:action="@{/update_profile}"
               method="post"
@@ -81,6 +80,7 @@
               <!-- Update Profile Picture -->
               <div class="labelInputBox">
                 <input
+                  class="rounded-none"
                   type="file"
                   id="hiddenFileInput"
                   name="profilePicture"
@@ -89,62 +89,50 @@
                 />
               </div>
 
-              <!-- Location -->
-              <div class="grid grid-cols-5 w-full bg-white">
-                <span
-                  class="text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200"
-                >
-                  Location
-                </span>
-                <input
-                  id="locationInput"
-                  class="col-span-4 text-sm p-2 border-y border-slate-200"
-                  name="location"
-                  th:value="${user?.location ?: ''}"
-                  placeholder="Location"
-                  type="text"
-                />
-              </div>
+              <div class="w-full">
+                <!-- Location -->
+                <div class="mt-2 mb-2">
+                  <label class="label text-slate-800" for="Location">Location</label>
+                  <input
+                    id="locationInput"
+                    class="col-span-4 text-sm p-2 border-y border-slate-200 rounded-none"
+                    name="location"
+                    th:value="${user != null and user.location != null} ? ${user.location} : ''"
+                    placeholder="Location"
+                    type="text"
+                  />
+                </div>
 
-              <!-- Website -->
-              <div class="grid grid-cols-5 w-full bg-white">
-                <span
-                  class="text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200"
-                >
-                  Website
-                </span>
-                <input
+                <!-- Website -->
+                <div class="mt-2 mb-2">
+                  <label class="label text-slate-800" for="Website">Website</label>
+                  <input
                   id="websiteInput"
-                  class="col-span-4 text-sm p-2 border-y border-slate-200"
+                  class="col-span-4 text-sm p-2 border-y border-slate-200 rounded-none"
                   name="website"
-                  th:value="${user?.website ?: ''}"
+                  th:value="${user != null and user.website != null} ? ${user.website} : ''"
                   placeholder="Website"
                   type="text"
                 />
               </div>
 
               <!-- Biography -->
-              <div class="grid grid-cols-5 w-full bg-white">
-                <span
-                  class="text-slate-400 flex items-center col-span-1 text-xs p-2 border-y border-r border-slate-200"
-                >
-                  Biography
-                </span>
+              <div class="mt-2 mb-2">
+                <label class="label text-slate-800" for="Biography">Biography</label>
                 <textarea
                   id="biographyInput"
                   class="col-span-4 text-sm p-2 border-y border-slate-200"
                   name="biography"
-                  th:text="${user?.biography ?: ''}"
+                  th:text="${user != null and user.biography != null} ? ${user.biography} : ''"
                   placeholder="Biography"
                   maxlength="250"
                 ></textarea>
               </div>
-
               <button
-                type="submit"
-                id="hiddenSubmitButton"
-                class="hidden"
-              ></button>
+                class="button bg-blue-600 hover:bg-blue-800 mx-auto"
+                type="submit">
+                  Save Changes
+              </button>
             </form>
           </div>
         </div>
