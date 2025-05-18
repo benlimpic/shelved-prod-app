@@ -41,7 +41,7 @@ public class S3Service {
                                         .build(),
                                         software.amazon.awssdk.core.sync.RequestBody.fromInputStream(inputStream,
                                                         inputStream.available()));
-                } catch (Exception e) {
+                } catch (java.io.IOException | software.amazon.awssdk.core.exception.SdkClientException e) {
                         throw new RuntimeException("Failed to upload file to S3", e);
                 }
         }

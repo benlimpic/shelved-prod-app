@@ -44,12 +44,12 @@ public class CollectionModel {
   @Column(name = "updated_at", nullable = false)
   private Timestamp updatedAt;
 
-  @OneToMany(mappedBy = "collection", cascade = { jakarta.persistence.CascadeType.ALL }, orphanRemoval = true)
+  @OneToMany(mappedBy = "collection", cascade = { CascadeType.ALL }, orphanRemoval = true)
   private List<ItemModel> items;
 
-  @OneToMany(mappedBy = "collection", cascade = { jakarta.persistence.CascadeType.ALL }, orphanRemoval = true)
+  @OneToMany(mappedBy = "collection", cascade = { CascadeType.ALL }, orphanRemoval = true)
   private List<CommentModel> comments;
-    
+
   @OneToMany(mappedBy = "collection", cascade = { CascadeType.REMOVE }, orphanRemoval = true)
   private List<LikeModel> likes;
 
@@ -207,5 +207,23 @@ public class CollectionModel {
 
   public void setIsOwner(Boolean isOwner) {
     this.isOwner = isOwner;
+  }
+
+  public List<LikeModel> getLikes() {
+    return likes;
+  }
+
+  public void setLikes(List<LikeModel> likes) {
+    this.likes = likes;
+  }
+
+  public void addLike(LikeModel like) {
+    this.likes.add(like);
+    like.setCollection(this);
+  }
+
+  public void removeLike(LikeModel like) {
+    this.likes.remove(like);
+    like.setCollection(null);
   }
 }

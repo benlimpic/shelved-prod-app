@@ -302,10 +302,14 @@ public class UserService implements UserDetailsService {
       System.out.println("Generated S3 URL: " + fileUrl);
 
       return fileUrl;
-    } catch (Exception e) {
-      System.err.println("Error in saveProfilePicture: " + e.getMessage());
-      e.printStackTrace();
+    } catch (IOException e) {
+      System.err.println("IO Error in saveProfilePicture: " + e.getMessage());
+      // Use a logger in production code. For now, print the message.
       throw new RuntimeException("Failed to upload profile picture to S3", e);
+    } catch (RuntimeException e) {
+      System.err.println("Runtime Error in saveProfilePicture: " + e.getMessage());
+      // Consider using a logger in production code to log the stack trace.
+      throw e;
     }
   }
 

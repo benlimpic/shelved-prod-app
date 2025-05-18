@@ -30,8 +30,8 @@ public class CollectionService {
   private final S3Service s3Service;
   private final ImageService imageService;
 
-  @Value("${AWS_S3_BUCKET_COLLECTION_IMAGES}")
-  private String collectionImagesBucket;
+@Value("${aws.s3.AWS_S3_BUCKET_COLLECTION_IMAGES}")
+private String collectionImagesBucket;
 
   public CollectionService(CollectionRepository repository, ItemService itemService,
       CommentRepository commentRepository, UserService userService,
@@ -99,9 +99,7 @@ public class CollectionService {
       return Map.of("message", "Collection created successfully");
     } catch (CollectionCreationException e) {
       throw new CollectionCreationException(e.getMessage(), e);
-    } catch (IOException e) {
-      throw new CollectionCreationException(e.getMessage(), e);
-    } catch (RuntimeException e) {
+    } catch (IOException | RuntimeException e) {
       throw new CollectionCreationException(e.getMessage(), e);
     }
   }
@@ -133,10 +131,9 @@ public class CollectionService {
       System.out.println("Generated S3 URL: " + fileUrl);
 
       return fileUrl;
-    } catch (Exception e) {
+    } catch (IOException | RuntimeException e) {
       System.err.println("Error in saveProfilePicture: " + e.getMessage());
-      e.printStackTrace();
-      throw new RuntimeException("Failed to upload profile picture to S3", e);
+      throw new RuntimeException("Failed to upload collection image to S3", e);
     }
   }
 

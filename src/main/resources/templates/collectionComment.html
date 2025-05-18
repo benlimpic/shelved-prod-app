@@ -293,8 +293,9 @@
                 >
                   <button
                     class="commentReplyButton"
-                    th:attr="data-comment-id=${comment.id}"
+                    th:data-comment-id="${comment.id}"
                     onclick="triggerCommentId(this)"
+                    type="button"
                   >
                     <span class="leading-[1.2]">Reply</span>
                   </button>
@@ -371,8 +372,10 @@
                         >
                           <button
                             class="commentReplyReplyButton"
-                            th:attr="data-comment-id=${comment.id}, data-reply-username=${reply.user.username}"
+                            th:data-comment-id="${comment.id}"
+                            th:data-reply-username="${reply.user.username}"
                             onclick="triggerReplyId(this)"
+                            type="button"
                           >
                             <span class="leading-[1.2]">Reply</span>
                           </button>
@@ -584,11 +587,7 @@
                 alt="Profile Picture"
               />
             </a>
-            <input
-              type="hidden"
-              name="collectionId"
-              th:value="${collection.id}"
-            />
+
             <input
               id="replyContentInput"
               type="text"
@@ -597,7 +596,7 @@
               class="h-8 mx-2 px-2"
             />
 
-            <input type="hidden" name="_csrf" th:value="${_csrf?.token}" />
+            <input type="hidden" name="commentId" id="replyCommentIdInput" value="" />
 
             <input type="hidden" name="currentUser" th:value="${user.id}" />
 

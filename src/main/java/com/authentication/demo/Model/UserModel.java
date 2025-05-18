@@ -254,6 +254,108 @@ public class UserModel implements UserDetails {
         this.collections = collections;
     }
 
+    public List<LikeModel> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<LikeModel> likes) {
+        this.likes = likes;
+    }
+
+    public List<CommentModel> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<CommentModel> comments) {
+        this.comments = comments;
+    }
+
+    public List<ReplyModel> getReplies() {
+        return replies;
+    }
+
+    public void setReplies(List<ReplyModel> replies) {
+        this.replies = replies;
+    }
+
+    public List<FollowModel> getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(List<FollowModel> following) {
+        this.following = following;
+    }
+
+    public List<FollowModel> getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(List<FollowModel> followers) {
+        this.followers = followers;
+    }
+
+    public void addCollection(CollectionModel collection) {
+        this.collections.add(collection);
+        collection.setUser(this);
+    }
+
+    public void removeCollection(CollectionModel collection) {
+        this.collections.remove(collection);
+        collection.setUser(null);
+    }
+
+    public void addLike(LikeModel like) {
+        this.likes.add(like);
+        like.setUser(this);
+    }
+
+    public void removeLike(LikeModel like) {
+        this.likes.remove(like);
+        like.setUser(null);
+    }
+
+    public void addComment(CommentModel comment) {
+        this.comments.add(comment);
+        comment.setUser(this);
+    }
+
+    public void removeComment(CommentModel comment) {
+        this.comments.remove(comment);
+        comment.setUser(null);
+    }
+
+    public void addReply(ReplyModel reply) {
+        this.replies.add(reply);
+        reply.setUser(this);
+    }
+
+    public void removeReply(ReplyModel reply) {
+        this.replies.remove(reply);
+        reply.setUser(null);
+    }
+
+    public void addFollowing(FollowModel follow) {
+        this.following.add(follow);
+        follow.setFollower(this);
+    }
+
+    public void removeFollowing(FollowModel follow) {
+        this.following.remove(follow);
+        follow.setFollower(null);
+    }
+
+    public void addFollower(FollowModel follow) {
+        this.followers.add(follow);
+        follow.setFollowed(this);
+    }
+
+    public void removeFollower(FollowModel follow) {
+        this.followers.remove(follow);
+        follow.setFollowed(null);
+    }
+
+    
+
 
     @Override
     public boolean isAccountNonExpired() {

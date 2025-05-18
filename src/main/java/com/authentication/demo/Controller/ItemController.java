@@ -39,10 +39,7 @@ public class ItemController {
             Map<String, String> result = itemService.createItem(params, itemImage);
             redirectAttributes.addFlashAttribute("message", result.get("message"));
             return "redirect:/collection/" + collectionId;
-        } catch (ItemCreationException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-            return "redirect:/create-item/" + collectionId;
-        } catch (Exception e) {
+        } catch (ItemCreationException | IllegalArgumentException | IOException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/create-item/" + collectionId;
         }

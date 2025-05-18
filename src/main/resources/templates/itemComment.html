@@ -304,8 +304,9 @@
                   
                   <button
                     class="commentReplyButton"
-                    th:attr="data-comment-id=${comment.id}"
+                    th:data-comment-id="${comment.id}"
                     onclick="triggerCommentId(this)"
+                    type="button"
                   >
                     <span class="leading-[1.2]">Reply</span>
                   </button>
@@ -384,8 +385,10 @@
                         >
                           <button
                           class="commentReplyReplyButton"
-                          th:attr="data-comment-id=${comment.id}, data-reply-username=${reply.user.username}"
+                          th:data-comment-id="${comment.id}"
+                          th:data-reply-username="${reply.user.username}"
                           onclick="triggerReplyId(this)"
+                          type="button"
                           >
                             <span class="leading-[1.2]">Reply</span>
                           </button>
@@ -583,9 +586,9 @@
             </button>
           </form>
         </div>
-      </>
+      </nav>
 
-      <div id="commentReplyActivity" class="hidden">
+      <nav id="commentReplyActivity" class="hidden w-full">
         <div id="commentInputContainer" class="w-full">
           <form
             id="commentReplyForm"
@@ -600,33 +603,18 @@
                 alt="Profile Picture"
               />
             </a>
-            <input
-              id="replyCommentIdInput"
-              type="hidden"
-              name="commentId"
-              value=""
-            />
 
             <input
               id="replyContentInput"
               type="text"
               name="content"
-              placeholder="Leave a reply..."
-              value=""
+              placeholder="Leave a comment..."
               class="h-8 mx-2 px-2"
             />
 
-            <input
-              type="hidden"
-              name="_csrf"
-              th:value="${_csrf?.token}"
-            />
+            <input type="hidden" name="commentId" id="replyCommentIdInput" value="" />
 
-            <input
-              type="hidden"
-              name="currentUser"
-              th:value="${user.id}"
-            />
+            <input type="hidden" name="currentUser" th:value="${user.id}" />
 
             <button
               id="commentReplyButton"
@@ -637,7 +625,7 @@
             </button>
           </form>
         </div>
-      </div>
+      </nav>
     </footer>
   </body>
 </html>

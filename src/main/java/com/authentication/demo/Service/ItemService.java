@@ -30,7 +30,7 @@ public class ItemService {
   private final S3Service s3Service;
   private final ImageService imageService;
 
-  @Value("${AWS_S3_BUCKET_ITEM_IMAGES}")
+  @Value("${aws.s3.AWS_S3_BUCKET_ITEM_IMAGES}")
   private String itemImagesBucket;
 
   public ItemService(
@@ -130,9 +130,9 @@ public class ItemService {
       System.out.println("Generated S3 URL: " + fileUrl);
 
       return fileUrl;
-    } catch (Exception e) {
+    } catch (IOException | RuntimeException e) {
       System.err.println("Error in saveProfilePicture: " + e.getMessage());
-      e.printStackTrace();
+      // Consider using a logger here for stack trace if needed
       throw new RuntimeException("Failed to upload profile picture to S3", e);
     }
   }

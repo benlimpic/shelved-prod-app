@@ -1,3 +1,5 @@
+
+
 aws:
   s3:
     AWS_S3_BUCKET_PROFILE_IMAGES: shelved-profile-pictures-benlimpic
@@ -24,5 +26,12 @@ spring:
     hibernate:
       ddl-auto: update
 
+
+
 server:
   port: 9090
+
+
+
+  
+  

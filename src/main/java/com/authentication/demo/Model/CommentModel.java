@@ -137,4 +137,14 @@ public class CommentModel {
         this.isOwner = isOwner;
     }
 
+    public List<LikeModel> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<LikeModel> likes) {
+        this.likes = likes;
+    }
+
+    
+
 }
