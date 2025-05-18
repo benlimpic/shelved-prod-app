@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,6 +29,9 @@ public class ItemService {
   private final CommentRepository commentRepository;
   private final S3Service s3Service;
   private final ImageService imageService;
+
+  @Value("${AWS_S3_BUCKET_ITEM_IMAGES}")
+  private String itemImagesBucket;
 
   public ItemService(
       ItemRepository itemRepository,
@@ -101,7 +105,7 @@ public class ItemService {
 
   // SAVE COLLECTION IMAGE
   public String saveItemImage(MultipartFile itemImage) throws IOException {
-    String bucketName = "shelved-item-images-benlimpic";
+    String bucketName = itemImagesBucket;
     String filename = UUID.randomUUID().toString() + "-" + itemImage.getOriginalFilename();
 
     // Validate the file

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,6 +29,9 @@ public class CollectionService {
   private final UserService userService;
   private final S3Service s3Service;
   private final ImageService imageService;
+
+  @Value("${AWS_S3_BUCKET_COLLECTION_IMAGES}")
+  private String collectionImagesBucket;
 
   public CollectionService(CollectionRepository repository, ItemService itemService,
       CommentRepository commentRepository, UserService userService,
@@ -95,8 +99,7 @@ public class CollectionService {
       return Map.of("message", "Collection created successfully");
     } catch (CollectionCreationException e) {
       throw new CollectionCreationException(e.getMessage(), e);
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       throw new CollectionCreationException(e.getMessage(), e);
     } catch (RuntimeException e) {
       throw new CollectionCreationException(e.getMessage(), e);
@@ -105,7 +108,7 @@ public class CollectionService {
 
   // SAVE COLLECTION IMAGE
   public String saveCollectionImage(MultipartFile collectionImage) throws IOException {
-    String bucketName = "shelved-collection-images-benlimpic";
+    String bucketName = collectionImagesBucket;
     String filename = UUID.randomUUID().toString() + "-" + collectionImage.getOriginalFilename();
 
     // Validate the file

@@ -14,6 +14,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -39,6 +40,9 @@ public class UserService implements UserDetailsService {
   private final UserDetailsService userDetailsService;
   private final S3Service s3Service;
   private final ImageService imageService;
+
+  @Value("${aws.s3.AWS_S3_BUCKET_PROFILE_IMAGES}")
+  private String profileImagesBucketName;
 
   public UserService(
       UserRepository repository,
@@ -267,18 +271,13 @@ public class UserService implements UserDetailsService {
       // Save the updated user back to the database
       repository.save(userModel);
 
-
-        // Add success message
-
-        redirectAttributes.addFlashAttribute("message", "User profile updated successfully.");
-    } else {
-        redirectAttributes.addFlashAttribute("error", "User not found.");
+      // Add success message
+      redirectAttributes.addFlashAttribute("message", "User profile updated successfully.");
     }
   }
 
-  // SAVE PROFILE PICTURE
   public String saveProfilePicture(MultipartFile profilePicture) throws IOException {
-    String bucketName = "shelved-profile-pictures-benlimpic";
+    String bucketName = profileImagesBucketName;
     String filename = UUID.randomUUID().toString() + "-" + profilePicture.getOriginalFilename();
 
     // Validate the file
