@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.authentication.demo.Listener.UserModelListener;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -19,6 +20,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
@@ -69,6 +71,25 @@ public class UserModel implements UserDetails {
     
     @Column(name = "updated_at", nullable = false)
     private Timestamp updatedAt;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<CollectionModel> collections;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<LikeModel> likes;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<CommentModel> comments;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<ReplyModel> replies;
+
+    @OneToMany(mappedBy = "follower", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<FollowModel> following;
+
+    @OneToMany(mappedBy = "followed", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<FollowModel> followers;
+
 
     @Transient
     private boolean isFollowing;
@@ -224,6 +245,15 @@ public class UserModel implements UserDetails {
     public void setFollowing(boolean isFollowing) {
         this.isFollowing = isFollowing;
     }
+
+        public List<CollectionModel> getCollections() {
+        return collections;
+    }
+
+    public void setCollections(List<CollectionModel> collections) {
+        this.collections = collections;
+    }
+
 
     @Override
     public boolean isAccountNonExpired() {

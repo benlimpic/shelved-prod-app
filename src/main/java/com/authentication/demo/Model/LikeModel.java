@@ -23,7 +23,7 @@ public class LikeModel {
   @ManyToOne
   @JoinColumn(name = "collection_id")
   private CollectionModel collection;
-
+    
   @ManyToOne
   @JoinColumn(name = "item_id")
   private ItemModel item;

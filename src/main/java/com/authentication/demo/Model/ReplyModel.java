@@ -1,7 +1,9 @@
 package com.authentication.demo.Model;
 
 import java.sql.Timestamp;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
@@ -27,11 +30,14 @@ public class ReplyModel {
     @JoinColumn(name = "comment_id", nullable = false)
     private CommentModel comment;
 
-    @Column(name= "content", nullable = false, length = 500)
+    @Column(name = "content", nullable = false, length = 500)
     private String content;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Timestamp createdAt;
+    
+    @OneToMany(mappedBy = "reply", cascade = {CascadeType.REMOVE}, orphanRemoval = true)
+    private List<LikeModel> likes;
 
     @Transient
     private Integer likeCount;
@@ -41,7 +47,6 @@ public class ReplyModel {
 
     @Transient
     private Boolean isOwner;
-
 
     public ReplyModel() {
     }

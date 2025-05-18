@@ -44,6 +44,9 @@ public class CommentModel {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Timestamp createdAt;
 
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<LikeModel> likes;
+
     @Transient
     private Integer likeCount;
 
@@ -52,8 +55,6 @@ public class CommentModel {
 
     @Transient
     private Boolean isOwner;
-
-
 
     // Getters and setters
     public Long getId() {

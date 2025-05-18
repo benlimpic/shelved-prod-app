@@ -178,12 +178,14 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Validate the delete account form when submitted
-  deleteAccountForm.addEventListener('submit', (event) => {
-    if (confirmDeleteInput.value !== 'DELETE') {
-      event.preventDefault();
-      confirmDeleteInput.classList.add('border-red-500', 'ring-red-500');
-    } else {
-      confirmDeleteInput.classList.remove('border-red-500', 'ring-red-500');
-    }
-  });
+  if (deleteAccountForm && confirmDeleteInput) {
+    deleteAccountForm.addEventListener('submit', (event) => {
+      if (confirmDeleteInput.value !== 'DELETE') {
+        event.preventDefault();
+        confirmDeleteInput.classList.add('border-red-500', 'ring-red-500');
+      } else {
+        confirmDeleteInput.classList.remove('border-red-500', 'ring-red-500');
+      }
+    });
+  }
 });

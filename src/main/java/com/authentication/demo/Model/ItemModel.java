@@ -3,6 +3,7 @@ package com.authentication.demo.Model;
 import java.sql.Timestamp;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -50,8 +51,12 @@ public class ItemModel {
   @Column(name = "updated_at", nullable = false)
   private Timestamp updatedAt;
 
-  @OneToMany(mappedBy = "item", cascade = { jakarta.persistence.CascadeType.ALL }, orphanRemoval = true)
+  @OneToMany(mappedBy = "item", cascade = { CascadeType.ALL }, orphanRemoval = true)
   private List<CommentModel> comments;
+
+  @OneToMany(mappedBy = "item", cascade = CascadeType.REMOVE, orphanRemoval = true)
+  private List<LikeModel> likes;
+
 
   @Transient
   private Integer likeCount;

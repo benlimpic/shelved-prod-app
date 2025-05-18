@@ -156,13 +156,17 @@ public class UserController {
       String result = userService.deleteUser(username);
       if ("User deleted successfully".equals(result)) {
         redirectAttributes.addFlashAttribute("message", result);
+        System.out.println("Delete result: " + result);
         return "redirect:/login";
+
       } else {
         redirectAttributes.addFlashAttribute("error", result);
+        System.out.println("Delete error: " + result);
         return "redirect:/update-profile";
       }
     } catch (Exception e) {
       redirectAttributes.addFlashAttribute("error", "An unexpected error occurred while deleting the user.");
+      System.out.println("Delete exception: " + e.getMessage());
       return "redirect:/update-profile";
     }
   }
