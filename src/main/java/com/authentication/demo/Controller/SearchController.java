@@ -1,5 +1,6 @@
 package com.authentication.demo.Controller;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,47 +20,39 @@ import com.authentication.demo.Service.UserService;
 @RequestMapping("/search-live")
 public class SearchController {
 
-  private final UserService userService;
-  private final CollectionService collectionService;
+    private final UserService userService;
+    private final CollectionService collectionService;
 
-  public SearchController(UserService userService, CollectionService collectionService) {
-    this.userService = userService;
-    this.collectionService = collectionService;
-  }
-
-  @GetMapping
-  public ResponseEntity<Map<String, Object>> liveSearch(@RequestParam(required = false) String query) {
-    List<UserModel> users;
-    List<CollectionModel> collections;
-
-    if (query == null || query.trim().isEmpty()) {
-      // If no query is provided, return empty lists
-      users = new java.util.ArrayList<>();
-      collections = new java.util.ArrayList<>();
-    } else if (query.startsWith("@")) {
-      // Search for users by username
-      String username = query.substring(1);
-      users = userService.searchUsersByUsername(username);
-      // Search for collections by title
-      collections = collectionService.searchCollectionsByTitle(username);
-    } else if (query.startsWith("#")) {
-      // Search for collections by title
-      String title = query.substring(1);
-      collections = collectionService.searchCollectionsByTitle(title);
-      // Search for users by username
-      users = userService.searchUsersByUsername(title);
-    } else {
-      // Search for users by username
-      users = userService.searchUsersByUsername(query);
-      // Search for collections by title
-      collections = collectionService.searchCollectionsByTitle(query);
+    public SearchController(UserService userService, CollectionService collectionService) {
+        this.userService = userService;
+        this.collectionService = collectionService;
     }
 
-    // Prepare the response
-    Map<String, Object> response = new HashMap<>();
-    response.put("users", users);
-    response.put("collections", collections);
+    @GetMapping
+    public ResponseEntity<Map<String, Object>> liveSearch(@RequestParam(required = false) String query) {
+        List<UserModel> users = Collections.emptyList();
+        List<CollectionModel> collections = Collections.emptyList();
 
-    return ResponseEntity.ok(response);
-  }
+        if (query != null && !query.trim().isEmpty()) {
+            String trimmedQuery = query.trim();
+            if (trimmedQuery.startsWith("@")) {
+                String username = trimmedQuery.substring(1);
+                users = userService.searchUsersByUsername(username);
+                collections = collectionService.searchCollectionsByTitle(username);
+            } else if (trimmedQuery.startsWith("#")) {
+                String title = trimmedQuery.substring(1);
+                collections = collectionService.searchCollectionsByTitle(title);
+                users = userService.searchUsersByUsername(title);
+            } else {
+                users = userService.searchUsersByUsername(trimmedQuery);
+                collections = collectionService.searchCollectionsByTitle(trimmedQuery);
+            }
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("users", users);
+        response.put("collections", collections);
+
+        return ResponseEntity.ok(response);
+    }
 }

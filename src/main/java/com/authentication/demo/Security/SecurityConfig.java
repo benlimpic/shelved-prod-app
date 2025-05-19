@@ -29,16 +29,20 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
             .csrf(csrf -> csrf
+                // Only ignore CSRF for stateless API endpoints if needed
                 .ignoringRequestMatchers(
-                    "/create_collection",
-                    "/create_item",
-                    "/create_reply",
-                    "/follow/**",
-                    "/unfollow/**"
-                    )
+                    "/api/**"
+                )
             )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login", "/signup", "/css/**", "/js/**", "/images/**", "/search-live").permitAll()
+                .requestMatchers(
+                    "/login",
+                    "/signup",
+                    "/css/**",
+                    "/js/**",
+                    "/images/**",
+                    "/search-live"
+                ).permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
