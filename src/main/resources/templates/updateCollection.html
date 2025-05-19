@@ -133,10 +133,8 @@
         <div
           class="flex flex-col w-full items-center justify-center pt-16 bg-[#f8fafc]"
         >
-          <form
-            th:action="@{/delete-collection/{id}(id=${collection.id})}"
-            method="post"
-          >
+          <form th:action="@{/delete-collection/{id}(id=${collection.id})}" method="post">
+
             <input type="hidden" name="_csrf" th:value="${_csrf?.token}" />
             <div>
               <button

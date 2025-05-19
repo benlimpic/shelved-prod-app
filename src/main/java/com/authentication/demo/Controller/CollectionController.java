@@ -59,6 +59,13 @@ public class CollectionController {
         return "redirect:/collection/" + collectionId;
     }
 
+    
+    @PostMapping("/delete-collection/{id}")
+    public String deleteCollection(@PathVariable Long id) {
+        collectionService.deleteCollection(id);
+        return "redirect:/profile";
+    }
+
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> searchCollections(@RequestParam("query") String query) {
