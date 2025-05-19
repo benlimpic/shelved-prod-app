@@ -7,6 +7,7 @@
 
     <script src="/js/fadeAnimations.js" defer></script>
 
+
   </head>
   <body>
     <header>
@@ -34,12 +35,31 @@
             </a>
           </li>
         </ul>
+
       </nav>
     </header>
 
     <main>
+
+      <!-- ERROR AND SUCCESS HANDLING -->
+      <div class="errorSuccessHandlingBox hidden">
+        <div
+          id="successMessageDiv"
+          class="success"
+          th:if="${message}"
+          th:text="${message}">
+        </div>
+        <div
+          id="errorMessageDiv"
+          class="failure"
+          th:if="${error}"
+          th:text="${error}">
+        </div>
+      </div>
+
+
       <div
-        class="h-auto w-full border-b-2 border-slate-300 bg-slate-200 shadow-sm pt-3"
+        class="h-auto w-full pt-3"
       >
         <!-- PROFILE CONTENT -->
         <div class="flex flex-col justify-start items-start w-full px-2">
@@ -168,7 +188,23 @@
             Share Profile
           </a>
         </div>
+
+      <!-- ERROR AND SUCCESS HANDLING -->
+      <div class="errorSuccessHandlingBox hidden">
+        <div
+          id="successMessageDiv"
+          class="success"
+          th:if="${message}"
+          th:text="${message}">
+        </div>
+        <div
+          id="errorMessageDiv"
+          class="failure"
+          th:if="${error}"
+          th:text="${error}">
+        </div>
       </div>
+
       <div class="w-full min-h-fit overflow-y-auto">
         <div class="grid">
           <div

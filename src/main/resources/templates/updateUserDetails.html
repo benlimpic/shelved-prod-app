@@ -29,17 +29,29 @@
       </nav>
     </header>
     <main>
+
+      
+      <!-- ERROR AND SUCCESS HANDLING -->
+      <div class="errorSuccessHandlingBox hidden">
+        <div
+          id="successMessageDiv"
+          class="success"
+          th:if="${message}"
+          th:text="${message}">
+        </div>
+        <div
+          id="errorMessageDiv"
+          class="failure"
+          th:if="${error}"
+          th:text="${error}">
+        </div>
+      </div>
+
+
       <div class="h-auto w-full">
         <nav class="flex flex-col justify-center items-center mt-2 p-2">
           <h1 class="formHeader">Account Details</h1>
         </nav>
-
-        <div class="errorBox">
-          <!-- SUCCESS MESSAGE -->
-          <div id="successMessageDiv" th:if="${message}" th:text="${message}" class="success"></div>
-          <!-- ERROR MESSAGE -->
-          <div id="errorMessageDiv" th:if="${error}" th:text="${error}" class="failure"></div>
-        </div>
 
         <!-- Username -->
         <div id="updateUsernameButton" class="grid grid-cols-5 w-full bg-white">

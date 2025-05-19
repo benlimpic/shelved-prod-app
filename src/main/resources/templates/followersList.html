@@ -24,6 +24,25 @@
     </header>
 
     <main class="overflow-auto">
+
+      
+      <!-- ERROR AND SUCCESS HANDLING -->
+      <div class="errorSuccessHandlingBox hidden">
+        <div
+          id="successMessageDiv"
+          class="success"
+          th:if="${message}"
+          th:text="${message}">
+        </div>
+        <div
+          id="errorMessageDiv"
+          class="failure"
+          th:if="${error}"
+          th:text="${error}">
+        </div>
+      </div>
+
+
       <div class="container p-2">
         <nav th:if="${#lists.isEmpty(followersList)}" class="box">
           <span class="text-sm font-semibold">No Users Following</span>

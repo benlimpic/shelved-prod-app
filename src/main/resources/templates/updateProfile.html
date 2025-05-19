@@ -33,6 +33,25 @@
       </nav>
     </header>
     <main class="overflow-auto bottom-0">
+
+      
+      <!-- ERROR AND SUCCESS HANDLING -->
+      <div class="errorSuccessHandlingBox hidden">
+        <div
+          id="successMessageDiv"
+          class="success"
+          th:if="${message}"
+          th:text="${message}">
+        </div>
+        <div
+          id="errorMessageDiv"
+          class="failure"
+          th:if="${error}"
+          th:text="${error}">
+        </div>
+      </div>
+
+
       <div class="container">
         <div class="box">
           <div class="flex flex-col justify-center items-center mt-8 p-2">
@@ -53,22 +72,7 @@
               </span>
             </a>
 
-            <div class="errorBox">
-              <!-- SUCCESS MESSAGE -->
-              <div
-                id="successMessageDiv"
-                th:if="${message != null and message != ''}"
-                th:text="${message}"
-                class="success"
-              ></div>
-              <!-- ERROR MESSAGE -->
-              <div
-                id="errorMessageDiv"
-                th:if="${error != null and error != ''}"
-                th:text="${error}"
-                class="failure"
-              ></div>
-            </div>
+
           </div>
           <div class="flex-col justify-center items-center w-full p-4">
             <form

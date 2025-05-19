@@ -29,17 +29,14 @@ public class ItemController {
     public String createItem(
             @PathVariable Long collectionId,
             @RequestParam Map<String, String> params,
-            @RequestParam("itemImage") MultipartFile itemImage,
+            @RequestParam MultipartFile itemImage,
             RedirectAttributes redirectAttributes) {
         try {
-            // Add the collectionId to the params map
-            params.put("collectionId", collectionId.toString());
-
-            // Call the service to create the item
-            Map<String, String> result = itemService.createItem(params, itemImage);
-            redirectAttributes.addFlashAttribute("message", result.get("message"));
+            params.put("collectionId", String.valueOf(collectionId));
+            itemService.createItem(params, itemImage);
+            redirectAttributes.addFlashAttribute("message", "Item created successfully");
             return "redirect:/collection/" + collectionId;
-        } catch (ItemCreationException | IllegalArgumentException | IOException e) {
+        } catch (ItemCreationException | IOException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/create-item/" + collectionId;
         }

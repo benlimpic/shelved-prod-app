@@ -10,6 +10,24 @@
   </head>
 
   <body>
+
+      <!-- ERROR AND SUCCESS HANDLING -->
+      <div class="errorSuccessHandlingBox hidden">
+        <div
+          id="successMessageDiv"
+          class="success"
+          th:if="${message}"
+          th:text="${message}">
+        </div>
+        <div
+          id="errorMessageDiv"
+          class="failure"
+          th:if="${error}"
+          th:text="${error}">
+        </div>
+      </div>
+
+
     <header>
       <nav>
         <ul>
@@ -35,6 +53,7 @@
 
     <!-- COLLECTION CONTENT -->
     <main class="overflow-y-auto" th:id="'collection-' + ${collection.id}">
+
       <div class="container">
         <div class="box">
           <nav>

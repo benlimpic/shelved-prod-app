@@ -8,6 +8,24 @@
   </head>
   <body>
     <main class="top-0 bottom-0 bg-blue-500">
+
+      <!-- ERROR AND SUCCESS HANDLING -->
+      <div class="errorSuccessHandlingBox hidden">
+        <div
+          id="successMessageDiv"
+          class="success"
+          th:if="${message}"
+          th:text="${message}">
+        </div>
+        <div
+          id="errorMessageDiv"
+          class="failure"
+          th:if="${error}"
+          th:text="${error}">
+        </div>
+      </div>
+
+
       <div class="flex flex-col items-center justify-center h-screen mb-4">
         <div
           class="flex flex-col items-center justify-center px-6 py-4 rounded-lg"
@@ -18,23 +36,6 @@
               src="/images/Shelved_Logo_White.png"
               alt="Shelved Logo"
             />
-          </div>
-
-          <div class="errorBox">
-            <!-- SUCCESS MESSAGE -->
-            <div
-              id="successMessageDiv"
-              th:if="${message}"
-              th:text="${message}"
-              class="success"
-            ></div>
-            <!-- ERROR MESSAGE -->
-            <div
-              id="errorMessageDiv"
-              th:if="${error}"
-              th:text="${error}"
-              class="failure"
-            ></div>
           </div>
 
           <form th:action="@{/login}" method="post">

@@ -41,6 +41,25 @@
     </header>
 
     <main class="overflow-y-auto scrollbar-hidden">
+
+      
+      <!-- ERROR AND SUCCESS HANDLING -->
+      <div class="errorSuccessHandlingBox hidden">
+        <div
+          id="successMessageDiv"
+          class="success"
+          th:if="${message}"
+          th:text="${message}">
+        </div>
+        <div
+          id="errorMessageDiv"
+          class="failure"
+          th:if="${error}"
+          th:text="${error}">
+        </div>
+      </div>
+
+
       <div th:if="${collections.size == 0}">
         <div class="container">
           <span class="text-sm font-semibold">No collections yet</span>

@@ -998,7 +998,7 @@ label {
   justify-content: center;
 }
 
-.icon-style  {
+.icon-style {
   font-size: 1.5rem;
   /* Equivalent to text-2xl */
   font-weight: bold;
@@ -1145,10 +1145,6 @@ label {
   /* Equivalent to px-5 */
   padding-right: 0.25rem;
   /* Equivalent to px-5 */
-}
-
-.visible {
-  visibility: visible;
 }
 
 .fixed {
@@ -1356,6 +1352,10 @@ label {
 
 .flex-grow {
   flex-grow: 1;
+}
+
+.transform {
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
 .resize {
@@ -1841,12 +1841,12 @@ label {
   --tw-ring-color: rgb(239 68 68 / var(--tw-ring-opacity, 1));
 }
 
-.transition {
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
+.ease-in {
+  transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+}
+
+.ease-out {
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
 }
 
 .success {
@@ -1855,7 +1855,10 @@ label {
   font-size: 0.875rem;
   font-weight: bold;
   text-align: center;
-  color: #22c55e;
+  width: 100%;
+  padding: auto;
+  border-radius: 0.375rem;
+  color: #fff;
   word-wrap: break-word;
 }
 
@@ -1865,12 +1868,64 @@ label {
   font-size: 0.875rem;
   font-weight: bold;
   text-align: center;
-  color: #ef4444;
+  width: 100%;
+  padding: auto;
+  border-radius: 0.375rem;
+  color: #fff;
   word-wrap: break-word;
 }
 
+.errorSuccessHandlingBox {
+  position: fixed;
+  /* Use fixed so it stays at the top of the viewport */
+  z-index: 9999;
+  /* Higher than header/footer */
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+  display: flex;
+}
+
+.slide-in {
+  animation: slide-in 0.7s ease-out forwards;
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide-out {
+  animation: slide-out 0.7s ease-in forwards;
+}
+
+@keyframes slide-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+}
+
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 .truncate {

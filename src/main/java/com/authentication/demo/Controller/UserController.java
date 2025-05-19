@@ -122,20 +122,20 @@ public class UserController {
   }
 
   // LOGIN USER
-  @PostMapping("/login")
-  public String login(@RequestParam String username, @RequestParam String password,
-      RedirectAttributes redirectAttributes) {
-    try {
-      authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-      return "redirect:/index";
-    } catch (AuthenticationException e) {
-      redirectAttributes.addFlashAttribute("error", "Invalid username or password");
-      return "redirect:/login";
-    } catch (Exception e) {
-      redirectAttributes.addFlashAttribute("error", "An unexpected error occurred");
-      return "redirect:/login";
-    }
+@PostMapping("/login")
+public String login(@RequestParam String username, @RequestParam String password,
+    RedirectAttributes redirectAttributes) {
+  try {
+    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+    return "redirect:/index";
+  } catch (AuthenticationException e) {
+    redirectAttributes.addFlashAttribute("error", "Invalid username or password");
+    return "redirect:/login";
+  } catch (Exception e) {
+    redirectAttributes.addFlashAttribute("error", "An unexpected error occurred");
+    return "redirect:/login";
   }
+}
 
   // LOGOUT USER
   @PostMapping("/logout")

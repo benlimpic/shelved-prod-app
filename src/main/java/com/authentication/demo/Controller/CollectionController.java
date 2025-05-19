@@ -36,9 +36,31 @@ public class CollectionController {
     public String postCollection(@RequestParam Map<String, String> collectionDetails,
             @RequestParam MultipartFile collectionImage,
             RedirectAttributes redirectAttributes) throws IOException {
-        collectionService.createCollection(collectionDetails, collectionImage);
-        redirectAttributes.addFlashAttribute("message", "Collection created successfully");
-        return "redirect:/profile";
+
+            if (collectionDetails == null) {
+                redirectAttributes.addFlashAttribute("error", "Collection cannot be empty");
+                return "redirect:/create-collection";
+            }
+        
+
+            // Validate collection details
+            if (collectionDetails.get("title") == null || collectionDetails.get("title").isEmpty()) {
+                redirectAttributes.addFlashAttribute("error", "Collection title cannot be empty");
+                return "redirect:/create-collection";
+            }
+            if (collectionImage == null || collectionImage.isEmpty()) {
+                redirectAttributes.addFlashAttribute("error", "Collection image cannot be empty");
+                return "redirect:/create-collection";
+            }
+            
+            try {
+                collectionService.createCollection(collectionDetails, collectionImage);
+                redirectAttributes.addFlashAttribute("message", "Collection created successfully");
+                return "redirect:/profile";
+            } catch (CollectionCreationException | IOException e) {
+                redirectAttributes.addFlashAttribute("error", e.getMessage());
+                return "redirect:/create-collection";
+            }
     }
 
     // UPDATE COLLECTION
@@ -56,18 +78,21 @@ public class CollectionController {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/update-collection/" + collectionId;
         }
+        redirectAttributes.addFlashAttribute("message", "Collection updated successfully");
         return "redirect:/collection/" + collectionId;
     }
 
     
     @PostMapping("/delete-collection/{id}")
-    public String deleteCollection(@PathVariable Long id) {
+    public String deleteCollection(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         collectionService.deleteCollection(id);
+
+        redirectAttributes.addFlashAttribute("message", "Collection deleted successfully");
         return "redirect:/profile";
     }
 
 
-    @GetMapping
+    @GetMapping("/search-collections")
     public ResponseEntity<Map<String, Object>> searchCollections(@RequestParam("query") String query) {
         List<CollectionModel> collections = collectionRepository.findByTitleContainingIgnoreCase(query);
         Map<String, Object> response = new HashMap<>();

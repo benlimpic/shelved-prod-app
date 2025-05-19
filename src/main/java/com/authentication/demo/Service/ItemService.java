@@ -58,10 +58,15 @@ public class ItemService {
   }
 
   // CREATE ITEM
-  public Map<String, String> createItem(Map<String, String> params, MultipartFile itemImage) throws IOException {
+  public void createItem(Map<String, String> params, MultipartFile itemImage)
+      throws IOException {
     // VALIDATE INPUT PARAMETERS
     if (itemImage == null || itemImage.isEmpty()) {
-      throw new ItemCreationException("Item image is required");
+      throw new ItemCreationException("Item image is required.");
+    }
+
+    if (params.get("title") == null || params.get("title").trim().isEmpty()) {
+      throw new ItemCreationException("Title is required.");
     }
 
     // GET USER ID
@@ -78,10 +83,22 @@ public class ItemService {
     // SAVE ITEM IMAGE
     String imageUrl = saveItemImage(processedFile);
 
-    // GET COLLECTION
-    Long collectionId = Long.valueOf(params.get("collectionId"));
+
+    // Get collectionId from params and validate
+    String collectionIdStr = params.get("collectionId");
+    if (collectionIdStr == null || collectionIdStr.trim().isEmpty()) {
+      throw new ItemCreationException("Collection ID is required.");
+    }
+    Long collectionId;
+    try {
+      collectionId = Long.valueOf(collectionIdStr);
+    } catch (NumberFormatException e) {
+      throw new ItemCreationException("Invalid Collection ID format.");
+    }
+
     CollectionModel collection = collectionRepository.findById(collectionId)
         .orElseThrow(() -> new ItemCreationException("Collection not found"));
+
 
     // CREATE ITEM
     ItemModel item = new ItemModel(
@@ -96,11 +113,13 @@ public class ItemService {
         new Timestamp(System.currentTimeMillis()),
         new Timestamp(System.currentTimeMillis()));
 
-    // SAVE ITEM TO DATABASE
-    itemRepository.save(item);
 
-    // RETURN SUCCESS RESPONSE
-    return Map.of("message", "Item created successfully", "itemId", item.getId().toString());
+    try {
+      // SAVE ITEM TO DATABASE
+      itemRepository.save(item);
+    } catch (RuntimeException e) {
+      throw new ItemCreationException("Failed to create item: " + e.getMessage(), e);
+    }
   }
 
   // SAVE COLLECTION IMAGE
