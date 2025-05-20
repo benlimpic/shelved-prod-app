@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="/css/output.css" />
 
     <script src="/js/fadeAnimations.js" defer></script>
-
   </head>
   <body>
     <header>
@@ -27,24 +26,21 @@
       </nav>
     </header>
     <main class="overflow-auto">
-
-      
       <!-- ERROR AND SUCCESS HANDLING -->
       <div class="errorSuccessHandlingBox hidden">
         <div
           id="successMessageDiv"
           class="success"
           th:if="${message}"
-          th:text="${message}">
-        </div>
+          th:text="${message}"
+        ></div>
         <div
           id="errorMessageDiv"
           class="failure"
           th:if="${error}"
-          th:text="${error}">
-        </div>
+          th:text="${error}"
+        ></div>
       </div>
-
 
       <div
         class="h-auto w-full border-b-2 border-slate-300 bg-slate-200 shadow-sm pt-3"
@@ -134,33 +130,42 @@
         </div>
 
         <!-- LOWER PROFILE BUTTONS -->
-        <div class="flex justify-center items-center w-full px-2 pb-1">
-          <div th:if="${!isFollowing}">
+        <div class="flex justify-center items-center w-full px-2 pb-1 gap-4">
+          <div>
             <form
+              th:if="${!isFollowing}"
               th:action="@{/follow/{id}(id=${userProfile?.id})}"
-              class="px-5 mr-2"
               method="post"
             >
-              <button class="profile-button bg-slate-500 hover:bg-slate-700 w-40" type="submit">Follow</button>
+              <button
+                class="profile-button bg-slate-500 hover:bg-slate-700 w-40"
+                type="submit"
+              >
+                Follow
+              </button>
             </form>
-          </div>
-
-          <div th:if="${isFollowing}">
             <form
+              th:if="${isFollowing}"
               th:action="@{/unfollow/{id}(id=${userProfile?.id})}"
-              class="px-5 mr-2"
               method="post"
             >
-              <button class="profile-button bg-blue-500 hover:bg-blue-700 w-40" type="submit">Following</button>
+              <button
+                class="profile-button bg-blue-500 hover:bg-blue-700 w-40"
+                type="submit"
+              >
+                Following
+              </button>
             </form>
           </div>
-          <a
-            class="profile-button bg-slate-500 hover:bg-slate-700 w-40 px-5 ml-2"
-            id="redirectShareProfile"
-            href="#"
-          >
-            Message
-          </a>
+          <div>
+            <a
+              class="profile-button bg-slate-500 hover:bg-slate-700 w-40"
+              id="redirectShareProfile"
+              href="#"
+            >
+              Message
+            </a>
+          </div>
         </div>
       </div>
       <div class="w-full min-h-fit overflow-y-auto">
@@ -187,29 +192,29 @@
     </main>
     <footer>
       <nav>
-          <ul>
-            <li>
-              <div id="homeButton" class="icon">
-                <a class="icon-style" href="/index">&#8962;</a>
-              </div>
-            </li>
-            <li>
-              <div class="icon">
-                <a class="icon-style" href="/popular">&#10066;</a>
-              </div>
-            </li>
-            <li></li>
-            <li>
-              <a href="/profile">
-                <img
-                  class="round-image"
-                  th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}"
-                  alt="Profile Picture"
-                />
-              </a>
-            </li>
-          </ul>
-        </nav>
+        <ul>
+          <li>
+            <div id="homeButton" class="icon">
+              <a class="icon-style" href="/index">&#8962;</a>
+            </div>
+          </li>
+          <li>
+            <div class="icon">
+              <a class="icon-style" href="/popular">&#10066;</a>
+            </div>
+          </li>
+          <li></li>
+          <li>
+            <a href="/profile">
+              <img
+                class="round-image"
+                th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}"
+                alt="Profile Picture"
+              />
+            </a>
+          </li>
+        </ul>
+      </nav>
     </footer>
   </body>
 </html>

@@ -1,7 +1,6 @@
 package com.authentication.demo.Service;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +21,16 @@ public class PopularService {
 
   public List<PopularEntry> getTopPopularEntries() {
     List<PopularEntry> all = new ArrayList<>();
-    all.addAll(collectionRepository.findAll()); // or your top-N query
-    all.addAll(itemRepository.findAll());
+    // Ensure the results are cast to PopularEntry if needed
+    collectionRepository.findAll().forEach(item -> all.add((PopularEntry) item));
+    itemRepository.findAll().forEach(item -> all.add((PopularEntry) item));
 
     // Sort by popularity score descending
-    all.sort(Comparator.comparingInt(PopularEntry::getPopularityScore).reversed());
+    all.sort((a, b) -> {
+        int aScore = a.getLikeCount() + a.getCommentCount();
+        int bScore = b.getLikeCount() + b.getCommentCount();
+        return Integer.compare(bScore, aScore); // descending
+    });
 
     // Limit to top 100 if needed
     return all.stream().limit(100).toList();

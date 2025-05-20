@@ -356,6 +356,8 @@ public class ContentController {
         Integer likeCount = likeService.countLikes(collectionId);
         collection.setLikeCount(likeCount);
 
+
+
         // Fetch the isLiked status for the collection
         List<LikeModel> likes = likeRepository.findAllByCollectionId(collectionId);
         if (likes.stream().anyMatch(like -> like.getUser().getId().equals(currentUser.getId()))) {
@@ -492,12 +494,13 @@ public class ContentController {
         }
 
         List<CommentModel> comments = commentService.getCommentsByItemId(itemId);
+        item.setComments(comments); // Ensure comments are set on the item
         int commentReplyCount = 0;
 
         for (CommentModel comment : comments) {
 
             List<ReplyModel> replies = comment.getReplies();
-            commentReplyCount = replies.size() + 1;
+            commentReplyCount += replies.size() + 1;
         }
 
         item.setCommentCount(commentReplyCount);
@@ -562,6 +565,7 @@ public class ContentController {
 
         item.setComments(commentService.getCommentsByItemId(itemId));
 
+        int commentReplyCount = 0;
         for (CommentModel comment : item.getComments()) {
 
             // isOwner
@@ -588,7 +592,7 @@ public class ContentController {
 
             // Fetch replies for the comment
             List<ReplyModel> replies = comment.getReplies();
-            int commentReplyCount = replies.size() + 1;
+            commentReplyCount += replies.size() + 1;
 
             for (ReplyModel reply : replies) {
                 UserModel replyOwner = reply.getUser();
@@ -609,9 +613,8 @@ public class ContentController {
                 reply.setIsLiked(isReplyLiked);
             }
 
-            item.setCommentCount(commentReplyCount);
-
         }
+        item.setCommentCount(commentReplyCount);
 
         // Add the item and item to the model
         model.addAttribute("user", currentUser);
@@ -649,6 +652,9 @@ public class ContentController {
     @GetMapping("/popular")
     public String popular(Model model) {
         List<PopularEntry> popularEntries = popularService.getTopPopularEntries();
+        if (popularEntries == null) {
+            popularEntries = new ArrayList<>();
+        }
         List<List<PopularEntry>> partitioned = ListUtils.partition(popularEntries, 3);
         model.addAttribute("popularEntries", popularEntries);
         model.addAttribute("partitionedEntries", partitioned);

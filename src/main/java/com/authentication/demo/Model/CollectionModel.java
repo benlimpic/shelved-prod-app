@@ -170,7 +170,13 @@ public class CollectionModel implements PopularEntry {
 
   @Override
   public int getLikeCount() {
-    return likeCount != null ? likeCount : 0;
+    int total = likeCount != null ? likeCount : 0;
+    if (items != null) {
+      for (ItemModel item : items) {
+        total += item.getLikeCount(); // Assumes ItemModel has getLikeCount()
+      }
+    }
+    return total;
   }
 
   public void setLikeCount(Integer likeCount) {
@@ -205,7 +211,17 @@ public class CollectionModel implements PopularEntry {
 
   @Override
   public int getCommentCount() {
-    return commentCount != null ? commentCount : 0;
+    int total = 0;
+    if (comments != null) {
+      for (CommentModel comment : comments) {
+        total++; // count the comment itself
+        List<ReplyModel> replies = comment.getReplies();
+        if (replies != null) {
+          total += replies.size(); // count all replies
+        }
+      }
+    }
+    return total;
   }
 
   public void setCommentCount(Integer commentCount) {
@@ -238,9 +254,4 @@ public class CollectionModel implements PopularEntry {
     like.setCollection(null);
   }
 
-    @Override
-  public int getPopularityScore() {
-    // Example implementation: sum of likes and comments
-    return getLikeCount() + getCommentCount();
-  }
 }

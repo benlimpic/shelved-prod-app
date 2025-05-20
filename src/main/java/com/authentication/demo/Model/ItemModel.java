@@ -200,7 +200,17 @@ public class ItemModel implements PopularEntry {
 
   @Override
   public int getCommentCount() {
-    return commentCount != null ? commentCount : 0;
+    int total = 0;
+    if (comments != null) {
+      for (CommentModel comment : comments) {
+        total++; // count the comment itself
+        List<ReplyModel> replies = comment.getReplies();
+        if (replies != null) {
+          total += replies.size(); // count all replies
+        }
+      }
+    }
+    return total;
   }
 
   public void setCommentCount(Integer commentCount) {
@@ -215,9 +225,4 @@ public class ItemModel implements PopularEntry {
     this.isOwner = isOwner;
   }
 
-  @Override
-  public int getPopularityScore() {
-    // Example implementation: you can adjust the logic as needed
-    return getLikeCount() + getCommentCount();
-  }
 }

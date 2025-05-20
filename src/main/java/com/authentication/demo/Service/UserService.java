@@ -247,6 +247,7 @@ public class UserService implements UserDetailsService {
           final long MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5 MB
           if (profilePicture.getSize() > MAX_IMAGE_SIZE) {
             redirectAttributes.addFlashAttribute("error", "File size exceeds the maximum limit of 5 MB.");
+            return;
           }
 
           // Process the image
@@ -255,11 +256,10 @@ public class UserService implements UserDetailsService {
           // Save the profile photo
           userModel.setProfilePictureUrl(saveProfilePicture(processedFile));
 
-        } catch (IOException e) {
-          redirectAttributes.addFlashAttribute("error", "Failed to process the image.");
-        } catch (IllegalArgumentException e) {
+        } catch (IOException | IllegalArgumentException e) {
+          System.err.println("Image upload error: " + e.getMessage());
           redirectAttributes.addFlashAttribute("error", e.getMessage());
-          
+          return;
         }
       }
 
@@ -278,23 +278,24 @@ public class UserService implements UserDetailsService {
 
   public String saveProfilePicture(MultipartFile profilePicture) throws IOException {
     String bucketName = profileImagesBucketName;
-    String filename = UUID.randomUUID().toString() + "-" + profilePicture.getOriginalFilename();
+    String originalFilename = profilePicture.getOriginalFilename() != null ? profilePicture.getOriginalFilename()
+        : "profile-pic";
+    String filename = UUID.randomUUID().toString() + "-" + originalFilename;
 
     // Validate the file
     if (profilePicture.isEmpty()) {
       throw new IllegalArgumentException("Profile picture file is empty");
     }
 
-    // Upload the file to S3
+    File tempFile = null;
     try {
       System.out.println("Starting file upload to S3...");
-      File tempFile = File.createTempFile("upload-", profilePicture.getOriginalFilename());
+      tempFile = File.createTempFile("upload-", originalFilename);
       profilePicture.transferTo(tempFile);
       try (InputStream inputStream = new FileInputStream(tempFile)) {
         String contentType = profilePicture.getContentType(); // Get content type from MultipartFile
         s3Service.uploadFile(bucketName, filename, inputStream, contentType);
       }
-      tempFile.deleteOnExit();
       System.out.println("File uploaded to S3 successfully.");
 
       // Generate a presigned URL
@@ -310,6 +311,12 @@ public class UserService implements UserDetailsService {
       System.err.println("Runtime Error in saveProfilePicture: " + e.getMessage());
       // Consider using a logger in production code to log the stack trace.
       throw e;
+    } finally {
+      if (tempFile != null && tempFile.exists()) {
+        if (!tempFile.delete()) {
+          System.err.println("Failed to delete temporary file: " + tempFile.getAbsolutePath());
+        }
+      }
     }
   }
 

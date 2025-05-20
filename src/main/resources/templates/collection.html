@@ -10,23 +10,21 @@
   </head>
 
   <body>
-
-      <!-- ERROR AND SUCCESS HANDLING -->
-      <div class="errorSuccessHandlingBox hidden">
-        <div
-          id="successMessageDiv"
-          class="success"
-          th:if="${message}"
-          th:text="${message}">
-        </div>
-        <div
-          id="errorMessageDiv"
-          class="failure"
-          th:if="${error}"
-          th:text="${error}">
-        </div>
-      </div>
-
+    <!-- ERROR AND SUCCESS HANDLING -->
+    <div class="errorSuccessHandlingBox hidden">
+      <div
+        id="successMessageDiv"
+        class="success"
+        th:if="${message}"
+        th:text="${message}"
+      ></div>
+      <div
+        id="errorMessageDiv"
+        class="failure"
+        th:if="${error}"
+        th:text="${error}"
+      ></div>
+    </div>
 
     <header>
       <nav>
@@ -39,7 +37,7 @@
           <li>
             <div th:if="${collection.isOwner != null && collection.isOwner}">
               <a
-                class=" text-white text-xs px-1 py-0.5 rounded"
+                class="text-white text-xs px-1 py-0.5 rounded"
                 id="redirectUpdateCollection"
                 th:href="@{/update-collection/{id}(id=${collection.id})}"
               >
@@ -53,7 +51,6 @@
 
     <!-- COLLECTION CONTENT -->
     <main class="overflow-y-auto" th:id="'collection-' + ${collection.id}">
-
       <div class="container">
         <div class="box">
           <nav>
@@ -274,6 +271,12 @@
                 <a class="icon-style" href="/index">&#8962;</a>
               </div>
             </li>
+            <li>
+              <div class="icon">
+                <a class="icon-style" href="/popular">&#10066;</a>
+              </div>
+            </li>
+            <li></li>
             <li>
               <a href="/profile">
                 <img
