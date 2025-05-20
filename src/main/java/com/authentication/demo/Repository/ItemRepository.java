@@ -11,4 +11,5 @@ import com.authentication.demo.Model.ItemModel;
 public interface ItemRepository extends JpaRepository<ItemModel, Long> {
   List<ItemModel> findAllByCollectionIdOrderByCreatedAtDesc(Long collectionId);
   List<ItemModel> findByCollectionId(Long collectionId);
+  List<ItemModel> findByTitleContainingIgnoreCase(String title);
 }

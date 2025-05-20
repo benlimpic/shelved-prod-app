@@ -423,7 +423,12 @@
     display: none; /* Chrome, Safari, and Edge */
   }
 
-  #search-results {
+
+
+}
+
+
+  /* #search-results {
     display: none;
     flex-direction: column;
     align-items: center;
@@ -438,6 +443,4 @@
 
   .search-container {
     position: relative;
-  }
-
-}
+  } */

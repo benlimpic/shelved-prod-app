@@ -1,0 +1,89 @@
+<div th:fragment="resultsList">
+  <div th:if="${users != null and users.size() > 0}">
+    <div class="w-full bg-slate-200 shadow-md rounded-md p-2 mt-2">
+      <p class="font-bold text-md m-1">Users</p>
+      <ul class="space-y-2">
+        <li th:each="user : ${users}">
+          <a th:href="@{/profile/{id}(id=${user.id})}">
+            <div
+              class="flex justify-start items-center w-full p-2 h-12 bg-slate-100 shadow-sm rounded-md"
+              style="cursor: pointer"
+            >
+              <div class="pr-2">
+                <img
+                  class="round-image"
+                  th:src="${user.profilePictureUrl}"
+                  alt="Profile Picture"
+                />
+              </div>
+              <div class="ml-2">
+                <span
+                  class="text-sm font-semibold"
+                  th:text="${user.username}"
+                ></span>
+              </div>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div th:if="${collections != null and collections.size() > 0}">
+    <div class="w-full bg-slate-200 shadow-md rounded-md p-2 mt-2">
+      <p class="font-bold text-md m-1">Collections</p>
+      <ul class="space-y-2">
+        <li th:each="collection : ${collections}">
+          <a th:href="@{/collection/{id}(id=${collection.id})}">
+            <div
+              class="flex justify-start items-center w-full p-2 h-12 bg-slate-100 shadow-sm rounded-md"
+              style="cursor: pointer"
+            >
+              <div class="pr-2">
+                <img
+                  class="round-image"
+                  th:src="${collection.imageUrl}"
+                  alt="Collection Image"
+                />
+              </div>
+              <div class="ml-2">
+                <span
+                  class="text-sm font-semibold"
+                  th:text="${collection.title}"
+                ></span>
+              </div>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div th:if="${items != null and items.size() > 0}">
+    <div class="w-full bg-slate-200 shadow-md rounded-md p-2 mt-2">
+      <p class="font-bold text-md m-1">Items</p>
+      <ul class="space-y-2">
+        <li th:each="item : ${items}">
+          <a th:href="@{/item/{id}(id=${item.id})}">
+            <div
+              class="flex justify-start items-center w-full p-2 h-12 bg-slate-100 shadow-sm rounded-md"
+              style="cursor: pointer"
+            >
+              <div class="pr-2">
+                <img
+                  class="round-image"
+                  th:src="${item.imageUrl}"
+                  alt="Item Image"
+                />
+              </div>
+              <div class="ml-2">
+                <span
+                  class="text-sm font-semibold"
+                  th:text="${item.title}"
+                ></span>
+              </div>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </di>
+</div>
