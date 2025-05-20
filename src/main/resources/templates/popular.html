@@ -7,7 +7,6 @@
 
     <script src="/js/fadeAnimations.js" defer></script>
     <script src="/js/searchBar.js" defer></script>
-
   </head>
   <body>
     <header>
@@ -26,26 +25,23 @@
       </nav>
     </header>
     <main class="overflow-y-auto">
-
-      
       <!-- ERROR AND SUCCESS HANDLING -->
       <div class="errorSuccessHandlingBox hidden">
         <div
           id="successMessageDiv"
           class="success"
           th:if="${message}"
-          th:text="${message}">
-        </div>
+          th:text="${message}"
+        ></div>
         <div
           id="errorMessageDiv"
           class="failure"
           th:if="${error}"
-          th:text="${error}">
-        </div>
+          th:text="${error}"
+        ></div>
       </div>
 
-
-      <div class="search-container w-full p-2" style="position:relative;">
+      <div class="search-container w-full p-2" style="position: relative">
         <input
           type="text"
           id="search-input"
@@ -55,26 +51,28 @@
         <div id="search-results"></div>
       </div>
 
-   
-
       <div class="h-auto w-full bg-slate-100">
         <div class="w-full min-h-fit overflow-y-auto">
           <div class="grid">
             <div
-              th:each="row : ${partitionedCollections}"
+              th:each="row : ${partitionedEntries}"
               class="grid grid-cols-3 border-0"
             >
-              <div
-                th:each="collection : ${row}"
-                class="flex flex-col items-center"
-              >
-                <a th:href="@{/collection/{id}(id=${collection.id})}">
-                  <img
-                    th:src="${#strings.defaultString(collection?.getImageUrl(), '/images/default-image.png')}"
-                    alt="Collection Image"
-                    class="aspect-square w-full h-auto object-cover"
-                  />
-                </a>
+              <div th:each="entry : ${row}" class="flex flex-col items-center">
+                <div th:if="${entry.isCollection()}">
+                  <a th:href="@{/collection/{id}(id=${entry.id})}">
+                    <img
+                      th:src="${#strings.defaultString(entry.imageUrl, '/images/default-image.png')}"
+                    />
+                  </a>
+                </div>
+                <div th:if="${!entry.isCollection()}">
+                  <a th:href="@{/item/{id}(id=${entry.id})}">
+                    <img
+                      th:src="${#strings.defaultString(entry.imageUrl, '/images/default-image.png')}"
+                    />
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -83,35 +81,33 @@
     </main>
     <footer>
       <nav>
-          <ul>
-            <li>
-              <div id="homeButton" class="icon">
-                <a class="icon-style" href="/index">&#8962;</a>
-              </div>
-            </li>
-            <li>
-              <div class="icon">
-                <a class="icon-style" href="/popular">&#10066;</a>
-              </div>
-            </li>
-            <li>
-              <div class="icon">
-                <a class="icon-style" href="/create-collection">
-                  &#43;
-                </a>
-              </div>
-            </li>
-            <li>
-              <a href="/profile">
-                <img
-                  class="h-7 w-7 rounded-full bg-white"
-                  th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}"
-                  alt="Profile Picture"
-                />
-              </a>
-            </li>
-          </ul>
-        </nav>
+        <ul>
+          <li>
+            <div id="homeButton" class="icon">
+              <a class="icon-style" href="/index">&#8962;</a>
+            </div>
+          </li>
+          <li>
+            <div class="icon">
+              <a class="icon-style" href="/popular">&#10066;</a>
+            </div>
+          </li>
+          <li>
+            <div class="icon">
+              <a class="icon-style" href="/create-collection">&#43;</a>
+            </div>
+          </li>
+          <li>
+            <a href="/profile">
+              <img
+                class="h-7 w-7 rounded-full bg-white"
+                th:src="${user != null && user.profilePictureUrl != null ? user.profilePictureUrl : '/images/default-profile-photo.png'}"
+                alt="Profile Picture"
+              />
+            </a>
+          </li>
+        </ul>
+      </nav>
     </footer>
   </body>
 </html>

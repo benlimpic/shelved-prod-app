@@ -3,6 +3,8 @@ package com.authentication.demo.Model;
 import java.sql.Timestamp;
 import java.util.List;
 
+import com.authentication.demo.Interface.PopularEntry;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,7 +19,7 @@ import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "items")
-public class ItemModel {
+public class ItemModel implements PopularEntry {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,7 +59,6 @@ public class ItemModel {
   @OneToMany(mappedBy = "item", cascade = CascadeType.REMOVE, orphanRemoval = true)
   private List<LikeModel> likes;
 
-
   @Transient
   private Integer likeCount;
 
@@ -69,6 +70,11 @@ public class ItemModel {
 
   @Transient
   private Boolean isOwner;
+
+  @Override
+  public boolean isCollection() {
+    return false;
+  }
 
   public ItemModel() {
 
@@ -109,6 +115,7 @@ public class ItemModel {
     return userId;
   }
 
+  @Override
   public String getTitle() {
     return title;
   }
@@ -141,6 +148,7 @@ public class ItemModel {
     this.caption = caption;
   }
 
+  @Override
   public String getImageUrl() {
     return imageUrl;
   }
@@ -165,8 +173,9 @@ public class ItemModel {
     this.updatedAt = new Timestamp(System.currentTimeMillis());
   }
 
-  public Integer getLikeCount() {
-    return likeCount;
+  @Override
+  public int getLikeCount() {
+    return likeCount != null ? likeCount : 0;
   }
 
   public void setLikeCount(Integer likeCount) {
@@ -189,8 +198,9 @@ public class ItemModel {
     this.comments = comments;
   }
 
-  public Integer getCommentCount() {
-    return commentCount;
+  @Override
+  public int getCommentCount() {
+    return commentCount != null ? commentCount : 0;
   }
 
   public void setCommentCount(Integer commentCount) {
@@ -203,5 +213,11 @@ public class ItemModel {
 
   public void setIsOwner(Boolean isOwner) {
     this.isOwner = isOwner;
+  }
+
+  @Override
+  public int getPopularityScore() {
+    // Example implementation: you can adjust the logic as needed
+    return getLikeCount() + getCommentCount();
   }
 }

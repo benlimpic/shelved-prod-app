@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.authentication.demo.Interface.PopularEntry;
 import com.authentication.demo.Model.CollectionModel;
 import com.authentication.demo.Model.CommentModel;
 import com.authentication.demo.Model.ItemModel;
@@ -28,6 +29,7 @@ import com.authentication.demo.Service.CommentService;
 import com.authentication.demo.Service.FollowService;
 import com.authentication.demo.Service.ItemService;
 import com.authentication.demo.Service.LikeService;
+import com.authentication.demo.Service.PopularService;
 import com.authentication.demo.Service.UserService;
 
 @Controller
@@ -41,11 +43,13 @@ public class ContentController {
     private final LikeService likeService;
     private final LikeRepository likeRepository;
     private final CommentService commentService;
+    private final PopularService popularService;
 
     public ContentController(UserRepository repository, UserService userService, CollectionService collectionService,
             ItemService itemService, FollowService followService, LikeService likeService,
             LikeRepository likeRepository,
-            CommentService commentService) {
+            CommentService commentService, PopularService popularService) {
+        this.popularService = popularService;
         this.repository = repository;
         this.userService = userService;
         this.collectionService = collectionService;
@@ -644,21 +648,10 @@ public class ContentController {
 
     @GetMapping("/popular")
     public String popular(Model model) {
-        // Fetch current user
-        UserModel currentUser = userService.getCurrentUser().orElse(null);
-        if (currentUser == null) {
-            return "redirect:/login"; // Redirect to login if user is not authenticated
-        }
-
-        // Fetch collections for the user
-        List<CollectionModel> collections = collectionService.getAllCollectionsByDesc();
-        // Partition collections into rows of 3 for display
-        List<List<CollectionModel>> partitionedCollections = ListUtils.partition(collections, 3);
-
-        // Add data to the model
-        model.addAttribute("collections", collections);
-        model.addAttribute("partitionedCollections", partitionedCollections);
-
+        List<PopularEntry> popularEntries = popularService.getTopPopularEntries();
+        List<List<PopularEntry>> partitioned = ListUtils.partition(popularEntries, 3);
+        model.addAttribute("popularEntries", popularEntries);
+        model.addAttribute("partitionedEntries", partitioned);
         return handleAuthentication(model, "popular");
     }
 

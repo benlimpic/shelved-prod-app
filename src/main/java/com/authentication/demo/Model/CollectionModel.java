@@ -3,6 +3,8 @@ package com.authentication.demo.Model;
 import java.sql.Timestamp;
 import java.util.List;
 
+import com.authentication.demo.Interface.PopularEntry;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,7 +19,7 @@ import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "collections")
-public class CollectionModel {
+public class CollectionModel implements PopularEntry {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -65,6 +67,11 @@ public class CollectionModel {
   @Transient
   private Boolean isOwner;
 
+  @Override
+  public boolean isCollection() {
+    return true;
+  }
+
   public CollectionModel() {
 
   }
@@ -103,6 +110,7 @@ public class CollectionModel {
     this.user = user;
   }
 
+  @Override
   public String getTitle() {
     return title;
   }
@@ -127,6 +135,7 @@ public class CollectionModel {
     this.description = description;
   }
 
+  @Override
   public String getImageUrl() {
     return imageUrl;
   }
@@ -159,8 +168,9 @@ public class CollectionModel {
     this.items = items;
   }
 
-  public Integer getLikeCount() {
-    return likeCount;
+  @Override
+  public int getLikeCount() {
+    return likeCount != null ? likeCount : 0;
   }
 
   public void setLikeCount(Integer likeCount) {
@@ -193,8 +203,9 @@ public class CollectionModel {
     comment.setCollection(null);
   }
 
-  public Integer getCommentCount() {
-    return commentCount;
+  @Override
+  public int getCommentCount() {
+    return commentCount != null ? commentCount : 0;
   }
 
   public void setCommentCount(Integer commentCount) {
@@ -225,5 +236,11 @@ public class CollectionModel {
   public void removeLike(LikeModel like) {
     this.likes.remove(like);
     like.setCollection(null);
+  }
+
+    @Override
+  public int getPopularityScore() {
+    // Example implementation: sum of likes and comments
+    return getLikeCount() + getCommentCount();
   }
 }
