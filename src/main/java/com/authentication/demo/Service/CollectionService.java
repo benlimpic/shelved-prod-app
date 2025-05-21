@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +18,7 @@ import com.authentication.demo.Exceptions.CollectionCreationException;
 import com.authentication.demo.Model.CollectionModel;
 import com.authentication.demo.Model.CommentModel;
 import com.authentication.demo.Model.ItemModel;
+import com.authentication.demo.Model.UserModel;
 import com.authentication.demo.Repository.CollectionRepository;
 import com.authentication.demo.Repository.CommentRepository;
 
@@ -169,13 +171,19 @@ private String collectionImagesBucket;
         throw new CollectionCreationException("Collection not found");
       }
 
-      // Fetch and delete items in the collection
-      List<ItemModel> items = itemService.getAllItemsByCollectionId(collectionId);
-      if (items != null && !items.isEmpty()) {
-        for (ItemModel item : items) {
-          itemService.deleteItem(item.getId());
-        }
+      if (collection.getImageUrl() != null) {
+        String oldKey = extractKeyFromUrl(collection.getImageUrl());
+        System.out.println("\u001B[32mEDeleting old profile picture: \nshelved-collection-images-benlimpic \n" + oldKey + "\u001B[0m");
+        s3Service.deleteFile("shelved-collection-images-benlimpic", oldKey);
       }
+
+      // // Fetch and delete items in the collection
+      // List<ItemModel> items = itemService.getAllItemsByCollectionId(collectionId);
+      // if (items != null && !items.isEmpty()) {
+      //   for (ItemModel item : items) {
+      //     itemService.deleteItem(item.getId());
+      //   }
+      // }
 
       // Delete the collection itself
       repository.delete(collection);
@@ -209,6 +217,13 @@ private String collectionImagesBucket;
         collection.setCaption(params.get("caption"));
       }
       if (collectionImage != null && !collectionImage.isEmpty()) {
+
+        if (collection.getImageUrl() != null) {
+          String oldKey = extractKeyFromUrl(collection.getImageUrl());
+          System.out.println("\u001B[32mEDeleting old profile picture: \nshelved-collection-images-benlimpic \n" + oldKey + "\u001B[0m");
+          s3Service.deleteFile("shelved-collection-images-benlimpic", oldKey);
+        }
+        
         MultipartFile processedFile = imageService.processImage(collectionImage);
         String imageUrl = saveCollectionImage(processedFile);
         collection.setImageUrl(imageUrl);
@@ -271,6 +286,26 @@ private String collectionImagesBucket;
 
   public Integer countComments(Long collectionId) {
     return commentRepository.countByCollectionId(collectionId);
+  }
+
+  /**
+   * Extracts the S3 object key from a given S3 URL.
+   * Assumes the key is the part after the last '/' in the URL.
+   */
+  
+
+  private String extractKeyFromUrl(String url) {
+    if (url == null || url.isEmpty()) {
+      throw new IllegalArgumentException("URL cannot be null or empty");
+    }
+    int lastSlash = url.lastIndexOf('/');
+    if (lastSlash == -1 || lastSlash == url.length() - 1) {
+      throw new IllegalArgumentException("Invalid S3 URL format: " + url);
+    }
+
+    System.out.println("\u001B[32mExtracted key from URL: " + url.substring(lastSlash + 1) + "\u001B[0m");
+    return url.substring(lastSlash + 1);
+
   }
 
 }

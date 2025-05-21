@@ -170,8 +170,15 @@ public class ItemService {
     }
 
     // CHECK IF ITEM EXISTS
-    if (!itemRepository.existsById(itemId)) {
+    ItemModel item = itemRepository.findById(itemId).orElse(null);
+    if (item == null) {
       throw new ItemCreationException("Item not found");
+    }
+
+    if (item.getImageUrl() != null) {
+      String oldKey = extractKeyFromUrl(item.getImageUrl());
+      System.out.println("\u001B[32mEDeleting old profile picture: \nshelved-item-images-benlimpic \n" + oldKey + "\u001B[0m");
+      s3Service.deleteFile("shelved-item-images-benlimpic", oldKey);
     }
 
     // DELETE ITEM
@@ -209,9 +216,15 @@ public class ItemService {
     }
     if (itemImage != null && !itemImage.isEmpty()) {
       try {
+
+        String oldKey = extractKeyFromUrl(item.getImageUrl());
+        System.out.println("\u001B[32mEDeleting old profile picture: \nshelved-item-images-benlimpic \n" + oldKey + "\u001B[0m");
+        s3Service.deleteFile("shelved-item-images-benlimpic", oldKey);
+
         MultipartFile processedFile = imageService.processImage(itemImage);
         String imageUrl = saveItemImage(processedFile);
         item.setImageUrl(imageUrl);
+
       } catch (IOException e) {
         throw new ItemCreationException("Failed to save item image: " + e.getMessage());
       }
@@ -238,6 +251,21 @@ public class ItemService {
 
   public Integer countComments(Long itemId) {
     return commentRepository.countByItemId(itemId);
+  }
+
+
+  private String extractKeyFromUrl(String url) {
+    if (url == null || url.isEmpty()) {
+      throw new IllegalArgumentException("URL cannot be null or empty");
+    }
+    int lastSlash = url.lastIndexOf('/');
+    if (lastSlash == -1 || lastSlash == url.length() - 1) {
+      throw new IllegalArgumentException("Invalid S3 URL format: " + url);
+    }
+
+    System.out.println("\u001B[32mExtracted key from URL: " + url.substring(lastSlash + 1) + "\u001B[0m");
+    return url.substring(lastSlash + 1);
+
   }
 
 }

@@ -240,6 +240,12 @@ public class UserService implements UserDetailsService {
     if (user.isPresent()) {
       UserModel userModel = user.get();
 
+      if (userModel.getProfilePictureUrl() != null) {
+        String oldKey = extractKeyFromUrl(userModel.getProfilePictureUrl());
+        System.out.println("\u001B[32mEDeleting old profile picture: \nshelved-profile-pictures-benlimpic \n" + oldKey + "\u001B[0m");
+        s3Service.deleteFile("shelved-profile-pictures-benlimpic", oldKey);
+      }
+
       // update profile picture if it is provided
       if (profilePicture != null && !profilePicture.isEmpty()) {
         try {
@@ -277,6 +283,7 @@ public class UserService implements UserDetailsService {
   }
 
   public String saveProfilePicture(MultipartFile profilePicture) throws IOException {
+
     String bucketName = profileImagesBucketName;
     String originalFilename = profilePicture.getOriginalFilename() != null ? profilePicture.getOriginalFilename()
         : "profile-pic";
@@ -405,12 +412,27 @@ public class UserService implements UserDetailsService {
 
   // DELETE USER
   public String deleteUser(String username) {
-    Optional<UserModel> user = repository.findByUsername(username);
-    if (user.isPresent()) {
-      repository.delete(user.get());
-      return "User deleted successfully";
+    Optional<UserModel> userByUsername = repository.findByUsername(username);
+
+    // Fetch the current user
+    Optional<UserModel> currentUser = getCurrentUser();
+    if (currentUser.isPresent()) {
+      UserModel userModel = currentUser.get();
+
+      if (userModel.getProfilePictureUrl() != null) {
+        String oldKey = extractKeyFromUrl(userModel.getProfilePictureUrl());
+        System.out.println("\u001B[32mEDeleting old profile picture: \nshelved-profile-pictures-benlimpic \n" + oldKey + "\u001B[0m");
+        s3Service.deleteFile("shelved-profile-pictures-benlimpic", oldKey);
+      }
+
+      if (userByUsername.isPresent()) {
+        repository.delete(userByUsername.get());
+        return "User deleted successfully";
+      } else {
+        return "User not found";
+      }
     } else {
-      return "User not found";
+      return "No authenticated user found";
     }
   }
 
@@ -442,6 +464,25 @@ public class UserService implements UserDetailsService {
 
   public List<UserModel> searchUsersByUsername(String query) {
     return repository.findByUsernameContainingIgnoreCase(query);
+  }
+
+  /**
+   * Extracts the S3 object key from a given S3 URL.
+   * Assumes the key is the part after the last '/' in the URL.
+   */
+
+  private String extractKeyFromUrl(String url) {
+    if (url == null || url.isEmpty()) {
+      throw new IllegalArgumentException("URL cannot be null or empty");
+    }
+    int lastSlash = url.lastIndexOf('/');
+    if (lastSlash == -1 || lastSlash == url.length() - 1) {
+      throw new IllegalArgumentException("Invalid S3 URL format: " + url);
+    }
+
+    System.out.println("\u001B[32mExtracted key from URL: " + url.substring(lastSlash + 1) + "\u001B[0m");
+    return url.substring(lastSlash + 1);
+
   }
 
 }
