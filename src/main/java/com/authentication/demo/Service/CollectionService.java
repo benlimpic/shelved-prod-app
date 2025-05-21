@@ -177,14 +177,6 @@ private String collectionImagesBucket;
         s3Service.deleteFile("shelved-collection-images-benlimpic", oldKey);
       }
 
-      // // Fetch and delete items in the collection
-      // List<ItemModel> items = itemService.getAllItemsByCollectionId(collectionId);
-      // if (items != null && !items.isEmpty()) {
-      //   for (ItemModel item : items) {
-      //     itemService.deleteItem(item.getId());
-      //   }
-      // }
-
       // Delete the collection itself
       repository.delete(collection);
     } catch (NumberFormatException e) {

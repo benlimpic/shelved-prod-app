@@ -56,9 +56,12 @@
           </span>
         </nav>
 
-        <div
-          class="box pb-3"
-          style="border-bottom: 1px solid rgba(148, 163, 184, 0.25)"
+        <form
+          id="createItemForm"
+          class="flex flex-col w-full items-center justify-center"
+          th:action="@{/create-item/{collectionId}(collectionId=${collectionId})}"
+          method="post"
+          enctype="multipart/form-data"
         >
           <div class="square">
             <img
@@ -68,95 +71,94 @@
               alt="Default Collection Image"
             />
           </div>
-          <a href="#" id="triggerUpload" class="mt-2">
-            <span class="text-sm font-semibold text-blue-500">
+
+          <div class="w-full flex flex-col justify-center items-center px-4 mt-4">
+            <div>
+              <a href="#" id="triggerUpload" class="mt-2">
+                <span class="text-sm font-semibold text-blue-500">
               Update Item Image
-            </span>
-          </a>
-        </div>
-
-        <form
-          class="flex flex-col w-full items-center justify-center px-4 mt-4"
-          th:action="@{/create-item/{collectionId}(collectionId=${collectionId})}"
-          method="post"
-          enctype="multipart/form-data"
-        >
-          <input type="hidden" name="collectionId" th:value="${collectionId}" />
-
-          <input type="hidden" name="_csrf" th:value="${_csrf?.token}" />
-          <!-- File Upload Field -->
-
-          <input
-            type="file"
-            id="hiddenFileInput"
-            name="itemImage"
-            style="display: none"
-            accept="image/*"
-          />
-
-          <!-- Title Field -->
-          <div class="flex flex-col w-full h-auto justify-center items-between">
-            <div class="labelInputBox w-full">
-              <label class="label" for="title">Title:</label>
-              <input
-                class="input w-full"
-                type="text"
-                id="collectionTitle"
-                name="title"
-                placeholder="Title"
-              />
+                </span>
+              </a>
             </div>
-          </div>
 
-          <!-- Description Field -->
-          <div class="flex flex-col w-full h-auto justify-center items-between">
-            <div class="labelInputBox w-full">
-              <label class="label" for="description">Description:</label>
-              <textarea
-                class="input w-full"
-                type="text"
-                id="description"
-                name="description"
-                placeholder="Description"
-                rows="6"
-                maxlength="255"
-              ></textarea>
+
+            <input type="hidden" name="collectionId" th:value="${collectionId}" />
+
+            <input type="hidden" name="_csrf" th:value="${_csrf?.token}" />
+            <!-- File Upload Field -->
+
+            <input
+              type="file"
+              id="hiddenFileInput"
+              name="itemImage"
+              style="display: none"
+              accept="image/*"
+            />
+
+            <!-- Title Field -->
+            <div class="flex flex-col w-full h-auto justify-center items-between">
+              <div class="labelInputBox w-full">
+                <label class="label" for="title">Title:</label>
+                <input
+                  class="input w-full"
+                  type="text"
+                  id="collectionTitle"
+                  name="title"
+                  placeholder="Title"
+                />
+              </div>
             </div>
-          </div>
 
-          <!-- Item Link Field -->
-          <div class="flex flex-col w-full h-auto justify-center items-between">
-            <div class="labelInputBox w-full">
-              <label class="label" for="itemLink">Item Link:</label>
-              <input
-                class="input w-full"
-                type="text"
-                id="itemLink"
-                name="itemLink"
-                placeholder="http://example.com"
-              />
+            <!-- Description Field -->
+            <div class="flex flex-col w-full h-auto justify-center items-between">
+              <div class="labelInputBox w-full">
+                <label class="label" for="description">Description:</label>
+                <textarea
+                  class="input w-full"
+                  type="text"
+                  id="description"
+                  name="description"
+                  placeholder="Description"
+                  rows="6"
+                  maxlength="255"
+                ></textarea>
+              </div>
             </div>
-          </div>
 
-          <!-- Caption Field -->
-          <div class="flex flex-col w-full h-auto justify-center items-between">
-            <div class="labelInputBox w-full">
-              <label class="label" for="caption">Caption:</label>
-              <input
-                class="input w-full"
-                type="text"
-                id="caption"
-                name="caption"
-                placeholder="Caption"
-              />
+            <!-- Item Link Field -->
+            <div class="flex flex-col w-full h-auto justify-center items-between">
+              <div class="labelInputBox w-full">
+                <label class="label" for="itemLink">Item Link:</label>
+                <input
+                  class="input w-full"
+                  type="text"
+                  id="itemLink"
+                  name="itemLink"
+                  placeholder="http://example.com"
+                />
+              </div>
             </div>
-          </div>
 
-          <!-- Submit Button -->
-          <div class="flex flex-row justify-center items-center mt-4">
-            <button class="button bg-blue-600 hover:bg-blue-800" type="submit">
-              Create Item
-            </button>
+            <!-- Caption Field -->
+            <div class="flex flex-col w-full h-auto justify-center items-between">
+              <div class="labelInputBox w-full">
+                <label class="label" for="caption">Caption:</label>
+                <input
+                  class="input w-full"
+                  type="text"
+                  id="caption"
+                  name="caption"
+                  placeholder="Caption"
+                />
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="flex flex-row justify-center items-center mt-4">
+              <button class="button bg-blue-600 hover:bg-blue-800" type="submit">
+                Create Item
+              </button>
+            </div>
           </div>
         </form>
       </div>
