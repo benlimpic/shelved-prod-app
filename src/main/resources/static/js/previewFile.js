@@ -2,6 +2,11 @@ const fileInput = document.getElementById('hiddenFileInput');
 const previewImage = document.getElementById('previewImage');
 const triggerUpload = document.getElementById('triggerUpload');
 
+const createCollectionForm = document.getElementById('createCollectionForm');
+const createItemForm = document.getElementById('createItemForm');
+const updateProfileForm = document.getElementById('updateProfileForm');
+const updateCollectionForm = document.getElementById('updateCollectionForm');
+const updateItemForm = document.getElementById('updateItemForm');
 let processedBlob = null;
 
 fileInput.addEventListener('change', function () {
@@ -13,17 +18,28 @@ fileInput.addEventListener('change', function () {
     reader.onload = function (e) {
       const img = new Image();
       img.onload = function () {
-        // Read EXIF orientation
         EXIF.getData(file, function() {
           const orientation = EXIF.getTag(this, "Orientation") || 1;
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
           const size = Math.min(img.width, img.height);
-          canvas.width = 500;
-          canvas.height = 500;
 
-          // Apply orientation transform
-          applyOrientationTransform(ctx, orientation, canvas.width, canvas.height);
+          // Default canvas size
+          let canvasWidth = 500;
+          let canvasHeight = 500;
+
+          // Swap width/height for 90-degree rotations
+          let destWidth = canvasWidth;
+          let destHeight = canvasHeight;
+          if (orientation === 6 || orientation === 8) {
+            [canvasWidth, canvasHeight] = [canvasHeight, canvasWidth];
+            [destWidth, destHeight] = [destHeight, destWidth];
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = canvasWidth;
+          canvas.height = canvasHeight;
+          const ctx = canvas.getContext('2d');
+
+          applyOrientationTransform(ctx, orientation, canvasWidth, canvasHeight);
 
           ctx.drawImage(
             img,
@@ -33,8 +49,8 @@ fileInput.addEventListener('change', function () {
             size,
             0,
             0,
-            canvas.width,
-            canvas.height
+            destWidth,
+            destHeight
           );
 
           canvas.toBlob(function (blob) {
@@ -43,10 +59,8 @@ fileInput.addEventListener('change', function () {
               const dataTransfer = new DataTransfer();
               dataTransfer.items.add(processedFile);
 
-              // Find the closest form to the file input
               const closestForm = fileInput.closest('form');
               if (closestForm) {
-                // Find the file input within the closest form and set its files
                 const formFileInput = closestForm.querySelector('input[type="file"]');
                 if (formFileInput) {
                   formFileInput.files = dataTransfer.files;
@@ -66,11 +80,6 @@ fileInput.addEventListener('change', function () {
   }
 });
 
-triggerUpload.addEventListener('click', function (event) {
-  event.preventDefault(); // Prevent the anchor from navigating
-  fileInput.click();
-});
-
 // Helper function for orientation
 function applyOrientationTransform(ctx, orientation, width, height) {
   switch (orientation) {
@@ -86,9 +95,15 @@ function applyOrientationTransform(ctx, orientation, width, height) {
       ctx.translate(0, height);
       ctx.rotate(-Math.PI / 2);
       break;
-    // Add more cases if needed
     default:
-      // No transform needed
       break;
   }
 }
+
+
+document
+  .getElementById('triggerUpload')
+  .addEventListener('click', function (event) {
+    event.preventDefault(); // Prevent the anchor from navigating
+    document.getElementById('hiddenFileInput').click();
+  });
