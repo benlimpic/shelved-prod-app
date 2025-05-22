@@ -113,7 +113,7 @@ private String collectionImagesBucket;
 
     // Validate the file
     if (collectionImage.isEmpty()) {
-      throw new IllegalArgumentException("Profile picture file is empty");
+      throw new IllegalArgumentException("Collection Image file is empty");
     }
 
     // Upload the file to S3

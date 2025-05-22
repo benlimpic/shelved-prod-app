@@ -53,13 +53,9 @@ public class ImageService {
         
         BufferedImage croppedImage = originalImage.getSubimage(x, y, size, size);
 
-        // Ensure the cropped image is not rotated or changed by drawing it into a new BufferedImage
-        BufferedImage uprightImage = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
-        uprightImage.getGraphics().drawImage(croppedImage, 0, 0, null);
-
-        // Convert the upright image to a MultipartFile
+        // Convert the cropped image to a MultipartFile
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            ImageIO.write(uprightImage, fileExtension, outputStream); // Use dynamic file type
+            ImageIO.write(croppedImage, fileExtension, outputStream); // Use dynamic file type
             return new MockMultipartFile(
                 file.getName(),
                 file.getOriginalFilename(),

@@ -83,7 +83,6 @@ public class ItemService {
     // SAVE ITEM IMAGE
     String imageUrl = saveItemImage(processedFile);
 
-
     // Get collectionId from params and validate
     String collectionIdStr = params.get("collectionId");
     if (collectionIdStr == null || collectionIdStr.trim().isEmpty()) {
@@ -99,7 +98,6 @@ public class ItemService {
     CollectionModel collection = collectionRepository.findById(collectionId)
         .orElseThrow(() -> new ItemCreationException("Collection not found"));
 
-
     // CREATE ITEM
     ItemModel item = new ItemModel(
         null,
@@ -113,7 +111,6 @@ public class ItemService {
         new Timestamp(System.currentTimeMillis()),
         new Timestamp(System.currentTimeMillis()));
 
-
     try {
       // SAVE ITEM TO DATABASE
       itemRepository.save(item);
@@ -122,14 +119,14 @@ public class ItemService {
     }
   }
 
-  // SAVE COLLECTION IMAGE
+  // SAVE ITEM IMAGE
   public String saveItemImage(MultipartFile itemImage) throws IOException {
     String bucketName = itemImagesBucket;
     String filename = UUID.randomUUID().toString() + "-" + itemImage.getOriginalFilename();
 
     // Validate the file
     if (itemImage.isEmpty()) {
-      throw new IllegalArgumentException("Profile picture file is empty");
+      throw new IllegalArgumentException("Item Image file is empty");
     }
 
     // Upload the file to S3
@@ -177,7 +174,8 @@ public class ItemService {
 
     if (item.getImageUrl() != null) {
       String oldKey = extractKeyFromUrl(item.getImageUrl());
-      System.out.println("\u001B[32mEDeleting old profile picture: \nshelved-item-images-benlimpic \n" + oldKey + "\u001B[0m");
+      System.out.println(
+          "\u001B[32mEDeleting old profile picture: \nshelved-item-images-benlimpic \n" + oldKey + "\u001B[0m");
       s3Service.deleteFile("shelved-item-images-benlimpic", oldKey);
     }
 
@@ -218,7 +216,8 @@ public class ItemService {
       try {
 
         String oldKey = extractKeyFromUrl(item.getImageUrl());
-        System.out.println("\u001B[32mEDeleting old profile picture: \nshelved-item-images-benlimpic \n" + oldKey + "\u001B[0m");
+        System.out.println(
+            "\u001B[32mEDeleting old profile picture: \nshelved-item-images-benlimpic \n" + oldKey + "\u001B[0m");
         s3Service.deleteFile("shelved-item-images-benlimpic", oldKey);
 
         MultipartFile processedFile = imageService.processImage(itemImage);
@@ -252,7 +251,6 @@ public class ItemService {
   public Integer countComments(Long itemId) {
     return commentRepository.countByItemId(itemId);
   }
-
 
   private String extractKeyFromUrl(String url) {
     if (url == null || url.isEmpty()) {
