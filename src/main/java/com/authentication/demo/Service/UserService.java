@@ -418,7 +418,7 @@ public class UserService implements UserDetailsService {
     }
   }
 
-  //✅ 
+  //✅
   // LOGOUT USER
   public String logout() {
     SecurityContextHolder.clearContext();
@@ -452,32 +452,38 @@ public class UserService implements UserDetailsService {
     }
   }
 
+  //✅❌
   // GET USERS BY ID
   public Map<Long, UserModel> getUsersByIds(List<Long> userIds) {
     return repository.findAllById(userIds).stream()
         .collect(Collectors.toMap(UserModel::getId, Function.identity()));
   }
 
+  //✅❌
   // GET ALL USERS
   public List<UserModel> getAllUsers() {
     return repository.findAll();
   }
 
+  //✅❌
   // GET USER BY USERNAME
   public Optional<UserModel> getUserByUsername(String username) {
     return repository.findByUsername(username);
   }
 
+  //✅❌
   // GET USER BY EMAIL
   public Optional<UserModel> getUserByEmail(String email) {
     return repository.findByEmail(email);
   }
 
+  //✅❌
   public Map<Long, UserModel> getUsersMappedById() {
     List<UserModel> users = repository.findAll();
     return users.stream().collect(Collectors.toMap(UserModel::getId, Function.identity()));
   }
 
+  //✅❌
   public List<UserModel> searchUsersByUsername(String query) {
     return repository.findByUsernameContainingIgnoreCase(query);
   }
@@ -486,6 +492,7 @@ public class UserService implements UserDetailsService {
    * Extracts the S3 object key from a given S3 URL.
    * Assumes the key is the part after the last '/' in the URL.
    */
+
 
   private String extractKeyFromUrl(String url) {
     if (url == null || url.isEmpty()) {

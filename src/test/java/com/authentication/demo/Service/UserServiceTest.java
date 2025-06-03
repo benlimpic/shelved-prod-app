@@ -18,6 +18,7 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -549,6 +550,16 @@ public void setUp() throws Exception {
         assertEquals("Login successful", result);
     }
 
+
+
+
+
+
+
+
+
+
+
     @Test
     @DisplayName("Logout if valid")
     void testLogout_Success() {
@@ -565,6 +576,14 @@ public void setUp() throws Exception {
         verify(userRepository, never()).save(any(UserModel.class)); // Ensure no save operation occurs
     }
 
+
+
+
+
+
+
+
+    
     @Test
     @DisplayName("Delete User if valid")
     void testDeleteUser_Success() {
@@ -584,6 +603,202 @@ public void setUp() throws Exception {
     }
 
     @Test
-    @DisplayName()
+    @DisplayName("Delete User if invalid")
+    void testDeleteUser_Invalid() {
+        // Arrange
+        when(userRepository.findByUsername(mockUser.getUsername()))
+            .thenReturn(Optional.empty());
+
+        // Act & Assert
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            userService.deleteUser(mockUser.getUsername());
+        });
+        assertEquals("User not found with username: " + mockUser.getUsername(), exception.getMessage());
+    }
+
+    // @Test
+    // @DisplayName("Delete Profile Picture on delete user if valid")
+    // void testDeleteProfilePictureOnDeleteUser_Success() {
+    //     // Arrange
+    //     String profilePictureUrl = "https://s3.amazonaws.com/test-bucket/profile-pic.jpg";
+    //     mockUser.setProfilePictureUrl(profilePictureUrl);
+    //     when(userRepository.findByUsername(mockUser.getUsername()))
+    //         .thenReturn(Optional.of(mockUser));
+
+    //     // Act
+    //     userService.deleteProfilePictureOnDeleteUser(mockUser.getUsername());
+
+    //     // Assert
+    //     verify(s3Service).deleteFile("shelved-profile-pictures-benlimpic", "profile-pic.jpg");
+    // }
+
+
+
+
+    
+    @Test
+    @DisplayName("Get user by id if valid")
+    void testGetUserById() {
+        //Arrange
+        when(userRepository.findById(mockUser.getId())).thenReturn(Optional.of(mockUser));
+
+        // Act
+        UserModel result = userService.getUserById(mockUser.getId());
+
+        // Assert
+        assertEquals(mockUser.getId(), result.getId());
+    }
+
+    @Test
+    @DisplayName("Get user by id if invalid")
+    void testGetUserById_Invalid() {
+        // Arrange
+        when(userRepository.findById(mockUser.getId())).thenReturn(Optional.empty());
+
+        // Act & Assert
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            userService.getUserById(mockUser.getId());
+        });
+        assertEquals("User not found with id: " + mockUser.getId(), exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Get all users if valid")
+    void testGetAllUsers_Success() {
+            //Arrange
+            when(userRepository.findAll()).thenReturn(List.of(mockUser));
+
+            //Act
+            List<UserModel> result = userService.getAllUsers();
+            
+            //Assert
+            assertEquals(1, result.size());
+            assertEquals(mockUser.getId(), result.get(0).getId());
+            assertEquals(mockUser.getUsername(), result.get(0).getUsername());
+    }
+
+    @Test
+    @DisplayName("Get user by username if valid")
+    void testGetUserByUsername_Success() {
+        //Arange
+        when(userRepository.findByUsername(mockUser.getUsername())).thenReturn(Optional.of(mockUser));
+
+        //Act
+        Optional<UserModel> result = userService.getUserByUsername(mockUser.getUsername());
+
+        //Assert
+        assertTrue(mockUser.getUsername().equals(result.get().getUsername()));
+    }
+
+    @Test
+    @DisplayName("Get user by username empty")
+    void testGetUserByUsername_Empty() {
+        //Arrange
+        when(userRepository.findByUsername(mockUser.getUsername())).thenReturn(Optional.empty());
+
+        //Act
+        Optional<UserModel> result = userService.getUserByUsername(mockUser.getUsername());
+
+        //Assert
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    @DisplayName("Get user by email if valid")
+    void testGetUserByEmail_Success() {
+
+        //Arrange
+        when(userRepository.findByEmail(mockUser.getEmail())).thenReturn(Optional.of(mockUser));
+
+        //Act
+        Optional<UserModel> result = userService.getUserByEmail(mockUser.getEmail());
+
+        //Assert
+        assertEquals(mockUser.getEmail(), result.get().getEmail());
+    }
+
+    @Test
+    @DisplayName("Get user by email empty")
+    void testGetUserByEmail_Empty() {
+
+        //Arrange
+        when(userRepository.findByEmail(mockUser.getEmail())).thenReturn(Optional.empty());
+
+        //Act
+        Optional<UserModel> result = userService.getUserByEmail(mockUser.getEmail());
+
+        //Assert
+        assertTrue(result.isEmpty());
+    }
+
+
+
+
+
+
+    
+    @Test
+    @DisplayName("Map users by Id if valid")
+    void usersMappedById_Success() {
+        //Arrange
+        when(userRepository.findAll()).thenReturn(List.of(mockUser));
+
+        //Act
+        Map<Long, UserModel> result = userService.getUsersMappedById();
+
+        //Assert
+        assertEquals(1, result.size());
+        assertTrue(result.containsKey(mockUser.getId()));
+        assertEquals(mockUser.getUsername(), result.get(mockUser.getId()).getUsername());
+    }
+
+    @Test
+    @DisplayName("Map users by Id Empty")
+    void usersMappedById_Empty() {
+        //Arrange
+        when(userRepository.findAll()).thenReturn(Collections.emptyList());
+
+        //Act
+        Map<Long, UserModel> result = userService.getUsersMappedById();
+
+        //Assert
+        assertTrue(result.isEmpty());
+    }
+
+
+
+
+
+
+    
+    @Test
+    @DisplayName("Search users by username if valid")
+    void testSearchUsersByUsername_Success() {
+
+        //Arrange
+        when(userRepository.findByUsernameContainingIgnoreCase(mockUser.getUsername())).thenReturn(List.of(mockUser));
+
+        //Act
+        List<UserModel> result = userService.searchUsersByUsername(mockUser.getUsername());
+        
+        //Assert
+        assertEquals(1, result.size());
+        assertEquals(mockUser.getUsername(), result.get(0).getUsername());
+        assertEquals(mockUser.getId(), result.get(0).getId());
+    }
+
+    @Test
+    @DisplayName("Search users by username if valid")
+    void testSearchUsersByUsername_Empty() {
+
+        //Arrange
+        when(userRepository.findByUsernameContainingIgnoreCase(mockUser.getUsername())).thenReturn(Collections.emptyList());
+
+        //Act
+        List<UserModel> result = userService.searchUsersByUsername(mockUser.getUsername());
+
+        //Assert
+        assertEquals(0, result.size());
+    }
 
 }
