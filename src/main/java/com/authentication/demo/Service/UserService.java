@@ -57,6 +57,7 @@ public class UserService implements UserDetailsService {
     this.imageService = imageService;
   }
 
+  //✅❌
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     Optional<UserModel> user = repository.findByUsername(username);
@@ -75,6 +76,7 @@ public class UserService implements UserDetailsService {
         authorities);
   }
 
+  //✅❌
   // GET CURRENT USER
   public Optional<UserModel> getCurrentUser() {
     SecurityContext securityContext = SecurityContextHolder.getContext();
@@ -86,6 +88,7 @@ public class UserService implements UserDetailsService {
     return repository.findByUsername(username);
   }
 
+  //✅❌
   // GET CURRENT USER ID
   public Long getCurrentUserId() {
     SecurityContext securityContext = SecurityContextHolder.getContext();
@@ -99,28 +102,31 @@ public class UserService implements UserDetailsService {
         .orElseThrow(() -> new RuntimeException("User not found for username: " + username));
   }
 
+
+  //✅❌
   // Get User By ID
   public UserModel getUserById(Long id) {
     return repository.findById(id)
         .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
   }
 
+  //✅❌
   // UPDATE USERNAME
   public String updateUsername(String newUsername) {
     if (newUsername == null || newUsername.isEmpty()) {
       return "Username is required";
     }
 
-    // Check if the new username already exists
-    Optional<UserModel> existingUser = repository.findByUsername(newUsername);
-    if (existingUser.isPresent()) {
-      return "Username already exists";
-    }
-
     // Check if the new username is the same as the current username
     Optional<UserModel> currentUser = getCurrentUser();
     if (currentUser.isPresent() && currentUser.get().getUsername().equals(newUsername)) {
       return "New username is the same as the current username";
+    }
+
+    // Check if the new username already exists
+    Optional<UserModel> existingUser = repository.findByUsername(newUsername);
+    if (existingUser.isPresent()) {
+      return "Username already exists";
     }
 
     Optional<UserModel> user = getCurrentUser();
@@ -141,6 +147,7 @@ public class UserService implements UserDetailsService {
     }
   }
 
+  //✅❌
   // UPDATE EMAIL
   public String updateEmail(String newEmail, String confirmNewEmail) {
     if (newEmail == null || newEmail.isEmpty() ||
@@ -174,6 +181,7 @@ public class UserService implements UserDetailsService {
     }
   }
 
+  //✅❌
   // UPDATE PASSWORD
   public String updatePassword(String currentPassword, String newPassword, String confirmNewPassword) {
     if (currentPassword == null || currentPassword.isEmpty() ||
@@ -208,6 +216,7 @@ public class UserService implements UserDetailsService {
     }
   }
 
+  //✅❌
   // UPDATE NAME
   public String updateName(Map<String, String> params) {
     Optional<UserModel> user = getCurrentUser();
@@ -231,6 +240,7 @@ public class UserService implements UserDetailsService {
     }
   }
 
+  //✅
   // UPDATE USER PROFILE
   public void updateProfile(Map<String, String> userDetails, MultipartFile profilePicture,
       RedirectAttributes redirectAttributes) {
@@ -282,6 +292,7 @@ public class UserService implements UserDetailsService {
     }
   }
 
+  //✅
   public String saveProfilePicture(MultipartFile profilePicture) throws IOException {
 
     String bucketName = profileImagesBucketName;
@@ -327,6 +338,7 @@ public class UserService implements UserDetailsService {
     }
   }
 
+  //✅
   // CREATE NEW USER
   public Map<String, String> postUser(Map<String, String> params) {
     String username = params.get("username");
@@ -383,6 +395,8 @@ public class UserService implements UserDetailsService {
     return result;
   }
 
+
+  //✅
   // LOGIN USER
   public String login(Map<String, String> params) {
     // Get form data parameters
@@ -404,12 +418,14 @@ public class UserService implements UserDetailsService {
     }
   }
 
+  //✅ 
   // LOGOUT USER
   public String logout() {
     SecurityContextHolder.clearContext();
     return "login";
   }
 
+  //✅
   // DELETE USER
   public String deleteUser(String username) {
     Optional<UserModel> userByUsername = repository.findByUsername(username);
