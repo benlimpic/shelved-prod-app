@@ -240,7 +240,7 @@ public class UserService implements UserDetailsService {
     }
   }
 
-  //✅
+  //✅❌
   // UPDATE USER PROFILE
   public void updateProfile(Map<String, String> userDetails, MultipartFile profilePicture,
       RedirectAttributes redirectAttributes) {
@@ -292,7 +292,7 @@ public class UserService implements UserDetailsService {
     }
   }
 
-  //✅
+  //✅❌
   public String saveProfilePicture(MultipartFile profilePicture) throws IOException {
 
     String bucketName = profileImagesBucketName;
@@ -338,7 +338,7 @@ public class UserService implements UserDetailsService {
     }
   }
 
-  //✅
+  //✅❌
   // CREATE NEW USER
   public Map<String, String> postUser(Map<String, String> params) {
     String username = params.get("username");
@@ -396,7 +396,7 @@ public class UserService implements UserDetailsService {
   }
 
 
-  //✅
+  //✅❌
   // LOGIN USER
   public String login(Map<String, String> params) {
     // Get form data parameters
@@ -418,14 +418,14 @@ public class UserService implements UserDetailsService {
     }
   }
 
-  //✅
+  //✅❌
   // LOGOUT USER
   public String logout() {
     SecurityContextHolder.clearContext();
     return "login";
   }
 
-  //✅
+  //✅❌
   // DELETE USER
   public String deleteUser(String username) {
     Optional<UserModel> userByUsername = repository.findByUsername(username);

@@ -1,21 +1,7 @@
 package com.authentication.demo.Service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.Collections;
@@ -24,13 +10,28 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.AfterEach;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -397,19 +398,28 @@ public void setUp() throws Exception {
 
     @Test
     @DisplayName("Should save a profile picture and return presigned URL when input is valid")
-    void testSaveProfilePicture_success() throws Exception {
+    void testSaveProfilePicture_success() {
         // Use the injected userService and mock S3
         reset(s3Service);
 
-        Field bucketField = UserService.class.getDeclaredField("profileImagesBucketName");
-        bucketField.setAccessible(true);
-        bucketField.set(userService, "test-bucket");
+        Field bucketField = null;
+        try {
+            bucketField = UserService.class.getDeclaredField("profileImagesBucketName");
+            bucketField.setAccessible(true);
+            bucketField.set(userService, "test-bucket");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         // Create and spy on a fake image file
         byte[] imageData = "fake image content".getBytes();
         MockMultipartFile mockFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", imageData);
         MultipartFile spyFile = spy(mockFile);
-        doNothing().when(spyFile).transferTo(any(File.class));
+        try {
+            doNothing().when(spyFile).transferTo(any(File.class));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         // Mock expected S3 behavior
         String expectedUrl = "https://mocked-url.com/test.jpg";
@@ -417,7 +427,12 @@ public void setUp() throws Exception {
         when(s3Service.generatePresignedUrl(eq("test-bucket"), anyString())).thenReturn(expectedUrl);
 
         // Act
-        String result = userService.saveProfilePicture(spyFile);
+        String result = null;
+        try {
+            result = userService.saveProfilePicture(spyFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         // Assert
         assertEquals(expectedUrl, result);
@@ -425,14 +440,45 @@ public void setUp() throws Exception {
         verify(s3Service).generatePresignedUrl(eq("test-bucket"), anyString());
     }
 
+    @Test
+    @DisplayName("Should throw exception when file is empty")
+    void testSaveProfilePicture_failure_emptyFile() {
 
+        reset(s3Service);
 
+        MultipartFile emptyFile = new MockMultipartFile("file", new byte[0]);
 
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            userService.saveProfilePicture(emptyFile);
+        });
 
+        assertEquals("Profile picture file is empty", exception.getMessage());
 
+    }
 
+    @Test
+    @DisplayName("Should throw RuntimeException when S3 upload fails")
+    void testSaveProfilePicture_failure_s3UploadFailure() {
+        reset(s3Service);
 
+        byte[] imageData = "fake image content".getBytes();
+        MockMultipartFile mockFile = new MockMultipartFile("file", "test.jpg", "image/jpeg", imageData);
+        MultipartFile spyFile = spy(mockFile);
+        try {
+            doNothing().when(spyFile).transferTo(any(File.class));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
+        doThrow(new RuntimeException("S3 upload failed")).when(s3Service).uploadFile(anyString(), anyString(), any(InputStream.class), anyString());
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            userService.saveProfilePicture(spyFile);
+        });
+
+        assertEquals("S3 upload failed", exception.getMessage());
+        
+    }
 
     @Test
     @DisplayName("Should update profile and save new profile picture")
@@ -472,14 +518,193 @@ public void setUp() throws Exception {
         verify(redirectAttributes).addFlashAttribute("message", "User profile updated successfully.");
     }
 
+    @Test
+    @DisplayName("Should not update profile when user is not authenticated")
+    void testUpdateProfile_failure_noAuthenticatedUser() throws Exception {
+        SecurityContextHolder.clearContext();
 
+        // Use real empty multipart file
+        MockMultipartFile multipartFile = new MockMultipartFile("file", "", "image/jpeg", new byte[0]);
 
+        RedirectAttributes redirectAttributes = mock(RedirectAttributes.class);
+        Map<String, String> details = Map.of("biography", "Updated bio");
 
+        userService.updateProfile(details, multipartFile, redirectAttributes);
 
+        // Optionally, verify redirectAttributes or other side effects here
+    }
 
+    @Test
+    @DisplayName("Should update profile and skip profile picture if file is empty")
+    void testUpdateProfile_failure_emptyFile() throws Exception {
+        mockUser.setId(1L);
+        mockUser.setUsername("testUser");
+        mockUser.setProfilePictureUrl("https://s3.amazonaws.com/test-bucket/old-pic.jpg");
 
+        MockMultipartFile emptyFile = new MockMultipartFile("file", "empty.jpg", "image/jpeg", new byte[0]);
 
+        Map<String, String> details = Map.of(
+            "location", "San Diego",
+            "website", "https://example.com",
+            "biography", "Still cool"
+        );
 
+        RedirectAttributes redirectAttributes = mock(RedirectAttributes.class);
+
+        when(userRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+
+        userService.updateProfile(details, emptyFile, redirectAttributes);
+
+        assertEquals("San Diego", mockUser.getLocation());
+        assertEquals("https://example.com", mockUser.getWebsite());
+        assertEquals("Still cool", mockUser.getBiography());
+
+        // Save should be called
+        verify(userRepository).save(mockUser);
+
+        // No file interaction
+        verify(imageService, never()).processImage(any());
+        verify(s3Service, never()).uploadFile(any(), any(), any(), any());
+    }
+
+    @Test
+    @DisplayName("Should skip profile update if image processing fails but no exception is thrown")
+    void testUpdateProfile_failure_imageProcessingSuppressed() throws Exception {
+        mockUser.setId(1L);
+        mockUser.setUsername("testUser");
+        mockUser.setProfilePictureUrl("https://s3.amazonaws.com/test-bucket/old-pic.jpg");
+
+        byte[] imageData = "new image content".getBytes();
+        MockMultipartFile uploadedFile = new MockMultipartFile("file", "new.jpg", "image/jpeg", imageData);
+
+        Map<String, String> details = Map.of(
+            "location", "New York",
+            "website", "https://example.com",
+            "biography", "Updated bio"
+        );
+
+        RedirectAttributes redirectAttributes = mock(RedirectAttributes.class);
+
+        doThrow(new IOException("Image processing failed"))
+            .when(imageService).processImage(any(MultipartFile.class));
+
+        // Act
+        userService.updateProfile(details, uploadedFile, redirectAttributes);
+
+        // Assert: confirm that userRepository.save() never happens due to the processing failure
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("Should return error message when username is already taken")
+    void testPostUser_failure_usernameTaken() {
+        // Arrange
+        Map<String, String> params = Map.of(
+            "username", "existingUser",
+            "email", "newuser@example.com",
+            "password", "securePass123",
+            "confirmPassword", "securePass123",
+            "firstName", "New",
+            "lastName", "User"
+        );
+
+        // Mock user with the same username
+        when(userRepository.findByUsername("existingUser")).thenReturn(Optional.of(new UserModel()));
+
+        // Act
+        Map<String, String> result = userService.postUser(params);
+
+        // Assert
+        assertEquals("error", result.get("status"));
+        assertEquals("Username already exists", result.get("message"));
+    }
+
+    @Test
+    @DisplayName("Should return error message when email is already taken")
+    void testPostUser_failure_emailTaken() {
+        // Arrange
+        Map<String, String> params = Map.of(
+            "username", "newuser",
+            "email", "existing@example.com",
+            "password", "securePass123",
+            "confirmPassword", "securePass123",
+            "firstName", "New",
+            "lastName", "User"
+        );
+
+        // Mock user with the same email
+        when(userRepository.findByEmail("existing@example.com")).thenReturn(Optional.of(new UserModel()));
+
+        // Act
+        Map<String, String> result = userService.postUser(params);
+
+        // Assert
+        assertEquals("error", result.get("status"));
+        assertEquals("Email already exists", result.get("message"));
+    }
+
+    @Test
+    @DisplayName("Should return error message when passwords do not match")
+    void testPostUser_failure_passwordMismatch() {
+        // Arrange
+        Map<String, String> params = Map.of(
+            "username", "newuser",
+            "email", "newuser@example.com",
+            "password", "securePass123",
+            "confirmPassword", "differentPass123",
+            "firstName", "New",
+            "lastName", "User"
+        );
+
+        // Act
+        Map<String, String> result = userService.postUser(params);
+
+        // Assert
+        assertEquals("error", result.get("status"));
+        assertEquals("Passwords do not match", result.get("message"));
+    }
+
+    @Test
+    @DisplayName("Should return error message when email format is invalid")
+    void testPostUser_failure_invalidEmailFormat() {
+        // Arrange
+        Map<String, String> params = Map.of(
+            "username", "newuser",
+            "email", "invalid-email",
+            "password", "securePass123",
+            "confirmPassword", "securePass123",
+            "firstName", "New",
+            "lastName", "User"
+        );
+
+        // Act
+        Map<String, String> result = userService.postUser(params);
+
+        // Assert
+        assertEquals("error", result.get("status"));
+        assertEquals("Invalid email format", result.get("message"));
+    }
+
+    @Test
+    @DisplayName("Should return error message when required fields are missing")
+    void testPostUser_failure_missingRequiredFields() {
+        // Arrange
+        Map<String, String> params = Map.of(
+            "username", "newuser",
+            "email", "", // Missing email
+            "password", "securePass123",
+            "confirmPassword", "securePass123",
+            "firstName", "New",
+            "lastName", "User"
+        );
+
+        // Act
+        Map<String, String> result = userService.postUser(params);
+
+        // Assert
+        assertEquals("error", result.get("status"));
+        assertTrue(result.get("message").contains("All fields are required"));
+    }
 
 
     @Test
@@ -523,13 +748,6 @@ public void setUp() throws Exception {
     }
 
 
-
-
-
-
-
-
-
     @Test
     @DisplayName("Should return success message when credentials are valid")
     void testLogin_success() {
@@ -550,15 +768,41 @@ public void setUp() throws Exception {
         assertEquals("Login successful", result);
     }
 
+    @Test
+    @DisplayName("Should return error message when username or password are empty")
+    void testLogin_failure_emptyFields() {
+        // Arrange
+        Map<String, String> params = Map.of(
+            "username", "",
+            "password", ""
+        );
 
+        // Act
+        String result = userService.login(params);
 
+        // Assert
+        assertEquals("Username and password are required", result);
+    }
 
+    @Test
+    @DisplayName("Should return error message when user or password is invalid")
+    void testLogin_failure_invalidCredentials() {
+        // Arrange
+        Map<String, String> params = Map.of(
+            "username", "testUser",
+            "password", "wrongPassword"
+        );
 
+        // Mock user with matching password
+        when(userRepository.findByUsername("testUser")).thenReturn(Optional.of(mockUser));
+        when(passwordEncoder.matches("wrongPassword", mockUser.getPassword())).thenReturn(false);
 
+        // Act
+        String result = userService.login(params);
 
-
-
-
+        // Assert
+        assertEquals("Invalid username or password", result);
+    }
 
     @Test
     @DisplayName("Logout if valid")
@@ -576,14 +820,6 @@ public void setUp() throws Exception {
         verify(userRepository, never()).save(any(UserModel.class)); // Ensure no save operation occurs
     }
 
-
-
-
-
-
-
-
-    
     @Test
     @DisplayName("Delete User if valid")
     void testDeleteUser_Success() {
@@ -603,34 +839,52 @@ public void setUp() throws Exception {
     }
 
     @Test
-    @DisplayName("Delete User if invalid")
-    void testDeleteUser_Invalid() {
+    @DisplayName("Delete User if user is found")
+    void testDeleteUser_UserFound() {
+        // Arrange
+        when(userRepository.findByUsername(mockUser.getUsername()))
+            .thenReturn(Optional.of(mockUser));
+
+        // Act
+        String result = userService.deleteUser(mockUser.getUsername());
+
+        // Assert
+        assertEquals("User deleted successfully", result);
+        verify(userRepository).delete(mockUser);
+    }
+
+    @Test
+    @DisplayName("Delete User if user is not found")
+    void testDeleteUser_UserNotFound() {
         // Arrange
         when(userRepository.findByUsername(mockUser.getUsername()))
             .thenReturn(Optional.empty());
 
-        // Act & Assert
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            userService.deleteUser(mockUser.getUsername());
-        });
-        assertEquals("User not found with username: " + mockUser.getUsername(), exception.getMessage());
+        // Act
+        String result = userService.deleteUser(mockUser.getUsername());
+
+        // Assert
+        assertEquals("User not found", result);
+        verify(userRepository, never()).delete(any());
     }
 
-    // @Test
-    // @DisplayName("Delete Profile Picture on delete user if valid")
-    // void testDeleteProfilePictureOnDeleteUser_Success() {
-    //     // Arrange
-    //     String profilePictureUrl = "https://s3.amazonaws.com/test-bucket/profile-pic.jpg";
-    //     mockUser.setProfilePictureUrl(profilePictureUrl);
-    //     when(userRepository.findByUsername(mockUser.getUsername()))
-    //         .thenReturn(Optional.of(mockUser));
+    @Test
+    @DisplayName("Should delete profile picture when deleting user")
+    void testDeleteUser_DeletesProfilePicture() {
+        // Arrange
+        String profilePictureUrl = "https://s3.amazonaws.com/test-bucket/profile-pic.jpg";
+        mockUser.setProfilePictureUrl(profilePictureUrl);
+        when(userRepository.findByUsername(mockUser.getUsername()))
+            .thenReturn(Optional.of(mockUser));
 
-    //     // Act
-    //     userService.deleteProfilePictureOnDeleteUser(mockUser.getUsername());
+        // Act
+        String result = userService.deleteUser(mockUser.getUsername());
 
-    //     // Assert
-    //     verify(s3Service).deleteFile("shelved-profile-pictures-benlimpic", "profile-pic.jpg");
-    // }
+        // Assert
+        assertEquals("User deleted successfully", result);
+        verify(s3Service).deleteFile("shelved-profile-pictures-benlimpic", "profile-pic.jpg");
+        verify(userRepository).delete(mockUser);
+    }
 
 
 
